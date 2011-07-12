@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+  <head>
+    <title>
+      
+      Smerity.com :  Python to Java - A Survivalist&#39;s Guide
+      
+    </title>
+    <link rel="SHORTCUT ICON" href="/img/favicon.ico">
+
+    
+    <link href="/blog/atom.xml" rel="alternate" title="Smerity.com" type="application/atom+xml"/>
+    
+
+    
+    
+    
+    
+
+    
+    <link href="/media/css/reset.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/typography.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/base.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/pygments.css" type="text/css" rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+  </head>
+
+  <body>
+    
+    <div class="topfloat">
+      <header id="masthead">
+        <h1>
+          <a href="/">Smerity</a>
+        </h1>
+      </header>
+
+      <nav>
+        <ul>
+          <a href="/articles/articles.html"><li>Articles</li></a>
+          <a href="/abme.html"><li>About Me</li></a>
+          <a href="/define.html"><li>Define Me</li></a>
+        </ul>
+      </nav>
+    </div>
+
+    <div id="content">
+      
+
+
+
+<div id="content-header">
+    <h1>Python to Java - A Survivalist&#39;s Guide</h1>
+    <span class="post-date">Sun 01 Jun 2008</span>
+</div>
+
+
+
+
+
+
+
+
+<div id="post-content">
+	
+
+	<!-- Hyde::Article::Begin -->
+
+<h2 id="aim">Aim</h2>
+<p>This guide was written originally for Info1903 students at the University of Sydney who after two terms of Python needed to quickly begin coding in Java. This is in no way a replacement for a full Java textbook however and is merely here to allow an easy transition from Python to simple Java programs. In here we&#8217;ll walk you through a few simple tasks - first a way to print&nbsp;primes.</p>
+<div class="toc">
+<ul>
+<li><a href="#aim">Aim</a><ul>
+<li><a href="#basic-syntax-and-semantics">Basic Syntax and&nbsp;Semantics</a></li>
+<li><a href="#down-to-business">Down to&nbsp;business&#8230;</a></li>
+<li><a href="#simple-iteration">Simple&nbsp;Iteration</a></li>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#naive-prime-numbers">Naive Prime&nbsp;Numbers</a></li>
+<li><a href="#primitives-and-autoboxing">Primitives and&nbsp;Autoboxing</a></li>
+<li><a href="#data-structures">Data Structures</a><ul>
+<li><a href="#list">List</a></li>
+<li><a href="#dictionary">Dictionary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="basic-syntax-and-semantics">Basic Syntax and&nbsp;Semantics</h2>
+<p>The name of the file (<strong>Name</strong>.java) and class (public class <strong>Name</strong>) must be equal or else the code will not compile. It&#8217;s convention to capitalise classes in&nbsp;Java.</p>
+<p>Java&#8217;s syntax is quite different to Python. First, all lines must end with a semicolon (;) and instead of specifying parts of the code with indentation like tabbing Java instead uses curly brackets ({}). Using indendation to mark the beginning and end of codeblocks is still considered good practice however and increase&nbsp;readability.</p>
+<div class="codehilite"><pre><span class="c1">//Python</span>
+<span class="k">for</span> <span class="o">...:</span>
+  <span class="k">if</span> <span class="o">...:</span>
+    <span class="k">do</span> <span class="n">stuff</span>
+
+<span class="c1">//Java</span>
+<span class="k">for</span> <span class="o">...</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">...</span> <span class="o">{</span>
+    <span class="k">do</span> <span class="n">stuff</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="down-to-business">Down to&nbsp;business&#8230;</h2>
+<p>In Java everything is a class. When you run Java source code the class will automatically be searched for <em>public static void main</em> to execute. It also can accept command line input, in this case an array of strings called args - we&#8217;ll return to exactly what that means&nbsp;later.</p>
+<div class="codehilite"><pre><span class="c1">//from Primes.java</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Primes</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>The ellipsis (&#8230;) is where our main code will go. For our hello world we&#8217;ll be using Primes.java as a base. Java implements things slightly differently in regards to&nbsp;printing.</p>
+<div class="codehilite"><pre><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="c1">// Prints x by itself</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="c1">// Prints x + &quot;\n&quot;, equivalent of Python&#39;s print function</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">var</span><span class="o">)</span> <span class="c1">// Used in string formatting like C&#39;s printf, which we&#39;ll reference later</span>
+</pre></div>
+
+
+<p>To print our hello world, just inject the println statement into our above&nbsp;code.</p>
+<div class="codehilite"><pre><span class="o">/</span><span class="n">from</span> <span class="n">Primes</span><span class="o">.</span><span class="na">java</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Primes</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello world&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Congratulations - you&#8217;ve written <strong>Hello World</strong> in Java. Now the next challenge - compiling it. As opposed to Python, which is an interpreted language (ie, translated as it&#8217;s run), Java is instead a compiled language, and does all the &#8216;translation&#8217; in a separate stage. To compile and run Java in a Unix environment such as Usyd&#8217;s Congo server&nbsp;-</p>
+<div class="codehilite"><pre><span class="n">smerity</span><span class="nv">@Loki:</span><span class="o">~</span><span class="sr">/Coding/</span><span class="n">Courses</span><span class="sr">/Java Prep/</span><span class="n">work</span><span class="nv">$</span> <span class="nv">javac</span> <span class="n">Primes</span><span class="o">.</span><span class="n">java</span>
+<span class="n">smerity</span><span class="nv">@Loki:</span><span class="o">~</span><span class="sr">/Coding/</span><span class="n">Courses</span><span class="sr">/Java Prep/</span><span class="n">work</span><span class="nv">$</span> <span class="nv">java</span> <span class="n">Primes</span>
+<span class="n">Hello</span> <span class="n">world</span>
+<span class="n">smerity</span><span class="nv">@Loki:</span><span class="o">~</span><span class="sr">/Coding/</span><span class="n">Courses</span><span class="sr">/Java Prep/</span><span class="n">work</span><span class="nv">$</span>
+</pre></div>
+
+
+<p>You&#8217;ve now <em>compiled</em> and <em>executed</em> Hello World. As you progress in Java you&#8217;ll find it&#8217;s much easier to use an <span class="caps">IDE</span> (integrated development editor) instead of doing everything from the commandline. An <span class="caps">IDE</span> performs a number of helpful things like syntax/error highlighting, simple navigation between files and&nbsp;autocompletion.</p>
+<h2 id="simple-iteration">Simple&nbsp;Iteration</h2>
+<p>The For loop in Java is quite different to that of Python&#8217;s. If you&#8217;ve done C, C++ or Javascript however you&#8217;ll be familiar with&nbsp;it.</p>
+<div class="codehilite"><pre><span class="c1">//Python</span>
+<span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="nf">xrange</span><span class="o">(</span><span class="mi">10</span><span class="o">):</span>
+  <span class="n">print</span> <span class="n">i</span>
+
+<span class="c1">//Java</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>In the case of Java a for loop is split into three separate parts. Using layman&#8217;s terms, there&#8217;s the initialiser (run when the loop is first begun which in this case sets i to 0), the while (while i &lt; 10 is true, keep looping) and the iterator (add one to i (i++, the same as i += 1 or i = i + 1) each time we&nbsp;loop).</p>
+<h2 id="variables">Variables</h2>
+<p>Next important tidbit - Java is a statically typed language. As opposed to Python where x can equal anything (such as a number, a string, a list&#8230;), once you say what a variable is in Java it must remain that type. Variables are declared by typing their <em>(type) (name) = (value)</em>.</p>
+<div class="codehilite"><pre><span class="c1">//Java</span>
+<span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Stephen&quot;</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">18</span><span class="o">;</span>
+<span class="n">Boolean</span> <span class="n">male</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//Booleans only allow true or false - just like Python&#39;s True and False</span>
+
+<span class="c1">//This would raise a compilation error as you can&#39;t put a number into a </span>
+<span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">15</span><span class="o">;</span> <span class="c1">//<span class="caps">EXPLODE</span></span>
+</pre></div>
+
+
+<h2 id="naive-prime-numbers">Naive Prime&nbsp;Numbers</h2>
+<p>Excellent - if you&#8217;ve kept up with me then we&#8217;re ready to find primes using Java. To do this, we simply combine the simple loops and variables introduced&nbsp;above.</p>
+<div class="codehilite"><pre><span class="c1">//from Primes.java</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Primes</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">num</span><span class="o">&lt;</span><span class="mi">40</span><span class="o">;</span> <span class="n">num</span><span class="o">++)</span> <span class="o">{</span>
+      <span class="n">Boolean</span> <span class="n">prime</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//We&#39;ll assume the number&#39;s a prime to start with</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">num</span><span class="o">);</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span><span class="o">%</span><span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">prime</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+          <span class="k">break</span><span class="o">;</span> <span class="c1">//We found it&#39;s not a prime, so we can bail out of the loop early and save us work</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">prime</span><span class="o">)</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+    <span class="cm">/*Notice the above doesn&#39;t use curly brackets? It&#39;s the same as</span>
+<span class="cm">    if (prime) {</span>
+<span class="cm">      System.out.println(num);</span>
+<span class="cm">    }</span>
+<span class="cm">    If you don&#39;t use curly brackets Java assumes it ends at the next semicolon (;)*/</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Shake, bake, compile and you have yourself all the primes up to 40. Let&#8217;s look at the same code in Python, shall&nbsp;we?</p>
+<div class="codehilite"><pre><span class="o">//</span><span class="n">Python</span> <span class="n">primes</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">40</span><span class="p">):</span>
+  <span class="n">prime</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">%</span><span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">prime</span> <span class="o">=</span> <span class="bp">False</span>
+      <span class="k">break</span>
+  <span class="k">if</span> <span class="n">prime</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">num</span>
+</pre></div>
+
+
+<h2 id="primitives-and-autoboxing">Primitives and&nbsp;Autoboxing</h2>
+<p>If you didn&#8217;t know, all the variables in Python are classes - string for example is a class containing your string and also a bunch of functions to use with your string (such as <em>startswith</em>, <em>upper</em> etc). This isn&#8217;t true in Java however, as there are things called primitives that store <em>just</em> what you put in. Why is this a problem? Well, in things like Collections (such as ArrayLists) they only accept classes and it won&#8217;t accept primitives. How are we to fix this? For every primitve there is something called a <em>wrapper</em> class which is a class version of the primitive. To differentiate between the two the primitives are always lower case whilst their wrappers are always uppercase (as classes are by convention uppercase in Java). Autoboxing was introduced to Java to make the transition between primitives and their wrappers a simple process - you&#8217;ll see an example&nbsp;below.</p>
+<div class="codehilite"><pre><span class="kt">int</span> <span class="o">=&gt;</span> <span class="n">Integer</span>
+<span class="kt">char</span> <span class="o">=&gt;</span> <span class="n">Character</span>
+<span class="n">none</span> <span class="o">=&gt;</span> <span class="n">String</span>
+<span class="kt">boolean</span> <span class="o">=&gt;</span> <span class="n">Boolean</span>
+
+<span class="c1">//Autoboxing</span>
+<span class="n">Integer</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">42</span><span class="o">;</span>
+<span class="c1">//Without autoboxing the above becomes ...</span>
+<span class="n">Integer</span> <span class="n">y</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span>
+<span class="c1">//You can also do all your normal operations with ints instead of Integers</span>
+<span class="n">x</span> <span class="o">-=</span> <span class="mi">4</span><span class="o">;</span>
+<span class="n">y</span> <span class="o">-=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+</pre></div>
+
+
+<p>Most of the time you don&#8217;t have to worry about primitives and wrapper classes but when using certain datastructures it becomes very important to have an understanding of&nbsp;them.</p>
+<h2 id="data-structures">Data&nbsp;Structures</h2>
+<p>In this section we&#8217;ll introduce Java&#8217;s data structures and where they are equivalent to&nbsp;Python&#8217;s.</p>
+<h3 id="list">List</h3>
+<p>Python&#8217;s list is essentially an array - Java has two similar data structures. First is an array, which is a list with only a set number of &#8216;slots&#8217;, and second is an ArrayList, which is the closest to Python&#8217;s list. Notice that for both you need to declare what type of variables it&#8217;s going to be&nbsp;holding.</p>
+<div class="codehilite"><pre><span class="cm">/* Array */</span>
+<span class="n">String</span><span class="o">[]</span> <span class="n">numbers</span> <span class="o">=</span> <span class="o">{</span><span class="s">&quot;one&quot;</span><span class="o">,</span> <span class="s">&quot;two&quot;</span><span class="o">,</span> <span class="s">&quot;three&quot;</span><span class="o">};</span> <span class="c1">//Creates an array of strings that holds one to three</span>
+<span class="n">String</span><span class="o">[]</span> <span class="n">names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span> <span class="c1">//Creates an array named &#39;names&#39; with enough space for ten strings</span>
+<span class="n">names</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="s">&quot;Smerity&quot;</span><span class="o">;</span>
+<span class="n">names</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="s">&quot;Josh&quot;</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="c1">//Any unused slots are by default null, which is like Python&#39;s None</span>
+<span class="k">while</span><span class="o">(</span><span class="n">names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">names</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="n">i</span><span class="o">++;</span>
+<span class="o">}</span>
+<span class="c1">//Can also use the length of an array</span>
+<span class="k">for</span><span class="o">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numbers</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">numbers</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+
+<span class="cm">/* ArrayList */</span>
+<span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">primes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">primes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+<span class="n">primes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">primes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+<span class="k">for</span><span class="o">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">primes</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">primes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+<span class="c1">//Similar to Python&#39;s &quot;for num in numbers:&quot; syntax</span>
+<span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="n">prime</span> <span class="o">:</span> <span class="n">primes</span><span class="o">)</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">prime</span><span class="o">);</span>
+</pre></div>
+
+
+<h3 id="dictionary">Dictionary</h3>
+<p>Dictionaries are one of the most useful of Python&#8217;s default data structures. Java of course has similar&nbsp;structures.</p>
+<div class="codehilite"><pre><span class="cm">/*HashMap&lt;key_type, value_type&gt;*/</span>
+<span class="c1">//Once again you actually have to say what the types are due to static typing</span>
+<span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">letters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="c1">//.toCharArray turns &quot;tree&quot; into a Character array of {&#39;t&#39;, &#39;r&#39;, &#39;e&#39;, &#39;e&#39;}</span>
+<span class="k">for</span><span class="o">(</span><span class="n">Character</span> <span class="n">c</span> <span class="o">:</span> <span class="s">&quot;tree&quot;</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">()){</span>
+        <span class="c1">// The bang (!) means <span class="caps">NOT</span> - so if letters does <span class="caps">NOT</span> contain the key c ...</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">letters</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c</span><span class="o">))</span> <span class="n">letters</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">letters</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">letters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">)+</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="k">for</span><span class="o">(</span><span class="n">Character</span> <span class="n">c</span> <span class="o">:</span> <span class="n">letters</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Letter &quot;</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="s">&quot; used &quot;</span><span class="o">+</span><span class="n">letters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">)+</span><span class="s">&quot; times.&quot;</span><span class="o">);</span>
+<span class="cm">/*Output -</span>
+<span class="cm">Letter e used 2 times.</span>
+<span class="cm">Letter t used 1 times.</span>
+<span class="cm">Letter r used 1 times.</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<!-- Hyde::Article::End -->
+
+	
+</div>
+
+
+
+
+    </div>
+
+    
+    <footer>
+      <p><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Under the Creative Commons License</a></p>
+    </footer>
+</body>
+</html>
+

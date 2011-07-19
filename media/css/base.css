@@ -103,6 +103,19 @@ div.topfloat {
 
 }
 
+li.article_heading {
+ list-style-type: none;
+}
+
+span.post-date {
+ line-height: 2;
+}
+
+span.date {
+ float: left;
+ padding-right: 20px;
+}
+
 div.topfloat a {
   color: #999;
 }

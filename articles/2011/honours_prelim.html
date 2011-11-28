@@ -3,13 +3,13 @@
   <head>
     <title>
       
-      Smerity.com :  Preliminary Timeline for Honours
+      Smerity.com : Preliminary Timeline for Honours
       
     </title>
-    <link rel="SHORTCUT ICON" href="/img/favicon.ico">
+    <link rel="SHORTCUT ICON" href="/media/images/favicon.ico">
 
     
-    <link href="/blog/atom.xml" rel="alternate" title="Smerity.com" type="application/atom+xml"/>
+    
     
 
     
@@ -25,27 +25,16 @@
     
 
     
-<link href="/media/css/jquery.countdown.css" type="text/css" rel="stylesheet" />
-<style type="text/css"> 
-.hasCountdown {
-border: none;
-border-top: 2px solid #CCC;
-background-color: transparent;
-}
-</style>
-
+    
 
     
-<script type="text/javascript" src="/media/js/jquery.min.js"></script>
-
+    
 
     
-<script type="text/javascript" src="/media/js/jquery.countdown.pack.js"></script>
-
+    
   </head>
 
   <body>
-    
     <div class="topfloat">
       <header id="masthead">
         <h1>
@@ -69,60 +58,49 @@ background-color: transparent;
 
 <div id="content-header">
     <h1>Preliminary Timeline for Honours</h1>
-    <span class="post-date">Mon 11 Jul 2011</span>
+    <span class="post-date">11 July 2011</span>
 </div>
 
 
 
 
-<script type="text/javascript">
-$(function () {
-  // Javascript Date's month is zero indexed? Really? Weird...
-  // Very much a computer scientist at heart, but some things shouldn't be zero indexed
-  var honsDay = new Date(2011, 10-1, 31);
-  $('#honoursCountdown').countdown({until: honsDay, format: 'ODHMS'});
-});
-</script>
-<div id="honoursCountdown"></div>
 
 
 
 
 <div id="post-content">
 	
-
-	<p>To better prepare for Honours, I&#8217;ve begun a loose sketch of my remaining timeline and the tasks I have yet to accomplish. I also set up this aesthetic countdown clock to scare the hell out of me and the other Honours students&nbsp;;)</p>
-<h2 id="abstract">Abstract</h2>
-<p>The C&amp;C parser currently uses the chart-based <span class="caps">CKY</span> algorithm. By replacing this with the shift-reduce algorithm, it is possible to get both higher speeds and even higher accuracy in parsing.
+        <p>To better prepare for Honours, I've begun a loose sketch of my remaining timeline and the tasks I have yet to accomplish. I also set up this aesthetic countdown clock to scare the hell out of me and the other Honours students ;)</p>
+<h2>Abstract</h2>
+<p>The C&amp;C parser currently uses the chart-based CKY algorithm. By replacing this with the shift-reduce algorithm, it is possible to get both higher speeds and even higher accuracy in parsing.
 The primary task will be modifying the existing C&amp;C parser minimally so that close comparisons can be made to the existing C&amp;C parser.
-Once this is accomplished, allowing ambiguity in PoS and <span class="caps">CCG</span> tags may allow higher accuracy through more accurate language models.
-Finally, through aggressive pruning of the search space, parsing speeds can be improved hopefully without a significant impact on&nbsp;accuracy.</p>
-<h2 id="implement-shift-reduce-algorithm">Implement Shift-Reduce&nbsp;Algorithm</h2>
-<p><em>July 4th - July 24th (~3&nbsp;weeks)</em></p>
+Once this is accomplished, allowing ambiguity in PoS and CCG tags may allow higher accuracy through more accurate language models.
+Finally, through aggressive pruning of the search space, parsing speeds can be improved hopefully without a significant impact on accuracy.</p>
+<h2>Implement Shift-Reduce Algorithm</h2>
+<p><em>July 4th - July 24th (~3 weeks)</em></p>
 <ul>
-<li>Explore the C&amp;C Parser and identify all places that need to be&nbsp;modified</li>
-<li>Modify parser to use shift-reduce algorithm instead of the <span class="caps">CKY</span>&nbsp;algorithm</li>
-<li>Create all data and run evaluation tests on the current C&amp;C&nbsp;parser</li>
+<li>Explore the C&amp;C Parser and identify all places that need to be modified</li>
+<li>Modify parser to use shift-reduce algorithm instead of the CKY algorithm</li>
+<li>Create all data and run evaluation tests on the current C&amp;C parser</li>
 </ul>
-<h2 id="integrate-with-and-extend-the-cc-parser">Integrate with and Extend the C&amp;C&nbsp;Parser</h2>
-<p><em>July 25th - 4th September (~6&nbsp;weeks)</em></p>
+<h2>Integrate with and Extend the C&amp;C Parser</h2>
+<p><em>July 25th - 4th September (~6 weeks)</em></p>
 <ul>
-<li>Train perceptron/<span class="caps">MIRA</span> to drive search decisions during&nbsp;parsing</li>
-<li>Use beam search on top of supertagging to improve parsing&nbsp;speed</li>
+<li>Train perceptron/MIRA to drive search decisions during parsing</li>
+<li>Use beam search on top of supertagging to improve parsing speed</li>
 </ul>
-<h2 id="optimisation-and-evaluation">Optimisation and&nbsp;Evaluation</h2>
-<p><em>5th September - 2nd October (~4&nbsp;weeks)</em></p>
-<p><span class="caps">ALTA</span> 2011 Deadline: <em>14th&nbsp;September</em></p>
+<h2>Optimisation and Evaluation</h2>
+<p><em>5th September - 2nd October (~4 weeks)</em></p>
+<p>ALTA 2011 Deadline: <em>14th September</em></p>
 <ul>
-<li>In-place PoS/<span class="caps">CCG</span> tagging to improve accuracy and allow better&nbsp;disambiguation</li>
-<li>Investigate issues related to speed, such as aggressive pruning of search tree or engineering decisions and choices made by the C&amp;C&nbsp;framework</li>
-<li>Evaluate against CCGbank dependencies and identify errors that&nbsp;occur</li>
-<li>Compare this parser against C&amp;C and Zhang and Clark&#8217;s shift-reduce <span class="caps">CCG</span> parser&nbsp;directly</li>
+<li>In-place PoS/CCG tagging to improve accuracy and allow better disambiguation</li>
+<li>Investigate issues related to speed, such as aggressive pruning of search tree or engineering decisions and choices made by the C&amp;C framework</li>
+<li>Evaluate against CCGbank dependencies and identify errors that occur</li>
+<li>Compare this parser against C&amp;C and Zhang and Clark's shift-reduce CCG parser directly</li>
 </ul>
-<h2 id="poster-and-final-thesis-write-up">Poster and Final Thesis&nbsp;Write-up</h2>
-<p><em>3rd October - &#8230; (~4&nbsp;weeks)</em></p>
-<p><span class="caps">ACL</span> 2012 Deadline: <em>15th&nbsp;January</em></p>
-
+<h2>Poster and Final Thesis Write-up</h2>
+<p><em>3rd October - ... (~4 weeks)</em></p>
+<p>ACL 2012 Deadline: <em>15th January</em></p>
 	
 </div>
 
@@ -131,10 +109,8 @@ Finally, through aggressive pruning of the search space, parsing speeds can be i
 
     </div>
 
-    
     <footer>
       <p><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Under the Creative Commons License</a></p>
     </footer>
 </body>
 </html>
-

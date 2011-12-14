@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+  <head>
+    <title>
+      
+      Smerity.com : Shift-Reduce Parsing with a Graph-Structured Stack
+      
+    </title>
+    <link rel="SHORTCUT ICON" href="/media/images/favicon.ico">
+
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <link href="/media/css/reset.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/typography.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/base.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/pygments.css" type="text/css" rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-470775-5']);
+      _gaq.push(['_setDomainName', 'smerity.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+  </head>
+
+  <body>
+    <div class="topfloat">
+      <header id="masthead">
+        <h1>
+          <a href="/">Smerity</a>
+        </h1>
+      </header>
+
+      <nav>
+        <ul>
+          <a href="/articles/articles.html"><li>Articles</li></a>
+          <a href="/abme.html"><li>About Me</li></a>
+          <a href="/define.html"><li>Define Me</li></a>
+        </ul>
+      </nav>
+    </div>
+
+    <div id="content">
+      
+
+
+
+<div id="content-header">
+    <h1>Shift-Reduce Parsing with a Graph-Structured Stack</h1>
+    <span class="post-date">02 December 2011</span>
+</div>
+
+
+
+
+
+
+
+
+<div id="post-content">
+	
+        <p>During my Honours thesis, I was performing <a href="http://en.wikipedia.org/wiki/Natural_language_processing">natural language parsing</a> (NLP).
+NLP aims to allow computers to efficiently analyze, understand and even generate natural language.</p>
+<p>My focus was on parsing language, or determining the structure of a sentence.
+This is similar to parsing programming languages, something you're more likely familiar with, except that natural language is ambiguous.
+The phrase "<em>I saw the girl on the hill with the telescope</em>" has many possible different derivations, for example.
+A few example interpretations: the girl may be on the hill, the girl may be on the hill which has a telescope, the girl may have set up her telescope on the hill or you may have seen her with a telescope.</p>
+<p>This ambiguity makes parsing a difficult task as there may be millions of different possible derivations.
+Whilst there are ways to do this efficiently (with the <a href="http://en.wikipedia.org/wiki/CYK_algorithm">CKY algorithm</a> being one of the most popular), I had to perform the parsing incrementally.
+This led me to use <a href="http://en.wikipedia.org/wiki/Bottom-up_parsing#Algorithm:_Shift-reduce_parsing">shift-reduce (SR) parsing</a>.
+SR parsing is quite popular amongst programming language parsing as it's quite efficient for unambiguous languages.
+For ambiguous languages, however, parsing takes worst-case exponential time.
+With the addition of a relatively unexplored data structure, the <a href="http://en.wikipedia.org/wiki/Graph-structured_stack">Graph-Structured Stack</a> (GSS), this can be reduced down to worst-case polynomial time.</p>
+<h2>Shift-Reduce Parsing</h2>
+<div class="codehilite"><pre><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># Start with the empty stack -- ∅</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;D&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;E&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
+<span class="c"># stack = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;]</span>
+</pre></div>
+
+
+<div align="center">
+<img src="/media/images/articles/2011/gss/exponential.png" />
+</div>
+
+<h3>Deterministic Recogniser SR Parser</h3>
+<div class="codehilite"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+
+<span class="n">sent</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s">&quot;ABCDEI&quot;</span><span class="p">))</span>
+<span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rules</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;F&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;G&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;H&quot;</span><span class="p">),</span>
+
+  <span class="p">((</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">prev_stack</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">while</span> <span class="n">sent</span> <span class="ow">or</span> <span class="n">prev_stack</span> <span class="o">!=</span> <span class="n">stack</span><span class="p">:</span>
+  <span class="c"># Print out the stack and store it for later comparison</span>
+  <span class="k">print</span> <span class="s">&quot;Stack:&quot;</span><span class="p">,</span> <span class="n">stack</span>
+  <span class="n">prev_stack</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[:]</span>
+  <span class="c"># Try all reduction rules</span>
+  <span class="k">for</span> <span class="n">rule</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">):])</span> <span class="o">==</span> <span class="n">rule</span><span class="p">:</span>
+      <span class="k">print</span> <span class="s">&quot;+ Reduce with </span><span class="si">%r</span><span class="s"> =&gt; </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+      <span class="p">[</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">]</span>
+      <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+      <span class="k">continue</span>
+  <span class="c"># If there are tokens left in the input, shift</span>
+  <span class="k">if</span> <span class="n">sent</span><span class="p">:</span>
+    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sent</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+    <span class="k">print</span> <span class="s">&quot;+ Shift on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+
+<h2>The Graph-Structured Stack</h2>
+<p>The graph-structured stack is based around three key concepts:</p>
+<ul>
+<li>Splitting</li>
+<li>Combining</li>
+<li>Local Ambiguity Packing</li>
+</ul>
+<h3>Splitting</h3>
+<p>The graph-structured stack makes the <em>reduce</em> operation non-destructive by creating a new head for each possible derivation.
+Below we can see there are now four heads to the graph structured stack.</p>
+<div align="center">
+<img src="/media/images/articles/2011/gss/splitting.png" />
+</div>
+
+<h3>Combining</h3>
+<p>When a new node is <em>shifted</em>, it is combined with each of the heads of the graph-structured stack.
+This means that only a single shift operation is needed instead of <strong>n</strong> shift operations where <strong>n</strong> is the number of possible derivations in the previous step.</p>
+<div align="center">
+<img src="/media/images/articles/2011/gss/combining.png" />
+</div>
+
+<h3>Local Ambiguity Packing</h3>
+<p>Finally, if two reduction rules produce the same node (for whatever we define "same" as), the two nodes are merged into a single node.
+In the case below, two rules produce an equivalent node <strong>J</strong> (their stacks are equivalent as can be seen by the back pointer), so they are merged into a single <strong>J</strong> node.</p>
+<div align="center">
+<img src="/media/images/articles/2011/gss/lap.png" />
+</div>
+	
+</div>
+
+
+
+
+    </div>
+
+    <footer>
+      <p><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Under the Creative Commons License</a></p>
+    </footer>
+</body>
+</html>

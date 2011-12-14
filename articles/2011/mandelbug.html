@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+  <head>
+    <title>
+      
+      Smerity.com : Chromium Fractal plated Heisenbugs, Mandelbugs and Schrödinbugs
+      
+    </title>
+    <link rel="SHORTCUT ICON" href="/media/images/favicon.ico">
+
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <link href="/media/css/reset.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/typography.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/base.css" type="text/css" rel="stylesheet" />
+    <link href="/media/css/pygments.css" type="text/css" rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-470775-5']);
+      _gaq.push(['_setDomainName', 'smerity.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+  </head>
+
+  <body>
+    <div class="topfloat">
+      <header id="masthead">
+        <h1>
+          <a href="/">Smerity</a>
+        </h1>
+      </header>
+
+      <nav>
+        <ul>
+          <a href="/articles/articles.html"><li>Articles</li></a>
+          <a href="/abme.html"><li>About Me</li></a>
+          <a href="/define.html"><li>Define Me</li></a>
+        </ul>
+      </nav>
+    </div>
+
+    <div id="content">
+      
+
+
+
+<div id="content-header">
+    <h1>Chromium Fractal plated Heisenbugs, Mandelbugs and Schrödinbugs</h1>
+    <span class="post-date">15 December 2011</span>
+</div>
+
+
+
+
+
+
+
+
+<div id="post-content">
+	
+        <p>In my recent experiments with Coffescript and Canvas I've come across a Mandelbug in Google Chrome.
+This post won't go into too much detail about the Mandelbug I myself experienced.
+Instead, it's more a general outline of what these "bugs" are and what limitations they may eventually place on technological advances as a whole.</p>
+<h2>Sierpinski Triangle What?</h2>
+<p>The <a href="http://en.wikipedia.org/wiki/Sierpinski_triangle">Sierpinski Triangle</a> is an aesthetically pleasing fractal that can be constructed quite simply even with pen and paper.
+Start with a triangle and then drawn an upside down triangle inside of it.
+Repeat this for each of the triangles that have just been created.
+For more details, I'd encourage you to look elsewhere.</p>
+<p><center><canvas id="display" width="600" height="305"></canvas></center>
+<script src="/media/experiments/sierpinski/serp.js"></script></p>
+<p>For the programmers out there, this sort of structure is quite easily created recursively.
+The initial method I employed is spectacularly simple -- don't even draw the triangle.
+Instead, just place a dot at each of the vertices of the triangle and do this for each of the "sub-triangles" created.
+With enough dots the Sierpinski triangle emerges.
+This is where the Mandelbug popped up in Google Chrome.</p>
+<h2>Heisenbugs, Mandelbugs and Schrödinbugs?</h2>
+<p>Most people think of computer programs as deterministic machines -- they do exactly what you tell them to do and won't do anything unexpected.
+With enough investigation any bug can be prevented by working out the exact conditions that cause it.
+As computers are deterministic, the same input will result in the same output every time.</p>
+<p>Mandelbugs are caused when computers exhibit chaotic or non-deterministic behaviour.
+These bugs are caused by true non-determinism sneaking in to programs or the computer's interactions are so complex that it appears non-deterministic to a human.</p>
+<p>Below is an example of a Mandelbug seen during the creation of a Sierpinski triangle in Google Chrome.
+The expected result is on the left -- the completed triangle itself.
+On the right is what Google Chrome produces -- variations of incomplete triangles.
+Every time the browser is refreshed, a different proportion of the triangle is complete.
+The code used to generate it performs the exact same steps each time, so should always produce the same result.
+This is seen in other browsers such as Firefox.</p>
+<p><center><img src="/media/images/articles/2011/heisenbug/wtf_sierpinski_chrome_small.png" /></center></p>
+	
+</div>
+
+
+
+
+    </div>
+
+    <footer>
+      <p><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Under the Creative Commons License</a></p>
+    </footer>
+</body>
+</html>

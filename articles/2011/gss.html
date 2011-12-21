@@ -7,6 +7,7 @@
       
     </title>
     <link rel="SHORTCUT ICON" href="/media/images/favicon.ico">
+    <meta charset="utf-8">
 
     
     
@@ -99,14 +100,13 @@ SR parsing is quite popular amongst programming language parsing as it's quite e
 For ambiguous languages, however, parsing takes worst-case exponential time.
 With the addition of a relatively unexplored data structure, the <a href="http://en.wikipedia.org/wiki/Graph-structured_stack">Graph-Structured Stack</a> (GSS), this can be reduced down to worst-case polynomial time.</p>
 <h2>Shift-Reduce Parsing</h2>
-<div class="codehilite"><pre><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># Start with the empty stack -- ∅</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;D&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;E&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="c"># stack = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;]</span>
-</pre></div>
+<pre class="codehilite"><code class="language-python">stack = [] # Start with the empty stack -- ∅
+stack.append(&quot;A&quot;) # Shift
+stack.append(&quot;B&quot;) # Shift
+stack.append(&quot;C&quot;) # Shift
+stack.append(&quot;D&quot;) # Shift
+stack.append(&quot;E&quot;) # Shift
+# stack = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;]</code></pre>
 
 
 <div align="center">
@@ -114,36 +114,35 @@ With the addition of a relatively unexplored data structure, the <a href="http:/
 </div>
 
 <h3>Deterministic Recogniser SR Parser</h3>
-<div class="codehilite"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<pre class="codehilite"><code class="language-python">from collections import deque
 
-<span class="n">sent</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s">&quot;ABCDEI&quot;</span><span class="p">))</span>
-<span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">rules</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;F&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;G&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;H&quot;</span><span class="p">),</span>
+sent = deque(list(&quot;ABCDEI&quot;))
+stack = []
+rules = [
+  ((&quot;D&quot;, &quot;E&quot;), &quot;F&quot;),
+  ((&quot;D&quot;, &quot;E&quot;), &quot;G&quot;),
+  ((&quot;C&quot;, &quot;D&quot;, &quot;E&quot;), &quot;H&quot;),
 
-  <span class="p">((</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">)</span>
-<span class="p">]</span>
+  ((&quot;F&quot;, &quot;I&quot;), &quot;J&quot;),
+  ((&quot;G&quot;, &quot;I&quot;), &quot;J&quot;)
+]
 
-<span class="n">prev_stack</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="k">while</span> <span class="n">sent</span> <span class="ow">or</span> <span class="n">prev_stack</span> <span class="o">!=</span> <span class="n">stack</span><span class="p">:</span>
-  <span class="c"># Print out the stack and store it for later comparison</span>
-  <span class="k">print</span> <span class="s">&quot;Stack:&quot;</span><span class="p">,</span> <span class="n">stack</span>
-  <span class="n">prev_stack</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[:]</span>
-  <span class="c"># Try all reduction rules</span>
-  <span class="k">for</span> <span class="n">rule</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
-    <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">):])</span> <span class="o">==</span> <span class="n">rule</span><span class="p">:</span>
-      <span class="k">print</span> <span class="s">&quot;+ Reduce with </span><span class="si">%r</span><span class="s"> =&gt; </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-      <span class="p">[</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">]</span>
-      <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-      <span class="k">continue</span>
-  <span class="c"># If there are tokens left in the input, shift</span>
-  <span class="k">if</span> <span class="n">sent</span><span class="p">:</span>
-    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sent</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
-    <span class="k">print</span> <span class="s">&quot;+ Shift on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
+prev_stack = None
+while sent or prev_stack != stack:
+  # Print out the stack and store it for later comparison
+  print &quot;Stack:&quot;, stack
+  prev_stack = stack[:]
+  # Try all reduction rules
+  for rule, result in rules:
+    if tuple(stack[-len(rule):]) == rule:
+      print &quot;+ Reduce with %r =&gt; %r&quot; % (rule, result)
+      [stack.pop() for x in rule]
+      stack.append(result)
+      continue
+  # If there are tokens left in the input, shift
+  if sent:
+    stack.append(sent.popleft())
+    print &quot;+ Shift on %s&quot; % stack[-1]</code></pre>
 
 
 <h2>The Graph-Structured Stack</h2>

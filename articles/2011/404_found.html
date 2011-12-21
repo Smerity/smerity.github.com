@@ -7,6 +7,7 @@
       
     </title>
     <link rel="SHORTCUT ICON" href="/media/images/favicon.ico">
+    <meta charset="utf-8">
 
     
     
@@ -93,16 +94,15 @@ If, however, they are looking for the 404 Not Found page, then they found the pa
 <h2>Are you mad?</h2>
 <p>To be fair, it would not be the first time I've lost my mind, but at least one site backs me up in this!
 The <a href="http://www.github.com/404">404 page</a> over at <a href="http://www.github.com">GitHub</a> returns 200 OK when visited directly.</p>
-<div class="codehilite"><pre><span class="n">smerity</span><span class="nd">@hermes</span><span class="o">:~</span><span class="n">$</span> <span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="nl">https:</span><span class="c1">//github.com/404</span>
-<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">OK</span>
-<span class="nl">Server:</span> <span class="n">nginx</span><span class="o">/</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">4</span>
-<span class="nl">Date:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mi">16</span><span class="o">:</span><span class="mi">07</span><span class="o">:</span><span class="mi">31</span> <span class="n">GMT</span>
-<span class="n">Content</span><span class="o">-</span><span class="nl">Type:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
-<span class="n">Content</span><span class="o">-</span><span class="nl">Length:</span> <span class="mi">17461</span>
-<span class="n">Last</span><span class="o">-</span><span class="nl">Modified:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mi">04</span><span class="o">:</span><span class="mi">30</span><span class="o">:</span><span class="mi">43</span> <span class="n">GMT</span>
-<span class="nl">Connection:</span> <span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
-<span class="n">Accept</span><span class="o">-</span><span class="nl">Ranges:</span> <span class="n">bytes</span>
-</pre></div>
+<pre class="codehilite"><code class="language-java">smerity@hermes:~$ curl -I https://github.com/404
+HTTP/1.1 200 OK
+Server: nginx/1.0.4
+Date: Mon, 28 Nov 2011 16:07:31 GMT
+Content-Type: text/html
+Content-Length: 17461
+Last-Modified: Mon, 28 Nov 2011 04:30:43 GMT
+Connection: keep-alive
+Accept-Ranges: bytes</code></pre>
 
 
 <p>If this is repeated for another page that is legitimately <em>Not Found</em> then the server returns <strong>404 Not Found</strong>.</p>
@@ -119,7 +119,7 @@ By returning <strong>404 Not Found</strong> you're telling it, point blank, that
 </div></p>
 <p>GitHub's error pages both have aesthetic value (a <a href="https://github.com/404">Star Wars themed octocat</a> and a <a href="https://github.com/500">Wile E. Coyote style octocat</a>) and have received interest from <a href="http://news.ycombinator.com/item?id=2056629">the tech community</a>.
 As they return <strong>200 OK</strong>, the links from the community positively impact their Google PageRank.
-<!-- In case you're interested in the 3D effect achieved using klzzwxh:0018, there's a Javascript library called klzzwxh:0019 that may interest you. -->
+<!-- In case you're interested in the 3D effect achieved using \<Element 'a' at 0x21c3d50>, there's a Javascript library called \<Element 'a' at 0x21c3510> that may interest you. -->
 <div align="center">
 <img src="/media/images/articles/2011/blippy_404.jpg" class="smooth" alt="Blippy's 404 an animated cow" />
 </div></p>

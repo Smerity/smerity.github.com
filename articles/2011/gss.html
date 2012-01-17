@@ -7,6 +7,10 @@
 <link rel="shortcut icon" href="/media/images/favicon.ico">
 
     
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/static/js/html5.js"></script>
+<![endif]-->
 <link rel="stylesheet" type="text/css" href="/media/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
 <link rel="stylesheet" type="text/css" href="/media/css/addons.css">
@@ -59,10 +63,7 @@ With the addition of a relatively unexplored data structure, the <a href="http:/
 </pre></div>
 
 
-<div align="center">
-<img src="/media/images/articles/2011/gss/exponential.png" />
-</div>
-
+<p><img class="center" src="/media/images/articles/2011/gss/exponential.png" /></p>
 <h3>Deterministic Recogniser SR Parser</h3>
 <div class="codehilite"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 
@@ -106,23 +107,15 @@ With the addition of a relatively unexplored data structure, the <a href="http:/
 <h3>Splitting</h3>
 <p>The graph-structured stack makes the <em>reduce</em> operation non-destructive by creating a new head for each possible derivation.
 Below we can see there are now four heads to the graph structured stack.</p>
-<div align="center">
-<img src="/media/images/articles/2011/gss/splitting.png" />
-</div>
-
+<p><img class="center" src="/media/images/articles/2011/gss/splitting.png" /></p>
 <h3>Combining</h3>
 <p>When a new node is <em>shifted</em>, it is combined with each of the heads of the graph-structured stack.
 This means that only a single shift operation is needed instead of <strong>n</strong> shift operations where <strong>n</strong> is the number of possible derivations in the previous step.</p>
-<div align="center">
-<img src="/media/images/articles/2011/gss/combining.png" />
-</div>
-
+<p><img class="center" src="/media/images/articles/2011/gss/combining.png" /></p>
 <h3>Local Ambiguity Packing</h3>
 <p>Finally, if two reduction rules produce the same node (for whatever we define "same" as), the two nodes are merged into a single node.
 In the case below, two rules produce an equivalent node <strong>J</strong> (their stacks are equivalent as can be seen by the back pointer), so they are merged into a single <strong>J</strong> node.</p>
-<div align="center">
-<img src="/media/images/articles/2011/gss/lap.png" />
-</div>
+<p><img class="center" src="/media/images/articles/2011/gss/lap.png" /></p>
 
     
 <footer>

@@ -7,6 +7,10 @@
 <link rel="shortcut icon" href="/media/images/favicon.ico">
 
     
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/static/js/html5.js"></script>
+<![endif]-->
 <link rel="stylesheet" type="text/css" href="/media/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
 <link rel="stylesheet" type="text/css" href="/media/css/addons.css">
@@ -44,8 +48,10 @@ Instead, it's more a general outline of what these "bugs" are and what limitatio
 Start with a triangle and then drawn an upside down triangle inside of it.
 Repeat this for each of the triangles that have just been created.
 For more details, I'd encourage you to look elsewhere.</p>
-<p><center><canvas id="display" width="600" height="305"></canvas></center>
-<script src="/media/experiments/sierpinski/serp.js"></script></p>
+<canvas class="center" id="display" width="600" height="305"></canvas>
+
+<script src="/media/experiments/sierpinski/serp.js"></script>
+
 <p>For the programmers out there, this sort of structure is quite easily created recursively.
 The initial method I employed is spectacularly simple -- don't even draw the triangle.
 Instead, just place a dot at each of the vertices of the triangle and do this for each of the "sub-triangles" created.
@@ -63,7 +69,7 @@ On the right is what Google Chrome produces -- variations of incomplete triangle
 Every time the browser is refreshed, a different proportion of the triangle is complete.
 The code used to generate it performs the exact same steps each time, so should always produce the same result.
 This is seen in other browsers such as Firefox.</p>
-<p><center><img src="/media/images/articles/2011/heisenbug/wtf_sierpinski_chrome_small.png" /></center></p>
+<p><img class="center" src="/media/images/articles/2011/heisenbug/wtf_sierpinski_chrome_small.png" /></p>
 
     
 <footer>

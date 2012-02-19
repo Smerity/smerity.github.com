@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: PJAX and Flask</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+<link rel="stylesheet" type="text/css" href="/media/css/addons.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="white-well stretch-well container-fluid">
+    
+<div class="metadata">
+  <h1>PJAX and Flask</h1>
+  <h3 class="post-date">19 February 2012</h3>
+</div>
+<p>Recently <em>37signals</em> wrote about <a href="http://37signals.com/svn/posts/3112-how-basecamp-next-got-to-be-so-damn-fast-without-using-much-client-side-ui">improving the speed, both real and perceived, of their web application Basecamp Next</a>.
+Of the techniques discussed, they primarily focused around PJAX, extreme caching (<a href="http://www.quickmeme.com/meme/504s/">cache all the things!</a>) and infinite scrolling.<br />
+Here I'll focus just on PJAX, but the rest of the article is certainly worth reading!</p>
+<h2>Assuming I know what AJAX is, WTH is PJAX?</h2>
+<p>AJAX is commonly used to dynamically reload contents on a page without having to reload the page fully.
+Without a full page reload the client side experience is substantially improved: smoother, faster and less data shuffled back and forth.
+Unfortunately AJAX can add unwanted complexity to the codebase and doesn't degrade well for users with no Javascript.</p>
+<p><a href="https://github.com/defunkt/jquery-pjax">PJAX</a> provides a number of advantages without complicating the code substantially:</p>
+<ul>
+<li>Positive impact on the user experience (no full page reload, similar to AJAX)</li>
+<li>Degrades cleanly when Javascript is disabled</li>
+<li>Doesn't confuse / hide the user's interaction with the site from Google Analytics</li>
+<li>Page titles and the back button work as expected
+<!--+ Minimal additional code complexity--></li>
+</ul>
+<p>Although all these benefits come into play, the main one to consider is simply this: <em>transmitting and redrawing a page fully when there are shared elements is a waste</em>.</p>
+<h2>Simple PJAX Example</h2>
+<p>Imagine a fairly standard webpage layout which involves a main piece of content surrounded by a header and footer.</p>
+<div class="codehilite"><pre>  <span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+      <span class="nt">&lt;title&gt;</span>...<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;script&gt;</span><span class="p">...</span><span class="nx">JS</span> <span class="nx">that</span> <span class="nx">is</span> <span class="nx">reloaded</span> <span class="nx">and</span> <span class="nx">reconsidered</span> <span class="nx">each</span> <span class="nx">time</span><span class="p">...</span><span class="nt">&lt;/script&gt;</span>
+      <span class="nt">&lt;style&gt;</span><span class="o">..</span><span class="nc">.Style</span> <span class="nt">that</span> <span class="nt">is</span> <span class="nt">reloaded</span> <span class="nt">and</span> <span class="nt">reconsidered</span> <span class="nt">each</span> <span class="nt">time</span><span class="o">...</span><span class="nt">&lt;/style&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+
+    <span class="nt">&lt;body&gt;</span>
+      <span class="nt">&lt;header&gt;</span>...<span class="nt">&lt;/header&gt;</span>
+
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main-content&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+
+      <span class="nt">&lt;footer&gt;</span>..<span class="nt">&lt;/footer&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+  <span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+<p>Everything before and after <strong>#main-content</strong> other than the title, is a waste (assuming the Javascript and CSS styles are shared between pages).
+When PJAX requests a page, all it needs to receive is a subset of above, the title and the contents of a one element you want replaced, in this case, <strong>#main-content</strong>.</p>
+<div class="codehilite"><pre>  <span class="nt">&lt;title&gt;</span>...<span class="nt">&lt;/title&gt;</span>
+  <span class="c">&lt;!-- contents of #main-content --&gt;</span>
+</pre></div>
+
+
+<p>For more details, I recommend reading the <a href="https://github.com/defunkt/jquery-pjax">brief README</a> at PJAX's Github repository.</p>
+<h2>Using PJAX in Flask</h2>
+<p>Whenever PJAX makes a request to the webserver it sets a specific header to true: <strong>X-PJAX</strong>.
+Flask's default template engine, Jinja2, is already supplied with contextual information about the headers through the <em>request</em> object, so we can simply use that to modify the template.</p>
+<p>Note that when <strong>X-PJAX</strong> is not set in the headers, Flask/Jinja2 degrade to rendering and returning the full webpage.</p>
+<div class="codehilite"><pre>  {% if &quot;X-PJAX&quot; not in request.headers %}
+  <span class="cp">&lt;!DOCTYPE html&gt;</span>
+  <span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+      <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+  {% endif %}
+
+      <span class="nt">&lt;title&gt;</span>{% block title %}{% endblock %}<span class="nt">&lt;/title&gt;</span>
+
+  {% if &quot;X-PJAX&quot; not in request.headers %}
+      {% block head %}{% endblock %}
+      {% block css %}{% endblock %}
+      {% block js %}{% endblock %}
+    <span class="nt">&lt;/head&gt;</span>
+    {% block body %}
+    <span class="nt">&lt;body&gt;</span>
+      {% block header %}
+      <span class="nt">&lt;header&gt;</span>...<span class="nt">&lt;/header&gt;</span>
+      {% endblock %}
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main-content&quot;</span><span class="nt">&gt;</span>
+  {% endif %}
+
+      {% block content %}
+      {% endblock %}
+
+  {% if &quot;X-PJAX&quot; not in request.headers %}
+      <span class="nt">&lt;/div&gt;</span>
+      {% block footer %}
+      <span class="nt">&lt;footer&gt;</span>...<span class="nt">&lt;/footer&gt;</span>
+      {% endblock %}
+    <span class="nt">&lt;/body&gt;</span>
+  <span class="nt">&lt;/html&gt;</span>
+  {% endif %}
+</pre></div>
+
+
+<p>If you use this as a base template (<strong>_base.html</strong> or similar), all the pages that can benefit from PJAX will.
+Best of all, next to zero programmer attention is required!</p>
+
+    
+<footer>
+  &copy; Stephen Merity
+</footer>
+
+  </div>
+  
+  </body>
+</html>

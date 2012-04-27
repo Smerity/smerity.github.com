@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: Fast Facebook OAuth Login</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+<link rel="stylesheet" type="text/css" href="/media/css/addons.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="white-well stretch-well container-fluid">
+    
+<div class="metadata">
+  <a class="pull-right" href="/articles/articles.html">&larr; To the Articles...</a>
+  <h1>Fast Facebook OAuth Login</h1>
+  <h3 class="post-date">24 April 2012</h3>
+</div>
+  <!--
+  <a href="/abme.html">
+  <img src="/media/images/postage-smerity.png" style="
+  width: 100px;
+  -webkit-transform: rotate(4deg);
+  float: right;
+  ">
+  </a>
+  -->
+<p>The <a href="http://developers.facebook.com/docs/authentication/server-side/">Facebook OAuth login</a> is used everywhere on the web but is slow.
+In order to complete the server-side authentication, many round trips are required before you can confirm the person's identity.</p>
+<h2>The Issue</h2>
+<p>The diagram below describes the round trips involved in performing an OAuth login via Facebook.
+Notice there's a lot of them...
+The user needs to endure at minimum three round trips, bouncing between your site and Facebook itself.
+Your server also needs to do two round trips to Facebook on top of that before confirming the user's identity.</p>
+<div align="center">
+    <a href="http://developers.facebook.com/docs/authentication/server-side/" target="_blank">
+        <img class="smooth" width="519px" height="362px" src="/media/images/articles/2012/fb_login_process.png">
+    </a>
+</div>
+
+<p>These round trips take a good chunk of time.
+There's also the risk that the call to the Facebook API will never return or experience lag (maybe even tripping a timeout) -- not uncommon in my experience.
+Sadly, there's not too much of this process that can be optimised away other than the call to <code>/me</code>.
+It'd be optimal if at least we could skip the <code>/me</code> call.</p>
+<p>In a perfect world, Facebook would send back <code>{<b>user_id</b>, access_token, expires}</code> -- but this isn't a perfect world, we only get the latter two =[</p>
+<!--
+In the olden days the access token could actually be parsed for the user's Facebook ID (in an undocumented fashion of course).
+That's no longer true.
+-->
+
+<h2>Optimal Theoretical Solution: Caching</h2>
+<p class="alert alert-info">
+Use just the <code>{access token, expires}</code> tuple to identify the user (without access to their Facebook ID or <code>/me</code>)
+</p>
+
+<ul>
+<li>Facebook's reply to OAuth is only the access token and the expire time</li>
+<li><em>Assume</em> the access token is still valid and linked to the user (<span class="alert-error">do not like</span>)</li>
+</ul>
+<p>The word <em>assume</em> in that sentence scares the hell out of me as I hope it does for you.
+I don't like to <em>assume</em> identities when the user is logging in to my application.
+Whilst valid access tokens for an application need to be unique (as otherwise Facebook couldn't perform look-ups using them), nowhere does Facebook explicitly say that they won't re-use old invalid tokens for different users.</p>
+<p class="alert alert-error">
+If an old invalid token T from user A is later re-used for user B, your application could log user A in as user B
+</p>
+
+<p>What about using the expires time that comes along with the access token (see <a href="https://developers.facebook.com/tools/debug/access_token">Access Token Debugger</a> for more details).
+One could use both values, <code>{access token, expires}</code>, to uniquely identify the given access token.
+If a new access token has been issued to a different user of your application, they should have different exires.
+Thought it sounds reasonable I wouldn't necessarily trust that method without feedback from Facebook developers -- a mistake is far too costly in a step as important as the authentication process.</p>
+<h2>Sub-optimal Practical Solution: Smooth the Flow</h2>
+<p class="alert alert-info">
+If you can't get speed, go for interactivity -- one long unresponsive load becomes two responsive ones
+</p>
+
+<p>To make the login process flow better, one could break the <code>/oauth/authorize</code> and <code>/me</code> Facebook API requests into two pages:</p>
+<ul>
+<li>Page 1: <code>/oauth/authorize</code> &rarr; <strong>Loading user details...</strong></li>
+<li>Redirect to <em>Page 2</em> either (a) after a predefined timeout limit or (b) when the server informs the user that the <code>/me</code> request is complete</li>
+<li>Page 2: Normal application</li>
+</ul>
+<p>The optimal way of completing the redirect is via real-time Javascript push notifications (such as <a href="http://socket.io/">Socket.io</a>).
+This way the user can be alerted immediately when the Facebook API request has returned.
+The less optimal method is a stock standard redirect after a predefined amount of time, looping until your application has completed the API request.</p>
+
+    
+<footer>
+  &copy; Stephen Merity
+</footer>
+
+  </div>
+  
+  </body>
+</html>

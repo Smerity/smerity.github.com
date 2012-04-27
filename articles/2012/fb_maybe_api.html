@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: The Facebook (Maybe) API</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+<link rel="stylesheet" type="text/css" href="/media/css/addons.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="white-well stretch-well container-fluid">
+    
+<div class="metadata">
+  <a class="pull-right" href="/articles/articles.html">&larr; To the Articles...</a>
+  <h1>The Facebook (Maybe) API</h1>
+  <h3 class="post-date">23 April 2012</h3>
+</div>
+  <!--
+  <a href="/abme.html">
+  <img src="/media/images/postage-smerity.png" style="
+  width: 100px;
+  -webkit-transform: rotate(4deg);
+  float: right;
+  ">
+  </a>
+  -->
+<p>The Facebook API is a demon I've had to deal with on a regular basis recently.
+Here I'll rant and rave the demonic possession out of me.</p>
+<h2>Backstory</h2>
+<p class="alert alert-info">
+The sorry state of Facebook's API is not exactly a secret.
+</p>
+
+<p>At <a href="http://www.freelancer.com/">Freelancer.com</a> I had to deal with the Facebook API for the <a href="http://scavenger.freelancer.com/">Scavenger Hunt</a> and other random tidbits.
+It wasn't really liked by anyone on the team.
+In fact, I've yet to meet anyone who <em>really</em> likes the Facebook API at all.
+Now that I'm working for myself I can't say I'm any happier with the API, even when starting from a clean slate.</p>
+<p>I've been trying to surmise the issues I've commonly hit and it boils down to:</p>
+<ul>
+<li>No clear set of "best practices" to follow</li>
+<li>Too many choices with deprecation lurking around every corner (login =&gt; Oauth [<em>client side</em>, <em>server side</em>, <em>client side passing on to server side</em>, <em>FBML</em>, <em>codes</em>, <em>access tokens</em>])</li>
+<li>The documentation doesn't conform to the implementation</li>
+<li>The API has been monkey patched too many times to count</li>
+<li>Hidden but used undocumented functions that people are tempted to use as they don't know if there are any other options [see best practices] (<em>autologoutlink</em>)</li>
+</ul>
+<p>Why can they get away with it? They're essentially a monopoly in the social space, like Microsoft was with desktops...</p>
+<p class="alert alert-error">
+Developers bend over backwards to secure more users &rarr; more revenue
+</p>
+
+<h2>The Facebook Query Language (FQL)</h2>
+<p>According to Facebook, <a href="http://developers.facebook.com/docs/reference/fql/">FQL</a> <em>enables you to use a SQL-style interface to query the data exposed by the Graph API</em>.
+Excellent, that sort of power sounds nice -- I don't even need to bring batteries.
+So, Facebook, I'm a stock standard Facebook application or website using your tech stack -- what do my common queries look like?</p>
+<p>Oh... No answer..? Oh, and limited documentation? What about some standard queries to get me started?</p>
+<ul>
+<li>Do I have any <strong>friends already in my application</strong>? [interaction]
+<!--+ Are any of my friends in the application online currently?--></li>
+<li>Get all my statuses that <strong>contain</strong> "hapax legomenon" [searching]</li>
+<li>Get ten recent photos that are <strong>publically viewable</strong> [privacy]</li>
+<li>...</li>
+</ul>
+<p>If nothing else, the first one seems like a reasonable example considering damn near every Facebook application would use it or a variation of it!
+Sadly, there's not a mention of it anywhere. Good luck with that. The latter questions don't get any easier.
+In case you were wondering...</p>
+<p class="alert alert-info">
+SELECT uid FROM user WHERE is_app_user=1 and uid IN (SELECT uid2 FROM friend WHERE uid1 = me())
+</p>
+
+<p>Oh, you had <em>has_added_app</em> instead of <em>is_app_user</em>?
+Sorry, that's deprecated -- you shouldn't rely on old StackOverflow answers quite so much!</p>
+<h2>Frustration... and some rawr-i-ness</h2>
+<p>Facebook have the power.<br />
+Developers <em>need</em> to bend their apps to conform to the Facebook platform.<br />
+Yet Facebook doesn't work in the interest of the developer or the user.</p>
+<p>Even if the Facebook API required you to lick shards of broken glass off the floor, developers would persevere to work out how best to pick glass shards out of their teeth.</p>
+<p>As it now stands, the <a href="http://developers.facebook.com/docs/authentication/">Facebook login process</a> for my app is not seamless, but it works...
+It's the wrong tactic for allowing <a href="http://developers.facebook.com/docs/authentication/canvas/">direct logins from Facebook Canvas redirects</a> but I don't care.
+Whether any of this matters to the users I'll have to wait and see.
+Will they notice the <a href="http://developers.facebook.com/docs/reference/dialogs/oauth/">full page Oauth login dialog</a> and yearn for a popup Oauth login dialog?
+No clue.</p>
+<p>"Smerity, if it pains you so much, why don't you just not support Facebook?
+You know you're part of the problem right?"</p>
+<p><em>Ah... Uhm... Argh...</em> No comment.</p>
+<p><strong>&lt;EOF&gt;</strong></p>
+
+    
+<footer>
+  &copy; Stephen Merity
+</footer>
+
+  </div>
+  
+  </body>
+</html>

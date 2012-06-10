@@ -79,7 +79,7 @@ Hopefully this helps short circuit the confusion =]</p>
 <h2>Problem Definition</h2>
 <p>David Chaum introduced the problem in his paper <a href="http://www.cs.cornell.edu/people/egs/herbivore/dcnets.html">The Dining Cryptographers Problem: Unconditional Sender and Recipient Untraceability</a>:</p>
 <p class="alert alert-info">
-Three cryptographers are sitting down to dinner at their favorite three-star restaurant. Their waiter informs them that arrangements have been made with the maitre d'hotel for the bill to be paid anonymously. One of the cryptographers might be paying for the dinner, or it might have been NSA (U.S. National Security Agency). The three cryptographers respect each other's right to make an anonymous payment, but they wonder if NSA is paying. <!--They resolve their uncertainty fairly by carrying out the following protocol...-->
+Three cryptographers are sitting down to dinner at their favorite three-star restaurant. Their waiter informs them that arrangements have been made with the maitre d'hotel for the bill to be paid anonymously. One of the cryptographers might be paying for the dinner, or it might have been the NSA (U.S. National Security Agency). The three cryptographers respect each other's right to make an anonymous payment, but they wonder if the NSA is paying.
 </p>
 
 <!--
@@ -113,7 +113,7 @@ B = (b ^ a)
 C = (c ^ b)  
 -->
 
-<p>Finally, we xor all the computed values together.
+<p>Finally, we xor all these computed values together.
 If everyone is telling the truth about their computed values, then the result should be zero as all the values cancel out.</p>
 <p>A ^ B ^ C<br />
 = (a ^ c) ^ (b ^ a) ^ (c ^ b)<br />
@@ -131,7 +131,7 @@ For example, if B had actually paid for the meal...</p>
 = X ^ ¬X<br />
 = 1</p>
 <div class="alert alert-info">
-Thus, as long as the benevolent cryptographer flips their computed value (assuming they exist):
+Thus, as long as the benevolent cryptographer flips their computed value:
 
 <ul>
     <li>If the result is 0 then the NSA have paid for the meal</li>

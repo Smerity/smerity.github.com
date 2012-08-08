@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: Installing Vanilla Forums with performance in mind</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+<link rel="stylesheet" type="text/css" href="/media/css/addons.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="white-well stretch-well container-fluid">
+    
+<div class="metadata">
+  <a class="pull-right" href="/articles/articles.html">&larr; To the Articles...</a>
+  <h1>Installing Vanilla Forums with performance in mind</h1>
+  <h3 class="post-date">08 August 2012</h3>
+</div>
+  <!--
+  <a href="/abme.html">
+  <img src="/media/images/postage-smerity.png" style="
+  width: 100px;
+  -webkit-transform: rotate(4deg);
+  float: right;
+  ">
+  </a>
+  -->
+<p>As one of my recent side projects, I needed a forum and whilst there are many options out there, I decided on <a href="http://www.vanillaforums.org">Vanilla Forums</a>.
+Unfortunately, the documentation for installing Vanilla Forums on your own server is lacking, especially if you're concerned about performance.
+To help, I'll explain in this guide how to install and achieve the best possible performance on your own Vanilla Forums install.</p>
+<h2>Pre-requisites</h2>
+<p>For this, I'm assuming you're going to be installing Vanilla Forums on your own VPS or dedicated server.
+Bits and pieces of these instructions may be helpful for intalling on shared hosting but are certainly not tailored for that.
+I also presume you have basic Unix/Linux knowledge.</p>
+<h2>A performant Vanilla Forums install</h2>
+<p>These instructions will work on a standard <a href="http://www.ubuntu.com/download/server">Ubuntu server</a> installation and should be easily modified to fit other Linux distributions.</p>
+<h3>PHP</h3>
+<p>As Vanilla Forums is written in PHP, and PHP is not the fastest language around, it's not a bad idea to start there. If you're happy with package managers handling the versioning, it's quite straight forward in Ubuntu:</p>
+<p><code>sudo apt-get install php5 php5-gd php5-curl php5-memcache php5-mysql php5-cli php5-cgi php5-fpm spawn-fcgi php-apc</code></p>
+<p>This installs...</p>
+<ul>
+<li>php5 -- the base runtime for the language</li>
+<li>php5-gd -- an image library for PHP required for avatar creation or modification</li>
+<li>php5-curl -- a HTTP library required for a number of core plugins (such as Facebook connect)</li>
+<li>php5-mysql -- a module that allows PHP to talk to a MySQL compatible database</li>
+<li>php-apc -- an opcode cacher for PHP that will trivially improve performance substantially</li>
+</ul>
+<p class="alert alert-info">
+<b>Performance Point:</b> The Alternative PHP Cache (APC) is one of the most commonly overlooked tools in your speed arsenal.
+Just by turning it on you can improve page load and requests per second by caching PHP opcodes from previous requests.
+<br />
+On my install of Vanilla Forums on modest hardware, enabling PHP-APC increases the requests per second from 26 to 57.
+</p>
+
+<h3>Nginx</h3>
+<p>Unless you have a particular reason to go with Apache, Nginx will provide a speedier and somewhat less painful experience than Apache. Running <code>sudo apt-get install nginx</code> is all you really need.</p>
+<p>For setting up PHP on Nginx, following <a href="http://library.linode.com/web-servers/nginx/php-fastcgi">the guides at Linode</a> will work fine whilst <a href="http://blog.bigdinosaur.org/vanilla-forum-on-nginx/">the Nginx configuration to run Vanilla Forums</a> can be gleaned as well.</p>
+<h3>MySQL / MySQL compatible database</h3>
+<p>Vanilla Forums is backed by MySQL or a compatible replacement such as <a href="http://www.percona.com/software/percona-server/">Percona Server</a>.
+Looking at the state of the database abstraction layer, I don't see it supporting any other database backends in the near future.</p>
+<p>Percona has been shown to improve many types of queries and is a drop-in replacement.
+This means that if you find your database having trouble in the future, you can trivially move from MySQL to Percona Server just by restarting your server.</p>
+<h3>How to use memcached with Vanilla Forums</h3>
+<p>Memcache is an enormous performance booster, especially for pages with common database queries, and is a fundamental tool in any large scale website.
+Assuming you only want to use a local memcache instance, adding it is trivial. Running <code>sudo apt-get install memcached</code> will get you a service on Ubuntu that runs with sane defaults and launches memcached as a service.
+Then you can add to <code>conf/config.php</code> two simple lines:</p>
+<div class="codehilite"><pre>$<span class="n">Configuration</span><span class="p">[</span><span class="s">&#39;Cache&#39;</span><span class="p">][</span><span class="s">&#39;Enabled&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">TRUE</span><span class="p">;</span>
+$<span class="n">Configuration</span><span class="p">[</span><span class="s">&#39;Cache&#39;</span><span class="p">][</span><span class="s">&#39;Method&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#39;memcache&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p class="alert alert-info">
+<b>Performance Point:</b> Adding memcached results in a significant performance increase, from 44 requests per second up to 57 for the main page.
+Depending on the pages visited and the underlying use of cache by the given controller and view, this may be higher or lower on other pages.
+</p>
+
+<p>To ensure that it's working as expected, you can check Memcache's stats by issuing the command <code>echo stats | nc 127.0.0.1 11211</code>.
+If <code>get_hits</code> increases as you reload your page (I'd suggest testing with something similar to Apache's bechmark tool <code>ab</code>), then your memcache install is working.</p>
+<h3>Testing with Apache Benchmark</h3>
+<p>There are numerous tools to load test your website with, but the simplest is Apache Benchmark, or <code>ab</code>, that comes with <code>apache2-utils</code>.</p>
+<p>Hopefully you'll see performance increases in line with mine.
+If not, keep calm, tweak, benchmark, and then smile as the numbers make you feel better.
+Good luck! =]</p>
+<hr />
+<p class="alert alert-info alert-concise">
+  <b>Want more?</b> Follow me on Twitter at <a href="https://twitter.com/Smerity">@smerity</a> or reach me at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+</p>
+
+    
+<footer>
+  &copy; Stephen Merity
+</footer>
+
+  </div>
+  
+  </body>
+</html>

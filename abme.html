@@ -11,10 +11,12 @@
 <!--[if lt IE 9]>
   <script src="/media/js/html5.js"></script>
 <![endif]-->
-<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="/media/bootstrap/css/bootstrap-responsive.css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
 <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
-<link rel="stylesheet" type="text/css" href="/media/css/addons.css">
 
     
 <script type="text/javascript" src="/media/js/jquery.js"></script>
@@ -39,7 +41,7 @@
 <header class="navbar">
   <nav class="navbar-inner">
     <div class="container-fluid">
-      <a class="brand" href="/">Smerity</a>
+      <a class="brand" href="/">Smerity (n):</a>
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -58,22 +60,13 @@
 </header>
 
   
-  <div class="white-well stretch-well container-fluid">
+  <div class="container">
     
-<div class="metadata">
-  <a class="pull-right" href="/articles/articles.html">&larr; To the Articles...</a>
-  <h1>About Me</h1>
-  
-</div>
-  <!--
-  <a href="/abme.html">
-  <img src="/media/images/postage-smerity.png" style="
-  width: 100px;
-  -webkit-transform: rotate(4deg);
-  float: right;
-  ">
-  </a>
-  -->
+      <div class="row">
+      <div class="span8 content-box">
+      
+<h1 class="post-title">About Me</h1>
+
 <p>My name is Stephen Merity, though I'm more commonly referred to as Smerity.
 For more details you can view my <a href="/media/files/resume.pdf">resume</a> or contact me in person at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>.</p>
 <p>Searching for <em>Smerity</em> will find most places I've inhabited online.
@@ -81,15 +74,25 @@ If you're interested, almost all my Facebook communications are public as it all
 <p><a href="http://www.facebook.com/people/Stephen_Merity/606479711" title="Stephen Merity's Facebook profile" target=_TOP>
 <img src="http://badge.facebook.com/badge/606479711.159.1065599225.png" border=0 alt="Stephen Merity's Facebook profile">
 </a></p>
-<p><a href="http://profiles.google.com/smerity"><img alt="Smerity @ Google+" src="/media/images/google-plus.png" /></a>
+<!--
+[![Smerity @ Google+](/media/images/google-plus.png)](http://profiles.google.com/smerity)
 &nbsp;&nbsp;
-<a href="https://github.com/Smerity/"><img alt="Smerity @ Github" src="/media/images/github.png" /></a>
+[![Smerity @ Github](/media/images/github.png)](https://github.com/Smerity/)
 &nbsp;&nbsp;
 <a href="http://au.linkedin.com/in/smerity" >
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" border="0" alt="View Stephen Merity's profile on LinkedIn">
 </a>
 &nbsp;&nbsp;
-<a href="https://www.twitter.com/Smerity/"><img alt="Smerity @ Twitter" src="/media/images/twitter.png" /></a></p>
+[![Smerity @ Twitter](/media/images/twitter.png)](https://www.twitter.com/Smerity/)
+-->
+
+<p>Curious where you can find me online?<br />
+<a href="http://profiles.google.com/smerity">Smerity&nbsp;@&nbsp;Google+</a><br />
+<a href="https://github.com/Smerity/">Smerity&nbsp;@&nbsp;Github</a><br />
+<a href="http://au.linkedin.com/in/smerity" >
+Smerity&nbsp;@&nbsp;LinkedIn
+</a><br />
+<a href="https://www.twitter.com/Smerity/">Smerity&nbsp;@&nbsp;Twitter</a></p>
 <!--
 ## University & Work
 I've recently completed the [Bachelor of Information Technology](http://sydney.edu.au/courses/Bachelor-of-Information-Technology) at the University of Sydney, receiving First Class Honours and [University Medal](http://en.wikipedia.org/w/index.php?title=University_Medal&oldid=410146835#Australia). The majority of my work was with Dr James Curran and Schwa Lab at the University of Sydney on NLP research.
@@ -119,14 +122,48 @@ I've also spent a deal of time play with a wide range of other topics, including
 <p>A true "about me" would have to mention NCSS.
 NCSS is the <a href="http://www.ncss.edu.au">National Computer Science School</a>, a summer school run at the University of Sydney involving talented high school students from all over Australia. Having had the privilege of going there six times (first in 2007 as a student, then in 2008 as a returning student and finally as a tutor in 2009, 2010, 2011 and 2012) I can honestly say it was one of the most delightful experiences of my entire life.
 If you're a student or know someone that general age, sign up to <a href="http://www.ncss.edu.au">NCSS</a> or into <a href="http://challenge.ncss.edu.au">NCSS Challenge</a>!</p>
-<hr />
-<p class="alert alert-info alert-concise">
-  <b>Want more?</b> Follow me on Twitter at <a href="https://twitter.com/Smerity">@smerity</a> or reach me at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
-</p>
 
+      </div>
+      
+        <div class="span3 content-box" style="padding: 0">
+          <div class="hero-box">
+            <h1 class="slogan">Hi, I'm Smerity!</h1>
+          </div>
+          <div style="padding: 20px">
+            <div align="center">
+              
+              <img class="pronounced" src="/media/images/smerity_barcode.jpg" />
+            </div>
+            <p>
+              Hi, I'm <b>Stephen Merity</b>, better known as <b>Smerity</b>.
+            </p>
+            <p>
+              I spend my time doing what I enjoy, which is primarily some mix of coding, teaching and writing.
+              I've not yet had to live through a job I didn't enjoy.
+            </p>
+
+            <h4>Interested in saying hi?</h4>
+            <p>
+                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+            </p>
+            <p>
+                
+                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
     
 <footer>
-  &copy; Stephen Merity
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you cake, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="64" width="64" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
 </footer>
 
   </div>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: Big Ints Between Python, PyPy, Go and Java</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity (n):</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/consulting.html">Consulting</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-box">
+      
+<h1 class="post-title">Big Ints Between Python, PyPy, Go and Java</h1>
+<h3 class="post-date">April 14, 2013</h3>
+<p>One of the challenges I set in the Computer &amp; Network Security course's Wargames is factorisation.
+If you can factor a composite number <code>n = pq</code> where <code>p</code> and <code>q</code> are primes, then you can break RSA.
+The size of <code>n</code> we use in Wargames is quite small compared to the real world and it's mainly a bit of fun for students.
+As a given value of <code>n</code> is solved, we replace <code>n</code> with a number twice the difficulty.</p>
+<h3>Big Integers and Factorisation</h3>
+<p>Most computer architectures work most efficiently with 32 or 64 bit integers.
+Unless your computer is ancient.
+If you're browsing this on an 8 or 16 bit architecture, I commend you and would love to know!</p>
+<p>The integers used for cryptography start at 128 bits and go up.
+RSA is even more resource intensive, requiring working with integers a minimum of 1024, 2048 or 4096 bits long.
+As such, the performance of big integer operations is quite important for number theoretic cryptography.</p>
+<p>This is where I came across a surprising snag -- the low performance of Google's Go big integer library.
+The performance was poor compared to not just Java, known for being reasonably performant, but even PyPy and CPython.
+This was a shock as many suggest turning to Google Go for high performance.
+Whilst Google Go can certainly be highly performant in certain areas, I discovered it's not safe to assume it will be for a specific task.</p>
+<h3>Naive Factorisation</h3>
+<p>To get students going, I mentioned that the current value could be solved in only a few seconds using a naive Python program.
+Python isn't even the fastest language in the box, though it helps that with this task most of the work takes place in compiled CPython code, rather than Python itself.</p>
+<p>The simplest way to find a factor for a given integer <code>n</code> is <a href="http://en.wikipedia.org/wiki/Trial_division">trial division</a>:</p>
+<div class="codehilite"><pre>    <span class="n">n</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="c"># If n is even, 2 is a factor, otherwise...</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="k">print</span> <span class="n">i</span>
+      <span class="k">break</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+</pre></div>
+
+
+<p>There are <a href="http://en.wikipedia.org/wiki/Quadratic_sieve">far more</a> <a href="http://en.wikipedia.org/wiki/General_number_field_sieve">efficient methods</a>, even for trial division, but this is the simplest in terms of lines of code and understanding.
+As such, I used it to demonstrate to students how to get started for this challenge, leaving them to discover the more complex methods.</p>
+<p>During this, I discovered something quite interesting...</p>
+<h3>Big Integer Performance Across CPython, PyPy, Java and Go</h3>
+<p>To test the performance of Big Integers across CPython, PyPy, Java and Go, I created a set of small benchmarks.</p>
+<p>The challenge was to factorise <code>n = 273966616513101251352941655302036077733021013991</code> (around 157 bits).
+As CPython and PyPy can "cheat" on small tests (they use 32 or 64 bit integers until Big Integers are required), we couldn't start on a small <code>i</code> and move up incrementally.
+As such, we tried find a factor starting from <code>i = 496968652506233112158689</code> (around 78 bits) and going up.
+The starting point <code>i</code> is only 10e6 away from one of the primes <code>p</code> so is equivalent to running the loop 5e6 times.</p>
+<p>You can check out the code <a href="https://gist.github.com/Smerity/5377142">here</a>.</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Implementation
+      <th>Speed (seconds)
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>gccgo
+      <td>8.421
+    </tr>
+    <tr>
+      <td>go run
+      <td>3.516
+    </tr>
+    <tr>
+      <td>python
+      <td>1.880
+    </tr>
+    <tr>
+      <td>java
+      <td>1.656
+    </tr>
+    <tr>
+      <td>pypy
+      <td>1.148
+    </tr>
+  </tbody>
+</table>
+
+<p>What's most impressive here is that CPython performs so well.
+In this task, the majority of the computational work takes place deep in the depths of CPython, using compiled and optimised C code.</p>
+<h3>Conclusion</h3>
+<p>Google Go is a promising language and I expect great things from the future.
+For certain tasks, specifically anything that can utilise goroutines, it can make your code faster and simpler than ever before.
+Assuming that it is highly performant, however, may well be a mistake.
+Benchmark, benchmark and benchmark before dedicating substantial time pushing a CPU intensive task into Go or any other language.</p>
+<p>Over time, this situation will improve.
+Whilst I need to look into the situation in more detail, it appears <a href="https://groups.google.com/forum/?fromgroups=#!searchin/golang-nuts/Is$20Go$20%22big%22$20package$20slow?$20is$20Go$20slow?/golang-nuts/ChpHRdGU8ks/gyhBjheZmSEJ">Go's 6g compiler had an implementation of the big package with assembler implementations that hadn't been ported to gccgo</a>.</p>
+
+      </div>
+      
+        <div class="span3 content-box" style="padding: 0">
+          <div class="hero-box">
+            <h1 class="slogan">Hi, I'm Smerity!</h1>
+          </div>
+          <div style="padding: 20px">
+            <div align="center">
+              
+              <img class="pronounced" src="/media/images/smerity_barcode.jpg" />
+            </div>
+            <p>
+              Hi, I'm <b>Stephen Merity</b>, better known as <b>Smerity</b>.
+            </p>
+            <p>
+              I spend my time doing what I enjoy, which is primarily some mix of coding, teaching and writing.
+              I've not yet had to live through a job I didn't enjoy.
+            </p>
+
+            <h4>Interested in saying hi?</h4>
+            <p>
+                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+            </p>
+            <p>
+                
+                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you cake, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="64" width="64" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  </body>
+</html>

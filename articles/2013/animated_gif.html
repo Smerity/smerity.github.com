@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Smerity.com: The Mystery of the Spotty Animated GIF</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity (n):</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/consulting.html">Consulting</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-box">
+      
+<h1 class="post-title">The Mystery of the Spotty Animated GIF</h1>
+<h3 class="post-date">March 21, 2013</h3>
+<p>A short post about an interesting optimisation "hack" I stumbled upon.</p>
+<p>Have you ever posted an animated GIF to an application or website that didn't like the idea of motion?<br />
+You likely ended up with a horrible, strange looking freeze frame.</p>
+<p><img class="center" src="/media/images/articles/2013/the_spotty_gif_small.gif" class="smooth" /></p>
+<p>I know.
+You've pondered this question for the longest time.
+It has haunted your dreams.
+Why such a strange screenshot?
+What madness is happening?
+Is my computer cursed?
+Did I accidentally poke holes in my RAM again?</p>
+<p><a href="http://en.wikipedia.org/wiki/Graphics_Interchange_Format">GIF</a>, if you didn't know, is a most marvelously strange image format.
+It was introduced in 1987 and only supports 256 colours in an image.
+It has been plagued by lawsuits, poor algorithms, poor defaults, and lolcats.
+Actually, to be fair, I shouldn't be dissing the lolcats.
+The lolcats are probably what made it so resilient to change.
+Other formats have come and gone, but nothing has replaced the vehicle of the lolcats, our beloved GIF.</p>
+<h3>So why the spots, Doc?</h3>
+<p>GIF didn't have fancy techniques like spatial image compression or temporal motion compensation like these fancy new video formats.
+GIF's old.
+It predates the CD.
+It predates me!
+Instead, GIF uses an interesting little hack called <a href="http://www.imagemagick.org/Usage/anim_opt/#opt_trans">Transparency Optimisation</a> to optimise animations.</p>
+<p>Uncompresesd GIF animations store the full frame for each and every image.
+As you might guess, that gets pretty large pretty quickly.
+Wouldn't it be nice if you could just paint over the top of the previous frame?
+That's exactly what GIF does.</p>
+<p>One of the colours you can select is transparent.
+GIF doesn't support semi-transparency (like that fancy young PNG), but it does support binary transparency.
+Binary transparency is simple: either you see the colour or you don't.</p>
+<h3>How does that make it smaller?</h3>
+<p>One of the other advantages of GIF is that the images are compressed using the lossless <a href="http://en.wikipedia.org/wiki/Lempel-Ziv-Welch">Lempel-Ziv-Welch (LZW) technique</a>.
+LZW compresses by creating a dictionary of commonly occuring sequences and replacing them with a shorter symbol.
+These symbols are placed whereever you meet repetitive data.</p>
+<p>If we didn't include LZW, the transparency optimisation trick alluded to above wouldn't work.
+Each of those transparent pixels has to be recorded in the GIF.
+With LZW, however, those transparent pixels become hugely advantageous over just storing the full frame.</p>
+<p>GIFs store their pixel data in rows.
+If the majority of the frame is transparent, the majority of these rows will just be the transparent pixel repeated over and over again.
+This compresses tremendously well.</p>
+<p>LZW compression is very happy to turn that into a succint representation.
+Bam.
+A smaller, thinner, sexier GIF.</p>
+<h3>And it's that transparency that results in your spotty GIF preview</h3>
+<p>Long story, I know, but now you understand why this a random frame out of a GIF looks so spotty!
+Your friends will be amazed, your colleagues stunned, and it's now inevitable you'll become tremendously rich.</p>
+<p>Or, at the very least, you've discovered something interesting and new.
+I'm happy to settle for that.</p>
+<p><img class="center" src="/media/images/articles/2013/the_spotty_gif_small.gif" class="smooth" /></p>
+<h3>Random Thought</h3>
+<p>GIF isn't suitable for photographs or other high detailed images as you're limited to only 256 different colours in an image.
+There's one slight point of interest however - with each frame you can use a new block of 256 colours.
+Therefore, an animated GIF could reproduce a high detailed photograph flawlessly, even though the file format technically doesn't allow it.</p>
+<ol>
+<li>Given the <code>C</code> different colours used in the picture P, break <code>C</code> up into groups of 256 colours (i.e. <code>C =&gt; C1, C2, C3, ..., Cn</code>)</li>
+<li>For each frame of the animation, dot the image with the new selection of 256 colours.</li>
+<li>Stand back and marvel at your full 24 bit colour masterpiece that has the bitweight of a large elephant.</li>
+</ol>
+<p>Bonus points if you progressively enhance the appearance of the image as more and more "colour layers" are loaded!
+If you do it properly, with a delay here of there, it should be painting in the same style as <a href="http://en.wikipedia.org/wiki/A_Sunday_Afternoon_on_the_Island_of_La_Grande_Jatte">A Sunday Afternoon on the Island of La Grande Jatte</a>.</p>
+
+      </div>
+      
+        <div class="span3 content-box" style="padding: 0">
+          <div class="hero-box">
+            <h1 class="slogan">Hi, I'm Smerity!</h1>
+          </div>
+          <div style="padding: 20px">
+            <div align="center">
+              
+              <img class="pronounced" src="/media/images/smerity_barcode.jpg" />
+            </div>
+            <p>
+              Hi, I'm <b>Stephen Merity</b>, better known as <b>Smerity</b>.
+            </p>
+            <p>
+              I spend my time doing what I enjoy, which is primarily some mix of coding, teaching and writing.
+              I've not yet had to live through a job I didn't enjoy.
+            </p>
+
+            <h4>Interested in saying hi?</h4>
+            <p>
+                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+            </p>
+            <p>
+                
+                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you cake, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="64" width="64" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  </body>
+</html>

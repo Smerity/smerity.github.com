@@ -67,7 +67,7 @@
       
 <h1 class="post-title">Password Security: Why salting with usernames is no good</h1>
 <h3 class="post-date">June 7, 2012</h3>
-<p>LinkedIn recently lost 6.5 million password hashes, prompting an interesting <a href="http://news.ycombinator.com/item?id=4073309">discussion on Hacker News</a> about the implications of such a leak.
+  <p>LinkedIn recently lost 6.5 million password hashes, prompting an interesting <a href="http://news.ycombinator.com/item?id=4073309">discussion on Hacker News</a> about the implications of such a leak.
 LinkedIn suffered from two fundamental issues: no protection against rainbow tables in the form of a salt and no protection from brute force attacks due to the easy computation of plain SHA-1.</p>
 <p>In the Hacker News discussions, the idea of employing the username as a salt was raised numerous times.
 The standard response is "don't do that, just use bcrypt".

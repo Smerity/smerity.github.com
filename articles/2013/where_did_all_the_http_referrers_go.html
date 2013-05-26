@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Where did all the HTTP referrers go?</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+<header class="navbar">
+  <nav class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">Smerity (n):</a>
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="/articles/articles.html">Articles</a></li>
+          <li><a href="/consulting.html">Consulting</a></li>
+          <li><a href="/abme.html">About Me</a></li>
+          <li><a href="/define.html">Define Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-box">
+      
+<h1 class="post-title">Where did all the HTTP referrers go?</h1>
+<h3 class="post-date">May 26, 2013</h3>
+  <p>Good (and bad news): the general consensus in the web developer community is that any and every website should be HTTPS by default.
+Why?
+HTTP by itself isn't encrypted, leaving it open to eavesdropping, message tampering, and man-in-the-middle attacks.
+HTTPS, if you use it <a href="http://www.thoughtcrime.org/software/sslstrip/" title="Help avoid this by learning about HTTP Strict Transport Security (HSTS)">consistently</a>, prevents these issues.</p>
+<p>So how can that possibly be bad news?
+The Internet is built on data and <abbr title="PageRank uses metadata, how websites link to each other, to rank importance of pages, amongst many other metadata uses.">metadata</abbr>.
+HTTPS is killing one of the core metadata tools of the Internet: HTTP Referrers.</p>
+<h2>define(HTTP Referrers)</h2>
+<p>Imagine you're on <a href="http://www.reddit.com/r/netsec/search?q=homakov">Reddit</a> and click on a link to <a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">homakov.blogspot.ru</a>.
+The server at <strong>homakov.blogspot.ru</strong> knows that you came from <strong>reddit.com</strong>.
+It even knows what specific webpage you came from -- in this case, a Reddit search page on /r/netsec searching for <em>homakov</em>.</p>
+<p>So what does this look like?
+When your browser wants a page, it sends a GET request with a number of HTTP headers.
+One of these headers is the HTTP Referrer and informs server B that you came from a link at server A.</p>
+<div class="codehilite"><pre>GET http://homakov.blogspot.ru/2013/05/csrf-tool.html HTTP/1.1
+Referer: http://www.reddit.com/r/netsec/search?q<span class="o">=</span>homakov
+Accept-Charset: ISO-8859-1,utf-8;q<span class="o">=</span>0.7,*;q<span class="o">=</span>0.3
+User-Agent: Mozilla/5.0 <span class="o">(</span>X11; Linux x86_64<span class="o">)</span> AppleWebKit/537.31 <span class="o">(</span>KHTML, like Gecko<span class="o">)</span> Chrome/26.0.1410.63 Safari/537.31
+Connection: keep-alive
+Cookie: <span class="nv">session</span><span class="o">=</span><span class="s2">&quot;x1yc3OWM2ZTdhNNzk1YWY5NDk0MTczNTEKc==&quot;</span>; <span class="nv">csrftoken</span><span class="o">=</span><span class="s2">&quot;6QjAl18WY3NyZgpNsHpEKotZNfEtzSLocHRm&quot;</span>;
+Host: homakov.blogspot.ru
+Accept: text/html,application/xhtml+xml,application/xml;q<span class="o">=</span>0.9,*/*;q<span class="o">=</span>0.8
+Accept-Language: en-US,en;q<span class="o">=</span>0.8
+Accept-Encoding: gzip,deflate,sdch
+</pre></div>
+
+
+<p>The second line, <code>Referer: http://www.reddit.com/r/netsec/search?q=homakov</code>, is the HTTP Referrer.
+It's these HTTP Referrer fields that are tracked by analytics tools such as Google Analytics and ChartBeat.</p>
+<h2>HTTPS kills HTTP Referrers</h2>
+<p>HTTPS turns off HTTP Referrers.
+Why?
+According to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616 (HTTP 1.1)</a>, this is due to the possibility of sensitive information being encoded in a referring URL:</p>
+<blockquote>
+  Clients <i>SHOULD NOT</i> include a Referer header field in a (non-secure) HTTP request if the referring page was transferred with a secure protocol.
+</blockquote>
+
+<p>This is quite reasonable considering HTTPS was intended for secure applications where sensitive data may be stored or gleaned from the URL.
+Unfortunately, this hard set rule doesn't transition well into a future where almost every website uses HTTPS.</p>
+<h2>Fixing Referrers in HTTPS: The Meta Referrer</h2>
+<p>So what's the situation with our HTTP Referrer?
+What do we want to be possible?
+We'll label these different situations with names.</p>
+<ul>
+<li><strong>Never:</strong> Our URLs are sensitive and we don't want to tell the world about them. We want the HTTP Referrer dropped (i.e. default behaviour for HTTPS).</li>
+<li><strong>Origin:</strong> I run a search engine and want people to know the traffic came from me, but not which search queries were used to reach your site.</li>
+<li><strong>Default:</strong> I run Facebook and want to pass the HTTP referrer for all requests unless it goes from HTTPS to HTTP (i.e. the situation where previously hidden information might be disclosed).</li>
+<li><strong>Always:</strong> A blog hosted over HTTPS might wish to link to a blog hosted over HTTP and receive trackback links.</li>
+</ul>
+<p>These cases are covered under a new HTML5 called the <a href="http://wiki.whatwg.org/wiki/Meta_referrer">meta referrer</a>.
+Now a sinple tag can be used, such as <code>&lt;meta name="referrer" content="always"&gt;</code>, to specify the exact behaviour of the HTTP Referrer regardless of whether we're using HTTP or HTTPS.</p>
+<p>With that said, not all web browsers support this new fangled HTML5 meta referrer.
+If a web browser doesn't support this flag, it'll just fall back to the standard for HTTP or HTTPS.
+Which browsers support these?</p>
+<table class="table">
+  <thead>
+    <th>Web Browser</th>
+    <th>Meta Referrer Support</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Google Chrome
+      <td><span class="text-success">Yes</span>
+    </tr>
+    <tr>
+      <td>Safari
+      <td><span class="text-success">Yes</span>
+    </tr>
+    <tr>
+      <td>Firefox
+      <td><span class="text-error">No</span> (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=704320">In Progress</a>)
+    </tr>
+    <tr>
+      <td>Internet Explorer
+      <td><span class="text-error">No</span>
+    </tr>
+  </tbody>
+</table>
+
+<p>Well, okay, that's fine, the world improves.
+Let's say in a year they'll get it <abbr title="I _might_ be a little optimistic here...">all sorted</abbr>.
+Then we need all the popular websites to add these meta referrer tags in their HTML.
+And all the not so popular websites that still give you traffic.</p>
+<table class="table">
+  <thead>
+    <th>Website</th>
+    <th>Meta Referrer</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>https://www.facebook.com</td>
+      <td>Yes: Default</td>
+    </tr>
+    <tr>
+      <td>https://www.google.com</td>
+      <td>Yes: Origin</td>
+    </tr>
+    <tr>
+      <td><s>Reddit</s>
+      <td>Yes: HTTP and no meta referrer
+    </tr>
+    <tr>
+      <td>Hacker News
+      <td>No: <abbr title="&lt;sarcasm&gt;Likely a defense against the dreaded Eternal September&lt;/sarcasm&gt;">HTTPS with no meta referrer</abbr>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Add the metatag, save the world</h2>
+<p>So, here's my little request.</p>
+<blockquote>
+  If you run a website over HTTPS and there are positive benefits from others seeing your HTTPS Referrers, add in an appropriate meta referrer.
+</blockquote>
+
+<h4>Tangent: Referrer vs Referer</h4>
+<p>The correct spelling is refe<b>rr</b>er (two arrs) but you'll see it everywhere as refe<b>r</b>er (minimal arrs).
+Why?
+A small accident of history.
+Every reference to refe<b>rr</b>er is spelt refe<b>r</b>er in <a href="http://lists.w3.org/Archives/Public/ietf-http-wg-old/1995JanApr/0105.html">RFC 1945 (HTTP 1.0)</a>.
+By the time it was <a href="http://lists.w3.org/Archives/Public/ietf-http-wg-old/1995JanApr/0105.html">picked up</a>, it was a little too late.</p>
+<h4>Useful Links</h4>
+<ul>
+<li><a href="http://www.schemehostport.com/2011/11/referer-sic.html">Referer (sic)</a></li>
+<li><a href="http://lincolnloop.com/blog/2012/jun/27/referrer-blocking-hard/">Referrer Blocking is Hard</a></li>
+<li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#link-type-noreferrer">WhatWG description of "noreferrer" on links</a></li>
+<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=704320">Bug@Mozilla: Implement meta referrer</a></li>
+</ul>
+
+      </div>
+      
+        <div class="span3 content-box" style="padding: 0">
+          <div class="hero-box">
+            <h1 class="slogan">Hi, I'm Smerity!</h1>
+          </div>
+          <div style="padding: 8px">
+            <div align="center">
+              
+              <img class="pronounced" src="/media/images/smerity_bw.jpg" />
+            </div>
+            <p>
+              Hi, I'm <b>Stephen Merity</b>, better known as <b>Smerity</b>.
+            </p>
+            <p>
+              I spend my time doing what I enjoy, which is primarily some mix of coding and teaching.
+              I've not yet had to live through a job I didn't enjoy.
+            </p>
+            <p>
+              <b>Sydney University:</b><br />
+              <a href="http://sydney.edu.au/handbooks/engineering/undergraduate/schools/it/b_it.shtml">BIT</a> (University Medal + First Class Honours)
+            </p>
+            <p>
+              <b>Harvard University:</b><br />
+              <a href="http://iacs.seas.harvard.edu/master-of-science-in-cse">MS in CSE</a> (starting August 2013)
+            </p>
+
+            <h4>Interested in saying hi?</h4>
+            <p>
+                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+            </p>
+            <p>
+                
+                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you cake, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="64" width="64" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  </body>
+</html>

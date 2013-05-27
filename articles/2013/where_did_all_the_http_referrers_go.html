@@ -29,6 +29,11 @@
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-470775-5']);
   _gaq.push(['_trackPageview']);
+  setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+  setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+  setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+  setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+  setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -74,7 +79,9 @@ HTTP by itself isn't encrypted, leaving it open to eavesdropping, message tamper
 HTTPS, if you use it <a href="http://www.thoughtcrime.org/software/sslstrip/" title="Help avoid this by learning about HTTP Strict Transport Security (HSTS)">consistently</a>, prevents these issues.</p>
 <p>So how can that possibly be bad news?
 The Internet is built on data and <abbr title="PageRank uses metadata, how websites link to each other, to rank importance of pages, amongst many other metadata uses.">metadata</abbr>.
-HTTPS is killing one of the core metadata tools of the Internet: HTTP Referrers.</p>
+HTTPS is killing one of the core metadata tools of the Internet: HTTP Referrers.
+Don't worry though: there's hope.
+Or at lest meta hope.</p>
 <h2>define(HTTP Referrers)</h2>
 <p>Imagine you're on <a href="http://www.reddit.com/r/netsec/search?q=homakov">Reddit</a> and click on a link to <a href="http://homakov.blogspot.ru/2013/05/csrf-tool.html">homakov.blogspot.ru</a>.
 The server at <strong>homakov.blogspot.ru</strong> knows that you came from <strong>reddit.com</strong>.
@@ -105,10 +112,11 @@ According to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616
   Clients <i>SHOULD NOT</i> include a Referer header field in a (non-secure) HTTP request if the referring page was transferred with a secure protocol.
 </blockquote>
 
-<p>This is quite reasonable considering HTTPS was intended for secure applications where sensitive data may be stored or gleaned from the URL.
+<p>This seems quite reasonable considering HTTPS was intended for secure applications where sensitive data may be stored or gleaned from the URL.
 Unfortunately, this hard set rule doesn't transition well into a future where almost every website uses HTTPS.</p>
 <h2>Fixing Referrers in HTTPS: The Meta Referrer</h2>
-<p>So what's the situation with our HTTP Referrer?
+<p>So what are the possible situations with our HTTP Referrers?
+If we could somehow tell the HTTP Referrer to act in a particular way, what different behaviours would you like?
 What do we want to be possible?
 We'll label these different situations with names.</p>
 <ul>
@@ -118,7 +126,7 @@ We'll label these different situations with names.</p>
 <li><strong>Always:</strong> A blog hosted over HTTPS might wish to link to a blog hosted over HTTP and receive trackback links.</li>
 </ul>
 <p>These cases are covered under a new HTML5 called the <a href="http://wiki.whatwg.org/wiki/Meta_referrer">meta referrer</a>.
-Now a sinple tag can be used, such as <code>&lt;meta name="referrer" content="always"&gt;</code>, to specify the exact behaviour of the HTTP Referrer regardless of whether we're using HTTP or HTTPS.</p>
+Now a simple tag can be used, such as <code>&lt;meta name="referrer" content="always"&gt;</code>, to specify the exact behaviour of the HTTP Referrer regardless of whether we're using HTTP or HTTPS.</p>
 <p>With that said, not all web browsers support this new fangled HTML5 meta referrer.
 If a web browser doesn't support this flag, it'll just fall back to the standard for HTTP or HTTPS.
 Which browsers support these?</p>
@@ -148,9 +156,8 @@ Which browsers support these?</p>
 </table>
 
 <p>Well, okay, that's fine, the world improves.
-Let's say in a year they'll get it <abbr title="I _might_ be a little optimistic here...">all sorted</abbr>.
-Then we need all the popular websites to add these meta referrer tags in their HTML.
-And all the not so popular websites that still give you traffic.</p>
+Let's say in a year they'll get it <abbr title="I might be a little optimistic here..? ;)">all sorted</abbr>.
+Then we need all the popular websites (and not so popular websites that still give you traffic) to add these meta referrer tags in their HTML.</p>
 <table class="table">
   <thead>
     <th>Website</th>
@@ -182,6 +189,14 @@ And all the not so popular websites that still give you traffic.</p>
   If you run a website over HTTPS and there are positive benefits from others seeing your HTTPS Referrers, add in an appropriate meta referrer.
 </blockquote>
 
+<p><br /></p>
+<h3>Appendix</h3>
+<h4>Tangent: Google Knows</h4>
+<p>Considering Google Analytics is used for <a href="http://trends.builtwith.com/analytics">57.23% of the top million websites on the Internet</a> (572,300 in case your math failed you), they're actually in an excellent position to track and understand the flow of the Internet even without these referrers in place.
+Assuming that a user is only browsing amongst the top million websites, not only do they know how a user interacts on a website with Google Analytics but they're likely able to track when a user goes from site A to site B as site B likely has Google Analytics.
+Even if it didn't, they know the user <em>didn't</em> go to one of the other Google Analytics backed websites, so the user either ended up closing the tab or going to one of the links on the page that isn't backed by Google Analytics.
+This is all valuable information they could use as it's a form of limited PageRank -- in PageRank you assume the user is a random link clicking bot, whilst in this situation you've removed a great deal of the ambiguity.</p>
+<p>Combine this with Google's strangehold on how people reach web pages (Google Search) and their <attr title="When Google Search moved to HTTPS, they also ceased to send the search queries to websites. The only way you can get any of the search queries used to reach your site is using Google Webmaster Tools, and even then it's a limited subset.">access to the valuable search queries</attr>, they really are in an enviable position.</p>
 <h4>Tangent: Referrer vs Referer</h4>
 <p>The correct spelling is refe<b>rr</b>er (two arrs) but you'll see it everywhere as refe<b>r</b>er (minimal arrs).
 Why?

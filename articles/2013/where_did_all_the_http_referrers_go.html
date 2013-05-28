@@ -114,15 +114,14 @@ According to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616
   Clients <i>SHOULD NOT</i> include a Referer header field in a (non-secure) HTTP request if the referring page was transferred with a secure protocol.
 </blockquote>
 
-<p>Note: those headers will actually be sent to <em>any</em> other webpage that uses HTTPS.</p>
 <p>This seems quite reasonable at first glance.
 Unfortunately, this hard set rule doesn't transition well into a future where almost every website uses HTTPS.</p>
 <p>Why?
 The HTTPS Referrer, which may contain sensitive data, will be sent from any HTTPS website to any other HTTPS website by default.
-It's only when a connection goes from HTTPS to HTTP will the referrer be dropped.</p>
+It's only when a connection goes from HTTPS to HTTP that the referrer is dropped.</p>
 <p>This leaves two problematic situations:</p>
 <ul>
-<li>HTTP websites don't receive referrers from HTTPS websites -- it all appears as direct traffic</li>
+<li>HTTP websites don't receive referrers from HTTPS websites -- all traffic appears as direct traffic</li>
 <li>HTTPS websites will send referrers to <em>any other HTTPS website</em> even if it contains sensitive information</li>
 </ul>
 <p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities or information leaks.

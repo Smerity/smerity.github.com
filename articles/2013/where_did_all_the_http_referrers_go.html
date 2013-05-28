@@ -115,14 +115,17 @@ According to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616
 </blockquote>
 
 <p>Note: those headers will actually be sent to <em>any</em> other webpage that uses HTTPS.</p>
-<p>This seems quite reasonable considering HTTPS was intended for secure applications where sensitive data may be stored or gleaned from the URL.
+<p>This seems quite reasonable at first glance.
 Unfortunately, this hard set rule doesn't transition well into a future where almost every website uses HTTPS.</p>
+<p>Why?
+The HTTPS Referrer, which may contain sensitive data, will be sent from any HTTPS website to any other HTTPS website by default.
+It's only when a connection goes from HTTPS to HTTP will the referrer be dropped.</p>
 <p>This leaves two problematic situations:</p>
 <ul>
-<li>HTTP websites don't receive referrers from HTTPS websites</li>
+<li>HTTP websites don't receive referrers from HTTPS websites -- it all appears as direct traffic</li>
 <li>HTTPS websites will send referrers to <em>any other HTTPS website</em> even if it contains sensitive information</li>
 </ul>
-<p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities.</p>
+<p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities or information leaks.</p>
 <h2>Fixing Referrers in HTTPS: The Meta Referrer</h2>
 <p>So what are the possible situations with our HTTP Referrers?
 If we could somehow tell the HTTP Referrer to act in a particular way, what different behaviours would you like?
@@ -166,7 +169,7 @@ Which browsers support these?</p>
 
 <p>Well, okay, that's fine, the world improves.
 Let's say in a year they'll get it <abbr title="I might be a little optimistic here..? ;)">all sorted</abbr>.
-Then we need all the popular websites (and not so popular websites that still give you traffic) to add these meta referrer tags in their HTML.</p>
+What popular websites are using meta referrer?</p>
 <table class="table">
   <thead>
     <th>Website</th>
@@ -182,12 +185,12 @@ Then we need all the popular websites (and not so popular websites that still gi
       <td>Yes: Origin</td>
     </tr>
     <tr>
-      <td><s>Reddit</s>
-      <td>Yes: HTTP and no meta referrer
+      <td>Reddit
+      <td>No: HTTP and no meta referrer
     </tr>
     <tr>
       <td>Hacker News
-      <td>No: <abbr title="&lt;sarcasm&gt;Likely a defense against the dreaded Eternal September&lt;/sarcasm&gt;">HTTPS with no meta referrer</abbr>
+      <td>No: HTTPS with no meta referrer
     </tr>
   </tbody>
 </table>
@@ -196,7 +199,7 @@ Then we need all the popular websites (and not so popular websites that still gi
 <p>So, here's my little request.</p>
 <blockquote>
   If you run a website over HTTPS, add in an appropriate meta referrer.
-  If it's a secure application, nix the referrers.
+  If it's a secure application, nix the referrers by setting it to _Never_.
   If the Internet would benefit from knowing you sent them traffic, allow those referrers for everyone.
 </blockquote>
 

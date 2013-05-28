@@ -79,7 +79,9 @@ HTTP by itself isn't encrypted, leaving it open to eavesdropping, message tamper
 HTTPS, if you use it <a href="http://www.thoughtcrime.org/software/sslstrip/" title="Help avoid this by learning about HTTP Strict Transport Security (HSTS)">consistently</a>, prevents these issues.</p>
 <p>So how can that possibly be bad news?
 The Internet is built on data and <abbr title="PageRank uses metadata, how websites link to each other, to rank importance of pages, amongst many other metadata uses.">metadata</abbr>.
-HTTPS is killing one of the core metadata tools of the Internet: HTTP Referrers.
+HTTPS is confusing one of the core metadata tools of the Internet: HTTP Referrers.
+HTTP Referrers disappear when going from HTTPS to HTTP.
+And, more worryingly, sensitive HTTPS Referrers still get carried when going from HTTPS to HTTPS.
 Don't worry though: there's hope.
 Or at lest meta hope.</p>
 <h2>define(HTTP Referrers)</h2>
@@ -105,15 +107,22 @@ Accept-Encoding: gzip,deflate,sdch
 <p>The second line, <code>Referer: http://www.reddit.com/r/netsec/search?q=homakov</code>, is the HTTP Referrer.
 It's these HTTP Referrer fields that are tracked by analytics tools such as Google Analytics and ChartBeat.</p>
 <h2>HTTPS kills HTTP Referrers</h2>
-<p>HTTPS turns off HTTP Referrers.
+<p>HTTPS turns off HTTP Referrers to HTTP websites.
 Why?
 According to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616 (HTTP 1.1)</a>, this is due to the possibility of sensitive information being encoded in a referring URL:</p>
 <blockquote>
   Clients <i>SHOULD NOT</i> include a Referer header field in a (non-secure) HTTP request if the referring page was transferred with a secure protocol.
 </blockquote>
 
+<p>Note: those headers will actually be sent to <em>any</em> other webpage that uses HTTPS.</p>
 <p>This seems quite reasonable considering HTTPS was intended for secure applications where sensitive data may be stored or gleaned from the URL.
 Unfortunately, this hard set rule doesn't transition well into a future where almost every website uses HTTPS.</p>
+<p>This leaves two problematic situations:</p>
+<ul>
+<li>HTTP websites don't receive referrers from HTTPS websites</li>
+<li>HTTPS websites will send referrers to <em>any other HTTPS website</em> even if it contains sensitive information</li>
+</ul>
+<p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities.</p>
 <h2>Fixing Referrers in HTTPS: The Meta Referrer</h2>
 <p>So what are the possible situations with our HTTP Referrers?
 If we could somehow tell the HTTP Referrer to act in a particular way, what different behaviours would you like?
@@ -186,7 +195,9 @@ Then we need all the popular websites (and not so popular websites that still gi
 <h2>Add the metatag, save the world</h2>
 <p>So, here's my little request.</p>
 <blockquote>
-  If you run a website over HTTPS and there are positive benefits from others seeing your HTTPS Referrers, add in an appropriate meta referrer.
+  If you run a website over HTTPS, add in an appropriate meta referrer.
+  If it's a secure application, nix the referrers.
+  If the Internet would benefit from knowing you sent them traffic, allow those referrers for everyone.
 </blockquote>
 
 <p><br /></p>

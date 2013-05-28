@@ -78,10 +78,10 @@ Why?
 HTTP by itself isn't encrypted, leaving it open to eavesdropping, message tampering, and man-in-the-middle attacks.
 HTTPS, if you use it <a href="http://www.thoughtcrime.org/software/sslstrip/" title="Help avoid this by learning about HTTP Strict Transport Security (HSTS)">consistently</a>, prevents these issues.</p>
 <p>So how can that possibly be bad news?
-The Internet is built on data and <abbr title="PageRank uses metadata, how websites link to each other, to rank importance of pages, amongst many other metadata uses.">metadata</abbr>.
+<!--The Internet is built on data and <abbr title="PageRank uses metadata, how websites link to each other, to rank importance of pages, amongst many other metadata uses.">metadata</abbr>.-->
 HTTPS is confusing one of the core metadata tools of the Internet: HTTP Referrers.
-HTTP Referrers disappear when going from HTTPS to HTTP.
-And, more worryingly, sensitive HTTPS Referrers still get carried when going from HTTPS to HTTPS.
+HTTP Referrers disappear when going from HTTPS to HTTP, but, more worryingly, sensitive HTTPS Referrers still get carried when going from HTTPS to HTTPS.
+Most secure applications aren't aware of where their HTTP Referrers do or don't go.
 Don't worry though: there's hope.
 Or at lest meta hope.</p>
 <h2>define(HTTP Referrers)</h2>
@@ -125,7 +125,9 @@ It's only when a connection goes from HTTPS to HTTP will the referrer be dropped
 <li>HTTP websites don't receive referrers from HTTPS websites -- it all appears as direct traffic</li>
 <li>HTTPS websites will send referrers to <em>any other HTTPS website</em> even if it contains sensitive information</li>
 </ul>
-<p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities or information leaks.</p>
+<p>The first situation means we lose any understanding of where traffic is coming from, the second situation leads potentially to security vulnerabilities or information leaks.
+Essentially, if a HTTP website links to another HTTP website, the author of the secure page is lending extra trust just as it's HTTPS.
+In most cases, this is not what was intended.</p>
 <h2>Fixing Referrers in HTTPS: The Meta Referrer</h2>
 <p>So what are the possible situations with our HTTP Referrers?
 If we could somehow tell the HTTP Referrer to act in a particular way, what different behaviours would you like?

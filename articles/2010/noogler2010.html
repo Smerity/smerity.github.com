@@ -12,7 +12,6 @@
 <!--[if lt IE 9]>
   <script src="/media/js/html5.js"></script>
 <![endif]-->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
 
 
 <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
@@ -44,28 +43,25 @@
   </head>
   <body>
   
-<header class="navbar">
-  <nav class="navbar-inner-clean">
-    <div class="container-fluid">
-      <a class="brand" href="/">Smerity (n):</a>
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li><a href="/articles/articles.html">Articles</a></li>
-          <li><a href="/consulting.html">Consulting</a></li>
-          <li><a href="/abme.html">About Me</a></li>
-          <li><a href="/define.html">Define Me</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+
 
   
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="highlight pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="contact-me pull-right">
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a>
+      <a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a>
+      <a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a>
+      <a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a>
+      <a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
   <div class="container">
     
       <div class="row">
@@ -93,18 +89,16 @@
 <p>As an intern I wanted to make sure I had a clear work/home split. I only stayed late a handful of nights, primarily towards the end of my project when trying to finish things off. To be honest, if I had external VPN style access (which interns don't get access to and has become more strictly controlled since the Google China incident) I would likely have worked from home a bit more, but this likely would have been on pet projects using Google's resources that weren't related directly to my internship work. For the others at the company it seemed to vary depending on each person. On the few nights I stayed late the office was fairly deserted although a few employees seemed to prefer arriving later in the day and working into the night. How much work the average person put in at home I can't be sure but it would likely be necessary at times due to the global nature of Google - video-conferencing from the laptop or being on-call would be the two most common things to come to mind.</p>
 <p>The 20% Time that Google is known so well for is both better and worse than I expected. Some employees feel their work is too much by itself and feel like they can't 'spare' 20% of their time. Others have that time to spare and have done some great things with it - many Google projects that have been open sourced are a result of these people devoting their time and expertise to this. 20% time also lowers the barrier of entry to other projects internally so it becomes substantially easier to fix that annoying bug in a project you like or try out and then shift to another project. Many projects have '20% Lists' of small tasks that would be good ideas for an engineer's time.</p>
 <p>The tech talks at Google were one of the things that attracted me most. The breadth and depth of topics covered always amazed me and I'm thankful they make them <a href="http://www.youtube.com/user/GoogleTechTalks">publically available</a> to a larger audience. They serve both as a way to pull in interesting projects and research that is happening external to Google and also to allow Googlers to internally spread their work and advice to others. As an intern I was able to attend almost all the tech talks scheduled with only a surprisingly small number of topics considered too confidential for me to attend.</p>
-<p>Whilst at Google Sydney I attended a number of interesting talks - the vast majority of them were technical in nature but others explored a wider range of issues and topics (such as having an economics professor come in and speak about the recent financial crisis). There were two surprises attending them as a Googler though. Firstly, there were of course some internal tech talks that the world never sees, many of them just as fascinating (if not more) as the ones posted publically. On the negative side though it's not like Youtube - if after five or ten miutes you realise the tech talk isn't what you expected escaping it is fairly difficult. If I had a company laptop with VPN to the Google network I probably wouldn't have minded as I could work but I felt stuck in a handful of the talks. Tat shows I probably wasn't as discriminative as I should have been with the talks I attended.</p>
+<p>Whilst at Google Sydney I attended a number of interesting talks - the vast majority of them were technical in nature but others explored a wider range of issues and topics (such as having an economics professor come in and speak about the recent financial crisis). There were two surprises attending them as a Googler though. Firstly, there were of course some internal tech talks that the world never sees, many of them just as fascinating (if not more) as the ones posted publically. On the negative side though it's not like Youtube - if after five or ten miutes you realise the tech talk isn't what you expected, escaping it is fairly difficult. If I had a company laptop with VPN to the Google network I probably wouldn't have minded as I could work but I felt stuck in a handful of the talks. That shows I probably wasn't as discriminative as I should have been with the talks I attended.</p>
 <h2>What I Learned @ Google</h2>
 <h3>Learning New Things All The Time - ProtoBuffer, Unit Tests, Internal Libraries, Internal Components</h3>
-<p>It may surprise you just how many of Google's internal libraries and tools are available publically - things like <a href="http://code.google.com/apis/protocolbuffers/">Protocol Buffers</a>, <a href="http://code.google.com/webtoolkit/">Google Web Toolkit</a>, <a href="http://code.google.com/p/google-collections/">Google Collections Library</a>, <a href="http://code.google.com/p/closure-compiler/">Google Closure compiler</a>, <a href="http://code.google.com/p/google-sparsehash/">Google Sparsehash</a>, <a href="http://code.google.com/p/google-gtags/">google-gtags</a>, <a href="http://code.google.com/p/jarjar/">jarjar</a> - <a href="http://code.google.com/hosting/search?q=label:Google">check out a large list at code.google.com</a>. Most of those tools I used in some capacity internally. The surprising thing however is that the entire list there is barely the start of their internal arsenal. When you get to Google and start looking around you truly feel like a little kid in a candy store. Even if you had studied and worked with every single library that Google has publically released there are so many things you'll have never seen before.</p>
+<p>It may surprise you just how many of Google's internal libraries and tools are available publically - things like <a href="http://code.google.com/apis/protocolbuffers/">Protocol Buffers</a>, <a href="http://code.google.com/webtoolkit/">Google Web Toolkit</a>, <a href="http://code.google.com/p/google-collections/">Google Collections Library</a>, <a href="http://code.google.com/p/closure-compiler/">Google Closure compiler</a>, <a href="http://code.google.com/p/google-sparsehash/">Google Sparsehash</a>, <a href="http://code.google.com/p/google-gtags/">google-gtags</a>, <a href="http://code.google.com/p/jarjar/">jarjar</a> - <a href="http://code.google.com/hosting/search?q=label:Google">check out the large list at code.google.com</a>. Most of those tools I used in some capacity internally. The surprising thing however is that the entire list there is barely the start of their internal arsenal. When you get to Google and start looking around you truly feel like a little kid in a candy store. Even if you had studied and worked with every single library that Google has publically released there are so many things you'll have never seen before.</p>
 <p>Every day I'd come across some new tool or technology to learn and use - I wouldn't have it any other way.</p>
 <h3>Code Reviews, Style Guides and Unit Tests</h3>
 <p>At Google there's a huge emphasis on <a href="http://code.google.com/p/rietveld/">code reviews</a> and <a href="http://code.google.com/p/google-styleguide/">style guides</a>, both of which I appreciated a great deal. The style guides mean that even the production code bases are quite reasonable (which is especially helpful for an intern seeing it for the first time) and the code reviews improve your craft by having others actively checking through your logic and reasoning. If you're interested many of the tools that Google uses internally (including their <a href="http://code.google.com/p/google-styleguide/">style guides</a>, a <a href="http://code.google.com/appengine/articles/rietveld.html">Mondrian style code review tool</a> and <a href="http://code.google.com/p/googletest">Google's C++ unit testing framework</a>) have been open sourced.</p>
-<ul>
-<li>Before any commit (except to your personal repository) your code must be reviewed and <a href="http://acronyms.thefreedictionary.com/LGTM">LGTMed</a> by at least one other person. Comments are on both the language itself and the logic and reasoning in your code. If the reviewer is confused by some part of the code and needs further explanation, chances are that explanation should be in the comments or at least documented somewhere. This is practised regardless of your status - programmers such as Guido van Rossum and Rob Pike aren't exempt and get their code reviewed just like everyone else.</li>
-<li>Following the Google style guide is necessary. Even if I don't agree with a few of the rules the fact that everything is standardised (or near standardised for some of the projects) means substantially improved code quality in general. To commit code either the author or one of the reviewers must have readability in that programming language, which means that they've been internally certified in the language by other Googlers. This in most cases ensures you've followed the style guide sufficiently.</li>
-<li>If it hasn't been unit tested it may as well not be working. There are some gigantuan unit tests in the internal code bases I was using and they're all incredibly useful. This is hugely appreciated for an intern modifying a production system they've never had experience with before. In the optimal case you'd know every change modifying a line of code would make, but in the real world many systems are so large and complex that you can't necessarily guarantee the behaviour without having a far more intimate knowledge of the code than you can acquire in only three months.</li>
-</ul>
+<p>Before any commit (except to your personal repository) your code must be reviewed and <a href="http://acronyms.thefreedictionary.com/LGTM">LGTMed</a> by at least one other person. Comments are on both the language itself and the logic and reasoning in your code. If the reviewer is confused by some part of the code and needs further explanation, chances are that explanation should be in the comments or at least documented somewhere. This is practised regardless of your status - programmers such as Guido van Rossum and Rob Pike aren't exempt and get their code reviewed just like everyone else.</p>
+<p>Following the Google style guide is necessary. Even if I don't agree with a few of the rules the fact that everything is standardised (or near standardised for some of the projects) means substantially improved code quality in general. To commit code either the author or one of the reviewers must have readability in that programming language, which means that they've been internally certified in the language by other Googlers. This in most cases ensures you've followed the style guide sufficiently.</p>
+<p>If it hasn't been unit tested it may as well not be working. There are some gigantuan unit tests in the internal code bases I was using and they're all incredibly useful. This is hugely appreciated for an intern modifying a production system they've never had experience with before. In the optimal case you'd know every change modifying a line of code would make, but in the real world many systems are so large and complex that you can't necessarily guarantee the behaviour without having a far more intimate knowledge of the code than you can acquire in only three months.</p>
 <h2>What I Miss @ Google</h2>
 <p>As valuable as the experience at Google was it of course had to come to an end. Many jobs are transient and an internship is more transient than most =] Here I'm trying to recall some of the things I miss most about the place.</p>
 <h3>The Tools, Tech and Resources</h3>
@@ -117,21 +111,23 @@
       </div>
       
         <div class="span3 side-box">
-          <div class="hero-box">
-            <h1 class="slogan">Hi, I'm Smerity</h1>
-          </div>
-          <div style="padding: 8px">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+              <li><a href="/articles/2010/noogler2010.html">Google Internship Reflection (2010)</a></li>
+            </ul>
+            <h1 style="margin-bottom: 0; text-align: center;">Hi, I'm Smerity</h1>
             <div align="center">
-              
               <img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />
             </div>
             <!-- TODO: Place Twitter here -->
             <p>
               I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
-            </p>
-            <p>
-              I spend my time doing what I enjoy, which is primarily some mix of coding and teaching.
-              I've not yet had to live through a job I didn't enjoy.
             </p>
             <p>
               <b>Sydney University:</b><br />
@@ -141,14 +137,18 @@
               <b>Harvard University:</b><br />
               <a href="http://iacs.seas.harvard.edu/master-of-science-in-cse">MS in CSE</a> (starting August 2013)
             </p>
-
-            <h4>Interested in saying hi?</h4>
             <p>
-                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+              <b><a href="/abme.html">Read more about me</a></b>
             </p>
             <p>
-                
-                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a>
+              <a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a>
+              <a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a>
+              <a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a>
+              <a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
             </p>
 
             
@@ -167,6 +167,14 @@
 </footer>
 
   </div>
+  
+  
+<link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
   
   </body>
 </html>

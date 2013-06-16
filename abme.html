@@ -12,7 +12,6 @@
 <!--[if lt IE 9]>
   <script src="/media/js/html5.js"></script>
 <![endif]-->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
 
 
 <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
@@ -44,28 +43,25 @@
   </head>
   <body>
   
-<header class="navbar">
-  <nav class="navbar-inner-clean">
-    <div class="container-fluid">
-      <a class="brand" href="/">Smerity (n):</a>
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li><a href="/articles/articles.html">Articles</a></li>
-          <li><a href="/consulting.html">Consulting</a></li>
-          <li><a href="/abme.html">About Me</a></li>
-          <li><a href="/define.html">Define Me</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+
 
   
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="highlight pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="contact-me pull-right">
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a>
+      <a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a>
+      <a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a>
+      <a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a>
+      <a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
   <div class="container">
     
       <div class="row">
@@ -74,36 +70,11 @@
 <h1 class="post-title">About Me</h1>
 
   <p>My name is Stephen Merity, though I'm most commonly referred to as Smerity.
-I'm a developer interested in web development, start-ups, natural language processing / machine learning, large-scale data analytics and an enormous amount of other topics.</p>
-<p>I've been lucky enough to work with many fascinating people and groups over the years including Google Sydney, Freelancer.com, and the Schwa Lab at the University of Sydney.
-For more details you can view my <a href="/media/files/resume.pdf">resume</a> or contact me in person at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>.</p>
+I'm a developer interested in web development, start-ups, natural language processing / machine learning, large-scale data analytics and many other topics.</p>
+<p>I've been lucky enough to work with fascinating people and groups over the years including Google Sydney, Freelancer.com, and the Schwa Lab at the University of Sydney.
+For more details you can contact me in person at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>.</p>
 <p>I'm currently living in Sydney, Australia and working on various consulting projects.
 In August 2013, I'll be packing my bags and going over to complete a Master of Science (SM) in Computational Science and Engineering (CSE) at Harvard University.</p>
-<h3>Where's Smerity?</h3>
-<p>If you want to contact me, searching for <em>Smerity</em> will find most places I've inhabited online.
-If you're interested, almost all my Facebook communications are public as it allows people to discover a small amount of who I am and reminds me that even private things on Facebook aren't private.</p>
-<p><a href="http://www.facebook.com/people/Stephen_Merity/606479711" title="Stephen Merity's Facebook profile" target=_TOP>
-  <img src="http://badge.facebook.com/badge/606479711.159.1065599225.png" border=0 alt="Stephen Merity's Facebook profile">
-</a></p>
-<!--
-[![Smerity @ Google+](/media/images/google-plus.png)](http://profiles.google.com/smerity)
-&nbsp;&nbsp;
-[![Smerity @ Github](/media/images/github.png)](https://github.com/Smerity/)
-&nbsp;&nbsp;
-<a href="http://au.linkedin.com/in/smerity" >
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" border="0" alt="View Stephen Merity's profile on LinkedIn">
-</a>
-&nbsp;&nbsp;
-[![Smerity @ Twitter](/media/images/twitter.png)](https://www.twitter.com/Smerity/)
--->
-
-<p>Curious where you can find me online?<br />
-<a href="http://profiles.google.com/smerity">Smerity&nbsp;@&nbsp;Google+</a><br />
-<a href="https://github.com/Smerity/">Smerity&nbsp;@&nbsp;Github</a><br />
-<a href="http://au.linkedin.com/in/smerity" >
-Smerity&nbsp;@&nbsp;LinkedIn
-</a><br />
-<a href="https://www.twitter.com/Smerity/">Smerity&nbsp;@&nbsp;Twitter</a></p>
 <!--
 ## University & Work
 I've recently completed the [Bachelor of Information Technology](http://sydney.edu.au/courses/Bachelor-of-Information-Technology) at the University of Sydney, receiving First Class Honours and [University Medal](http://en.wikipedia.org/w/index.php?title=University_Medal&oldid=410146835#Australia). The majority of my work was with Dr James Curran and Schwa Lab at the University of Sydney on NLP research.
@@ -146,21 +117,23 @@ This product has been a search engine, a social network, a group of maze navigat
       </div>
       
         <div class="span3 side-box">
-          <div class="hero-box">
-            <h1 class="slogan">Hi, I'm Smerity</h1>
-          </div>
-          <div style="padding: 8px">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+              <li><a href="/articles/2010/noogler2010.html">Google Internship Reflection (2010)</a></li>
+            </ul>
+            <h1 style="margin-bottom: 0; text-align: center;">Hi, I'm Smerity</h1>
             <div align="center">
-              
               <img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />
             </div>
             <!-- TODO: Place Twitter here -->
             <p>
               I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
-            </p>
-            <p>
-              I spend my time doing what I enjoy, which is primarily some mix of coding and teaching.
-              I've not yet had to live through a job I didn't enjoy.
             </p>
             <p>
               <b>Sydney University:</b><br />
@@ -170,14 +143,18 @@ This product has been a search engine, a social network, a group of maze navigat
               <b>Harvard University:</b><br />
               <a href="http://iacs.seas.harvard.edu/master-of-science-in-cse">MS in CSE</a> (starting August 2013)
             </p>
-
-            <h4>Interested in saying hi?</h4>
             <p>
-                <a href="mailto:smerity@smerity.com">smerity@smerity.com</a>
+              <b><a href="/abme.html">Read more about me</a></b>
             </p>
             <p>
-                
-                <a href="https://www.twitter.com/Smerity/">Twitter</a>, <a href="https://www.facebook.com/smerity">Facebook</a>, etc.
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a>
+              <a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a>
+              <a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a>
+              <a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a>
+              <a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
             </p>
 
             
@@ -196,6 +173,14 @@ This product has been a search engine, a social network, a group of maze navigat
 </footer>
 
   </div>
+  
+  
+<link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,700' rel='stylesheet' type='text/css'>
+
   
   </body>
 </html>

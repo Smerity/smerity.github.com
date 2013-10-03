@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Dithering: how it works and why it matters</title>
+    
+<link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+  <script src="/media/js/html5.js"></script>
+<![endif]-->
+
+
+<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+<script type="text/javascript" src="/media/js/jquery.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-470775-5']);
+  _gaq.push(['_trackPageview']);
+  setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+  setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+  setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+  setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+  setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Dithering: how it works and why it matters</h1>
+<h3 class="post-date">June 22, 2013</h3>
+  <p>When most programmers and designers think about dithering, they think of images and animations from an
+<abbr title="i.e. when your computer had a turbo button on it">ancient era</abbr> or <a href="/articles/2013/animated_gif.html">an annoying animated GIF</a>.
+Surprisingly though dithering is still alive and well in many, <em>many</em> places.
+Some of those places would give web designers nightmares.</p>
+<h2>Brief Reminder: Colours in the Browser (Roses are #F00...)</h2>
+<p>In the browser, as defined by the <a href="http://www.w3.org/TR/css3-color/#rgb-color">W3 spec for CSS3 colours</a>, you'll usually see colours represented in a few different ways:</p>
+<ul class="crossed">
+  <li><code>#rgb</code> - three-digit RGB notation</li>
+  <li><code>#rrggbb</code> - six-digit RGB notation</li>
+  <li><code>rgb(rrr, ggg, bbb)</code> - integer valued (0-255) RGB notation</li>
+  <li><code>rgb(r%, g%, b%)</code> - percentage valued RGB notation</li>
+  <li><code>rgba(rrr, ggg, bbb, aaa)</code> - integer valued (0-255) RGB notation with an alpha channel</li>
+  <li><code>rgba(r%, g%, b%, a%)</code> - percentage valued RGB notation with an alpha channel</li>
+</ul>
+
+<p><em>Tangent:</em> the three-digit RGB notation is expanded to the six-bit by repeating the hex digit (<code>#rgb</code> becomes <code>#rrggbb</code> instead of <code>#r0g0b0</code>).
+This, amongst other things, ensures that black (<code>#000</code>) and white (<code>#FFF</code>) expand to absolute black and white (<code>#000000</code> and <code>#FFFFFF</code> respectively).<br />
+<!--*Double Tangent:* the \<Element 'a' at 0x2c38900> states that a browser that doesn't understand or support \<Element 'code' at 0x2c38030> can't just "cheat" and drop the alpha channel.--></p>
+<p><img class="center" src="/media/images/articles/2013/rgba.png" width="300px" /></p>
+<p>All the above are just ways of telling the browser how much red, green and blue go into making a given colour.
+For a standard browser, this is conveyed using 24 bits (8 bits per each of the three colour channels).
+<!--
+Each of the colour channels (R, G, B) get 8 bits each -- or 256 different possible values (0 to 255).
+The only exception is three-digit RGB notation which specifies 4 bits per channel.
+-->
+This means you can view a total of over 16 million colours with the standard 24 bit colour display.
+Sounds pretty reasonable, right?</p>
+<h2>Limited Colours &amp; Dithering</h2>
+<p>Imagine you've been thrown
+<abbr title="Likely via a trans-space-time-pan-dimensional-worm-hole-thingy which may or may not have been run by an unlicensed doctor out of a big blue box...">back in time</abbr>,
+to the days when computers were slow and bits were expensive.
+How can you improve the perceived image quality if you're limited to only displaying a palette of N different colours on the screen at once?
+<em>You cheat</em>.
+Dithering takes advantage of the human eye's tendency to "mix" two colors in close proximity to one another.</p>
+<h3>Spatial Dithering</h3>
+<p>If you intermix two different colours evenly and discretely enough, the human eye sees an average of the two colours.
+In this case, when red and blue are mixed in a checkerboard pattern, the result appears a convincing purple.
+This is the traditonal case of dithering and is most commonly seen in old school games and animated GIFs
+due to their lack of a full colour palette.</p>
+<p><a href="http://en.wikipedia.org/wiki/File:Dithering_example_red_blue.png">
+  <img class="center" src="/media/images/articles/2013/dithering_red_blue.png" />
+</a></p>
+<h3>Temporal Dithering</h3>
+<p>You can also alternate quickly between two colours to end up with what appears to be the average of the two.
+This is referred to as temporal dithering.
+You'll most commonly find temporal dithering in hardware, specifically to improve the appearance of an image on a sub-par television or monitor display.</p>
+<p>I've made an example of dithering using frame rate control but I preface it with the warning that it may be unsafe for those with epilepsy.
+If you're still happy that it won't impact you medically and you don't mind your CPU bursting into flames, <a href="http://codepen.io/Smerity/pen/Abwcu">click here</a>.
+Why not use an animated GIF, you might ask?
+It turns out that browsers don't like rapidly changing GIFs all that much.
+The <a href="https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame">requestAnimationFrame</a> is the best way to deal with rapidly changing elements in a browser.
+Better yet would be to actually implement it in something natively, but you wouldn't download arbitrary code off a website and run it, right..? ;)</p>
+<h2>But everyone has good monitors now, right? No need for dithering!</h2>
+<h3>Minor issue: colour banding in gradients</h3>
+<p>If you were creating a soft linear gradient on a website, you might hit an issue.
+Imagine a soft shifting gradient from dark grey (#333) to lighter grey (#666) on a website.</p>
+<h3>Major issue: low quality 18-bit monitors</h3>
+<h2>That red might not be the red you expected...</h2>
+<h4>Interesting Links</h4>
+<ul>
+<li>Wikipedia: <a href="http://en.wikipedia.org/wiki/Dither">Dither</a>, <a href="http://en.wikipedia.org/wiki/Error_diffusion">Error Diffusion</a> &amp; <a href="http://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering">Floyd-Steinberg dithering</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Mezzotint">Mezzotint</a></li>
+<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=627771">Bugzilla - Add dithering to gradient color transitions to address banding in 24-bit "truecolor"</a></li>
+<li><a href="https://code.google.com/p/chromium/issues/detail?id=41756">WebKit gradients show banding on Chrome</a> &amp; <a href="https://code.google.com/p/chromium/issues/detail?id=226753">css webkit-linear-gradient causes flicker on MacBook Pro (1680x1050)</a></li>
+<li><a href="http://tiamat.tsotech.com/24-bit-color-sucks">24-bit Colour Sucks</a></li>
+<li><a href="http://retro-sanctuary.com/comparisons%20-%20differing.html">Video Game Dithering</a></li>
+<li><a href="http://www.chrismcovell.com/gotRGB/rgb_compare.html">Video captures comparing RGB and NTSC composite</a></li>
+</ul>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+              <li><a href="/articles/2010/noogler2010.html">Google Internship Reflection (2010)</a></li>
+            </ul>
+            <div class="well well-small">
+              <h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/handbooks/engineering/undergraduate/schools/it/b_it.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://iacs.seas.harvard.edu/master-of-science-in-cse">MS in CSE</a> (starting August 2013)
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+<link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+<![endif]-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

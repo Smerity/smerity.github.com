@@ -62,8 +62,12 @@
   <div class="container">
     
       <div class="row">
-      <div class="span8 content-box">
-      
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
 <h1 class="post-title">Password Security: Why salting with usernames is no good</h1>
 <h3 class="post-date">June 7, 2012</h3>
   <p>LinkedIn recently lost 6.5 million password hashes, prompting an interesting <a href="http://news.ycombinator.com/item?id=4073309">discussion on Hacker News</a> about the implications of such a leak.
@@ -162,6 +166,7 @@ Note that this attack is only possible as the salt is not random and instead a k
 These small mistakes can result in substantial security vulnerabilities as seen with the <a href="http://wiki.debian.org/SSLkeys#A_bit_more_detail">Debian SSL keys incident</a>.
 The best suggestion is to use a pre-exising and well audited password hashing library and to avoid re-inventing the wheel yourself!</p>
 
+        </div>
       </div>
       
         <div class="span3 side-box">

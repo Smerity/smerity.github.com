@@ -35,7 +35,8 @@
   setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
@@ -87,7 +88,7 @@ Some of those places would give web designers nightmares.</p>
 
 <p><em>Tangent:</em> the three-digit RGB notation is expanded to the six-bit by repeating the hex digit (<code>#rgb</code> becomes <code>#rrggbb</code> instead of <code>#r0g0b0</code>).
 This, amongst other things, ensures that black (<code>#000</code>) and white (<code>#FFF</code>) expand to absolute black and white (<code>#000000</code> and <code>#FFFFFF</code> respectively).<br />
-<!--*Double Tangent:* the \<Element 'a' at 0x2c38900> states that a browser that doesn't understand or support \<Element 'code' at 0x2c38030> can't just "cheat" and drop the alpha channel.--></p>
+<!--*Double Tangent:* the \<Element 'a' at 0x286eb70> states that a browser that doesn't understand or support \<Element 'code' at 0x2116b70> can't just "cheat" and drop the alpha channel.--></p>
 <p><img class="center" src="/media/images/articles/2013/rgba.png" width="300px" /></p>
 <p>All the above are just ways of telling the browser how much red, green and blue go into making a given colour.
 For a standard browser, this is conveyed using 24 bits (8 bits per each of the three colour channels).
@@ -193,7 +194,7 @@ Imagine a soft shifting gradient from dark grey (#333) to lighter grey (#666) on
   <div align="center">
     <img src="/media/images/mini_coin.png" height="32" width="32" />
   </div>
-  Take a coin. No, not a Bitcoin. Do you know how expensive those are? ಠ_ಠ
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
 </footer>
 
   </div>

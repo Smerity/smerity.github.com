@@ -98,12 +98,12 @@ Even if you're not surprised yet, I tend to think you'll be surprised when you r
 As a minor tangent to the article, I posed the question <em>"how much of the traffic around the Internet is Google in a place to observe?"</em>, primarily as Google Analytics (GA) is one of the biggest users of HTTP referrers.
 Recently I had the opportunity to investigate this question further by <a href="http://smerity.com/cs205_ga/">research conducted for a final project at Harvard University</a>.
 Again, unlikely to surprise you, it turns out to be <abbr title="The more scientific numbers are further down the page. You know, percentages and stuff. No confidence intervals though.">a lot</abbr>.</p>
-<p>Google, over the past few years you have moved closer and closer towards SSL on all your products.
+<p>Over the past few years, Google have moved closer and closer towards SSL on all their products.
 In January 2010, <a href="http://gmailblog.blogspot.com/2010/01/default-https-access-for-gmail.html">Gmail became HTTPS by default</a>.
 In October 2011, <a href="http://googleblog.blogspot.com/2011/10/making-search-more-secure.html">Google Search became HTTPS by default</a>.
 In September 2013, <a href="http://googledevelopers.blogspot.com.au/2013/09/https-compatible-ad-code-for-adsense.html">Google AdSense added support for serving through HTTPS</a>.</p>
 <p><strong>Make early 2014 when Google Analytics becomes HTTPS by default.</strong></p>
-<p>With a flick of a switch, you can add security against unwanted surveillance for billions of users and webpages across the Internet.</p>
+<p>With a flick of a switch, Google can add security against unwanted surveillance for billions of users and webpages across the Internet.</p>
 <p class="alert alert-error">
   Before I begin, let me be clear about a few things.
   This is not a statement against <abbr title="I might change my tone if Google acquires Amazon, or the other way around, and an unholy drone army born from Google's driverless car technology and the Bezos drone armada begins hunting down all users who haven't yet given Google their real name for use on YouTube comments.">Google</abbr>, Google Analytics, analytics in general, or referrer tracking.
@@ -176,22 +176,21 @@ If you land on a web page with Google Analytics, a multitude of details are reco
 
 <p>By processing 535 million web pages from the <a href="http://commoncrawl.org/">Common Crawl corpus</a>, Chad Hornbaker and I came up with a loose estimate.
 Of the 535 million web pages processed from 48.5 million domains, 39.69% of them used Google Analytics.
-Looking at the 42 billion links across those 535 million web pages, we estimated that 51.43% of them had Google Analytics at one end of the links.</p>
+Yet of the 42 billion links across those 535 million web pages, we estimated that 48.96% of them had Google Analytics at the end of the link.
+That means, for about half of standard Internet traffic, both the originating site and the site the user end up on would being recorded.</p>
 <table class="table">
   <thead>
     <tr>
-      <th>N domains</th>
-      <th>Percentage using Google Analytics</th>
+      <th></th>
+      <th>Total Links Analyzed</th>
+      <th>Percentage ending in Google Analytics</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>GA&#8594;GA + NoGA&#8594;GA</td>
-      <td>TBA</td>
-    </tr>
-    <tr>
-      <td>GA&#8594;NoGA + GA&#8594;GA + NoGA&#8594;GA</td>
-      <td>51.43%</td>
+      <td>20,651,207,894 / 42,181,558,679</td>
+      <td>48.96%</td>
     </tr>
   </tbody>
 </table>
@@ -202,7 +201,8 @@ To perform this, the NSA would need to perform a man-in-the-middle attack for ea
 This either means observing all connections as they leave a user or observing all connections as they reach a server of interest.
 This doesn't scale well considering the number of users and servers on the Internet.</p>
 <p>With Google Analytics, the NSA can sidestep this, as it only has to eavesdrop on all connections to and from the Google Analytics servers.
-As we've just established, even though Google Analytics doesn't have full coverage of the Internet, they have substantial coverage.
+Not that <a href="http://en.wikipedia.org/wiki/Room_641A">that would ever happen</a>.
+As we've just established, even though Google Analytics doesn't have full coverage of the Internet, they have substantial coverage when you add in referrers.
 Hence, the NSA has an economical way to tap a large portion of web traffic, and they can spend extra resources where they deem necessary.</p>
 <h3>More than just the NSA</h3>
 <p>While this might be exciting for the NSA, it could be even more exciting for other smaller spy agencies.

@@ -5,41 +5,51 @@
     <meta name="referrer" content="always">
     <title>Smerity.com: Dithering: how it works and why it matters</title>
     
-<link rel="shortcut icon" href="/media/images/favicon.ico">
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
 
     
-<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-<!--[if lt IE 9]>
-  <script src="/media/js/html5.js"></script>
-<![endif]-->
-
-
-<link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
-
-<link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
-
-    
-<script type="text/javascript" src="/media/js/jquery.js"></script>
-<script src="/media/bootstrap/js/bootstrap.js"></script>
+  
+  <meta property="og:title" content="Dithering: how it works and why it matters">
+  
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
 
     
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
     
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-470775-5']);
-  _gaq.push(['_trackPageview']);
-  setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
-  setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
-  setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
-  setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
-  setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    ga.src = 'https://ssl.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 
   </head>
   <body>
@@ -88,7 +98,7 @@ Some of those places would give web designers nightmares.</p>
 
 <p><em>Tangent:</em> the three-digit RGB notation is expanded to the six-bit by repeating the hex digit (<code>#rgb</code> becomes <code>#rrggbb</code> instead of <code>#r0g0b0</code>).
 This, amongst other things, ensures that black (<code>#000</code>) and white (<code>#FFF</code>) expand to absolute black and white (<code>#000000</code> and <code>#FFFFFF</code> respectively).<br />
-<!--*Double Tangent:* the \<Element 'a' at 0x3d9c8a0> states that a browser that doesn't understand or support \<Element 'code' at 0x3d9cc60> can't just "cheat" and drop the alpha channel.--></p>
+<!--*Double Tangent:* the \<Element 'a' at 0x2d89cc0> states that a browser that doesn't understand or support \<Element 'code' at 0x34c4fc0> can't just "cheat" and drop the alpha channel.--></p>
 <p><img class="center" src="/media/images/articles/2013/rgba.png" width="300px" /></p>
 <p>All the above are just ways of telling the browser how much red, green and blue go into making a given colour.
 For a standard browser, this is conveyed using 24 bits (8 bits per each of the three colour channels).
@@ -200,11 +210,11 @@ Imagine a soft shifting gradient from dark grey (#333) to lighter grey (#666) on
   </div>
   
   
-<link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
-<!--[if lt IE 9]>
-  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
-<![endif]-->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
 
   
   </body>

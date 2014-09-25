@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: The Saga Of: Shuffling without using memory</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="The Saga Of: Shuffling without using memory">
+  
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">The Saga Of: Shuffling without using memory</h1>
+<h3 class="post-date">September 24, 2014</h3>
+  <p>tl;dr:
+You have an enormous compressed file, <code>urls.gz</code>, that you want to shuffle into <code>urls_shuffled.gz</code>.
+First attempt is to run <code>zcat urls.gz | shuf | gzip &gt; urls_shuffled.gz</code>.
+Infuriatingly, <code>shuf</code> only works in memory.
+<code>sort</code> is beautiful in that it works just as well for enormous files as it does for small.</p>
+<p><em>Note: I'm solving this problem in real time, so it's not 100% accurate but shows the thought process.
+Feel free to tease me when I get it wrong... ;)</em></p>
+<p>Ideally I'd like to take advantage of <code>sort</code>'s ability to handle large files relatively easily.
+One could preface each line with a random number, generated using any appropriate program such as <code>awk</code>, but that seems inefficient.
+Luckily, on checking <code>man sort</code>, there is a <code>--random-sort</code> option that "sort[s] by random hash of keys".
+Brilliant.</p>
+<p>Unfortunately, <code>sort</code> still needs the file to be on disk, so it needs to be decompressed.
+Luckily <code>sort</code> will handle the heavy lifting there, and is really intelligent with large files, but it could potentially be an issue if the decompressed output is really quite large.
+The closest solution about the place for this is a question on <a href="http://stackoverflow.com/questions/18125079/sort-lots-of-large-compressed-files">sorting lots of large compressed files</a> and even that mainly focuses on parallelizing the <code>sort</code> process.
+It does however make a nifty use of the <code>--merge</code> flag that only merges by assuming the input is sorted.
+Even then, I'd be curious to know whether <code>sort</code>'s own <code>--parallel=N</code> flag results in higher efficiency than the solution suggested.</p>
+<p>The file I want to shuffle (<code>com.txt.xz</code>, a list of 61 million .com domains from <a href="dnscensus2013.neocities.org">DNS Census 2013</a>) is only 187 megabytes compressed, so it shouldn't be too problematic to use a less than perfect method.</p>
+<p>Boom, let's do this thing.</p>
+<div class="codehilite"><pre><span class="n">xzcat</span> <span class="n">com</span><span class="p">.</span><span class="n">txt</span><span class="p">.</span><span class="n">xz</span> <span class="o">|</span> <span class="n">pv</span> <span class="o">|</span> <span class="n">sort</span> <span class="o">--</span><span class="n">random</span><span class="o">-</span><span class="n">sort</span> <span class="o">|</span> <span class="n">gzip</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">ephemeral0</span><span class="o">/</span><span class="n">torrent</span><span class="o">/</span><span class="n">com_random</span><span class="p">.</span><span class="n">gz</span>
+</pre></div>
+
+
+<p><code>xzcat</code> decompresses the file, <code>pv</code> allows me to see how much data is flowing through the pipe, <code>sort</code> handles randomly shuffling, and <code>gzip</code> compresses the final output.
+If you're curious and you want to monitor what's happening, <code>pv</code> is a start, but we can also check <code>htop</code> (shinier than <code>top</code>) for memory and CPU usage and <code>iotop</code> for disk usage.</p>
+<p>On reviewing using <code>htop</code>, my eight core box is only using one core -- almost all <code>sort</code> and a tiny bit <code>xzcat</code>.
+In the words of <strong>The Social Network</strong>, "it's definitely necessary to break out Emacs and modify that Perl script".
+Except in this case the command line and sort flags.</p>
+<p>Nope, the <code>--parallel=8</code> flag does nothing.
+Huzzah.
+Also tested without <code>--random-sort</code> and it still doesn't work.
+Whilst in the manpage again I came across <code>--compress-program=...</code> -- you can compress the temporary output of <code>sort</code>.
+Useful to know for later but it will likely end up slowing down the process here.</p>
+<p>Turns out that <code>--random-sort</code> is really quite slow.
+Like, stunningly slow, with full CPU utilization for one core, processing maybe a megabyte per second.
+Blargh.
+This is especially annoying for me as I don't want perfectly random, I just want pseudo-random, and would be happy with large imperfections.
+I'm curious whether this performance issue is due to the hashing algorithm used by <code>sort</code> or possibly due to sorting entirely random keys being a complete pain.
+Could be either.
+It certainly doesn't help that each new key is sorted according to a hash, and the hash aims to evenly distribute values across the entire range.</p>
+<p>Losing patience and sanity, especially as I don't want a truly random sort.
+I pondered randomly sorting sequential partitions (i.e. split the file in 10, randomly sort those 10 files), and then merge them using <code>sort</code>, but then the issue with that is it could end up very skewed on a theoretical basis.
+Imagine if the first segment end up with the first guy getting the largest number.
+That segment would not be merged until the end, in which case the entire segment would be lumped on.
+The only "random" part would be within the segment -- a very limited amount of random.
+Ewww.</p>
+<p>Now I'm curious how large the file actually is.
+Maybe I should give up on being smart and just expand it to disk.
+Disk is cheap and I happen to have a good chunk of it.
+<code>time xzcat com.txt.xz | pv | wc -c</code> will give me the size in bytes, plus <code>pv</code> to make sure I don't get bored.
+<code>pv</code> reports it's reading at around 30MB/s and half a minute later, <code>wc</code> reports the final file is around 1.1 GB (1112068488 bytes).</p>
+<p>Damn.
+I thought it was bigger.
+In my defence, my day job is spent dealing with things that don't sanely fit on hard disks.
+Let's expand the file and then try <code>sort --random-sort</code> on that.
+Bam, now <code>sort</code> is using all cores and, surprise surprise, the file is actually entirely cached in memory, so no disk activity.
+I should also mention, <code>sort</code> will use up to eight cores by default without you specifying the <code>--parallel</code> flag, so no work needed.</p>
+<p>It has now been running for some time, and <code>iotop</code> reports that <code>sort</code> is actually using disk.
+Spurts of a few megabytes per second at a time.
+In <code>/tmp/</code> there are a few random <code>sort...</code> files such as <code>sortO17hPL</code> are all around 200MB in size.
+Upon checking out the contents with <code>head</code>, one can see a pretty interesting pattern emerging.</p>
+<div class="codehilite"><pre><span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="n">tmp</span><span class="p">]</span><span class="err">$</span> <span class="n">head</span> <span class="n">sortxfJiYp</span>
+<span class="n">btempletes</span><span class="p">.</span><span class="n">com</span>
+<span class="n">bigaccfans</span><span class="p">.</span><span class="n">com</span>
+<span class="n">biljartdepot</span><span class="p">.</span><span class="n">com</span>
+<span class="n">asdoonline</span><span class="p">.</span><span class="n">com</span>
+<span class="n">alldiesels</span><span class="p">.</span><span class="n">com</span>
+<span class="mi">7</span><span class="n">rocks</span><span class="p">.</span><span class="n">com</span>
+<span class="n">brekhman</span><span class="p">.</span><span class="n">com</span>
+<span class="n">artspectrum</span><span class="p">.</span><span class="n">com</span>
+<span class="mi">215</span><span class="n">graphics</span><span class="p">.</span><span class="n">com</span>
+<span class="mi">1</span><span class="n">sttickets</span><span class="p">.</span><span class="n">com</span>
+<span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="n">tmp</span><span class="p">]</span><span class="err">$</span> <span class="n">head</span> <span class="n">sortO17hPL</span>
+<span class="n">mypetfection</span><span class="p">.</span><span class="n">com</span>
+<span class="n">preventionfirst</span><span class="p">.</span><span class="n">com</span>
+<span class="n">planetfriend</span><span class="p">.</span><span class="n">com</span>
+<span class="n">queerchachki</span><span class="p">.</span><span class="n">com</span>
+<span class="n">quietdiver</span><span class="p">.</span><span class="n">com</span>
+<span class="n">merecinema</span><span class="p">.</span><span class="n">com</span>
+<span class="n">nissanmckinney</span><span class="p">.</span><span class="n">com</span>
+<span class="n">mesubin</span><span class="p">.</span><span class="n">com</span>
+<span class="n">onlinecasinosandslots</span><span class="p">.</span><span class="n">com</span>
+<span class="n">ottobredesign</span><span class="p">.</span><span class="n">com</span>
+</pre></div>
+
+
+<p>Each file has a random chunk, yes, but only within a restricted domain of the alphabet.
+The original file, <code>com.txt.xz</code>, was sorted alphabetically.
+This is exactly what you'd expect from merge sort -- sort chunk by chunk and then merge those chunks.
+The only weirdness here of course is that we're sorting by random.</p>
+<p>I want to try and find you a later temporary sort file, one which actually involves combining two or more of these together.
+For that we can use <code>ls -ltr</code>.
+Honestly, I don't even remember what the flags stand for, it's instinctive when I want it sorted by creation with some details.
+Turns out <code>-l</code> is for long listing format, <code>-r</code> is for reverse, and <code>-t</code> is for sorting by modification time (newest to oldest).
+Makes sense.
+Thanks past me for figuring that out.</p>
+<div class="codehilite"><pre><span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="mi">2</span><span class="n">nd</span><span class="o">-</span><span class="n">level</span><span class="o">-</span><span class="n">domains</span><span class="p">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">ltr</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sort</span><span class="o">*</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">204665627</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">17</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortxfJiYp</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206620408</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">18</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortEjDAAv</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">203040320</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">20</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortRNqiUZ</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206915992</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">22</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortO17hPL</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206570511</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">24</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortn9PDp5</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span>  <span class="mi">84255630</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">24</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortkvB5ZI</span>
+</pre></div>
+
+
+<p>Unfortunately for those viewing at home, CPU usage has dropped but one process has spiked -- <code>gzip</code>.
+It's now receiving data to compress from <code>sort</code>.
+This means <code>sort</code> is no longer using temporary files, it's merging for the six files for the final result.
+I do believe I could explicitly make <code>sort</code> do more loops, but honestly, I leave that as an experiment for the reader at home, as I'm (a) lazy + (b) 3:30am + (c) I actually want to use this for an interesting task.
+Now that I think about it, I probably shouldn't have gzipped it, but oh well, live and learn, too late to bother restarting the command now and <code>gzip</code> is certainly not going to be a bottleneck at either end.</p>
+<p>And I'm done!
+16 minutes in real time, 60 minutes in user time.
+User time is the time the CPU spent spinning in user mode on our task.
+If it was breaking the laws of physics, I'd be very angry, but it's allowed to go faster than reality as it's counting the time spent on each of the eight cores.</p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/google_analytics_and_nsa.html">Google, make Google Analytics HTTPS by default (2013)</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+            </ul>
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

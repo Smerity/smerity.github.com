@@ -83,17 +83,17 @@
 <h3 class="post-date">April 3, 2015</h3>
   <p>If you were to browse Amazon right now and someone was eavesdropping on your connection, they could tell exactly what you were looking at.
 Even if you're logged in, all item browsing takes place over HTTP.
-This is tremendously odd given that it's 2015 and <a href="https://istlsfastyet.com/">encryption is fast enough for the masses</a>...</p>
+This is tremendously odd given that it's 2015 and <a href="https://istlsfastyet.com/">encryption is well and truly fast enough for the masses</a>...</p>
 <p><img class="smooth center" src="/media/images/articles/2015/amazon_http_browsing.png" />
 <p class="alert alert-info">
 This is a small extract from my browser history, filtered to only contain HTTP URLs.
-You can see both what I'm searching for (Yongnuo camera lenses) and the individual items themselves (the <a href="http://readyplayerone.com/">Ready Player One</a> novel).
+You can see both my searches ("Yongnuo camera lenses") and the individual items I browse (such as the <a href="http://readyplayerone.com/">Ready Player One</a> novel).
 </p></p>
 <p>Whilst that's troubling by itself, that's just the tip of the iceberg.
 Using trivial HTTP metadata, you can tell which items have been purchased by a user.
 If you capture the content and perform simple analysis, you can discover additional details such as when it was purchased and what product options were selected.</p>
 <p>I reported this to Amazon previously via <a href="http://smile.amazon.com/gp/help/customer/display.html/ref=hp_left_sib?ie=UTF8&amp;nodeId=201182150&amp;sa-no-redirect=1">their security email</a> but received a boilerplate response.
-Considering anyone interested in utilising this information leak would already be doing so, I feel it's worth raising awareness about the situation.
+Considering anyone interested in utilizing this information leak would already be doing so, I feel it's worth raising awareness about the situation.
 At the very least, it adds to some of my previous articles on <a href="http://smerity.com/articles/2013/google_analytics_and_nsa.html">the lack of default HTTPS on Google Analytics</a> and <a href="http://smerity.com/articles/2013/where_did_all_the_http_referrers_go.html">when HTTP referrers appear and disappear</a>.</p>
 <h2>Discovering which products a user has purchased</h2>
 <p>When you navigate to your <a href="https://www.amazon.com/gp/css/order-history">Order History</a> on Amazon, you're redirected to use HTTPS and are required to log in.
@@ -113,11 +113,12 @@ If I browse to this page, the <code>ref=oh_...</code> indicates this item was fr
 If I browse to this page from anywhere, the purchase information box is provided, and is sent over insecure HTTP.
 </p></p>
 <p>Amazon could fix some of this by removing the referrer (<code>ref</code>) but that would still leave the product box which appears if the user views the item's page.
+Most importantly, leaving pages to be served over HTTP allows for other future information leaks to occur.
 The easiest solution would be to sidestep the entire situation and go to HTTPS by default.
 The question of <a href="https://istlsfastyet.com/">whether TLS is fast enough</a> has been answered long ago.</p>
 <p>It's 2015 and Amazon is used all over the world.
 The list of countries they ship to is staggering.
-Their customers may face threats from something as trivial as an insecure wireless point at a cafe to an oppressive government with no regards to privacy.
+Their customers may face threats from something as trivial as an insecure wireless point at a cafe to the extreme of an oppressive government who hold no regards to their privacy.
 Why not make the world a little more resilient to eavesdropping at the flip of a switch?</p>
 
         </div>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: How Google Sparsehash achieves two bits of overhead per entry using sparsetable</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="How Google Sparsehash achieves two bits of overhead per entry using sparsetable">
+  
+  <meta name="description" content="Google Sparsehash is one of the most space efficient hash tables, but how does it achieve two bits of overhead per entry?" />
+  <meta property="og:description" content="Google Sparsehash is one of the most space efficient hash tables, but how does it achieve two bits of overhead per entry?" />
+  <meta name="twitter:description" content="Google Sparsehash is one of the most space efficient hash tables, but how does it achieve two bits of overhead per entry?" />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2015/amazon_lock_order_history.png" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2015/amazon_lock_order_history.png" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</h1>
+<h3 class="post-date">May 25, 2015</h3>
+  <p><a href="https://code.google.com/p/sparsehash/">Google Sparsehash</a> was released in 2005 and offered two different hash table implementations - Densehash for speed and Sparsehash for space.
+The Sparsehash implementation remains one of the most space efficient hash tables available, requiring only two bits of overhead per entry.
+Given that just saying whether something exists or not costs a bit, that's not too bad.</p>
+<p>How is it possible to be that space efficient whilst still maintaining reasonable performance?
+Today I'll be explaining, in relatively plain English, how the sparse array (called <em>sparsetable</em>) underlying Google Sparsehash works.</p>
+<p class="alert alert-danger">
+Whilst the majority of the post is finished, the last section is still incomplete.
+</p>
+
+<h2>Hash Table and Open Addressing Review</h2>
+<p><p class="alert alert-info">
+If you are comfortable with how hash tables work, specifically if the phrase "open addressing using quadratic probing" doesn't make you question your sanity, feel free to skip this section.
+</p></p>
+<p>Hash tables are one of the magical data structures of computer science.
+In the early days of computing, an 8-bit deity came down <a href="http://giphy.com/gifs/weird-abstract-4WSTSdQZXwME0">in all his/her pixelated goodness</a> and delivered unto us a data structure that allows for <code>O(1)</code> insertion, deletion, and lookup.
+It's even easy to implement.</p>
+<p>Hash tables store key-value pairs, such as going from an email to a name, where the email would be the key and the name the value.</p>
+<p><code>Email =&gt; Name</code>
+<code>smerity@smerity.com =&gt; Stephen Merity</code></p>
+<p>Hash tables are also frequently referred to as dictionaries, specifically as that's exactly what they become if we set the key to be a word and the value to be the word's description.</p>
+<p>For a full description of hash tables and how they achieve such quick insertion and lookup times, there are likely <a href="http://en.wikipedia.org/wiki/Hash_table">far better sources available</a>.
+In the next few lines I will try to describe them with brutal (and likely messy) efficiency.</p>
+<h2>Sparsetable</h2>
+<p>The underlying reason why hash tables are space inefficient is that we need to store a very large array in order to ensure we have good performance.
+How large?
+If we are using open addressing, one would generally leave 20-50% of the space empty.
+If we allow the empty space to drop too low, the hash table can degenerate into a full traversal to find items - <code>O(N)</code>.
+Given hash tables are usually featured in the inner loop of more complex algorithms, the not too bad sounding <code>O(N)</code> rapidly becomes a "<a href="http://en.wikipedia.org/wiki/Lp0_on_fire">why is my computer on fire!?!?</a>" problem.</p>
+<p>As such, the easiest way to minimize the size of the hash table is by minimizing the size of the array.
+Whilst we only discuss sparse tables, there are many more interesting data structures that use space close to the information theoretic minimum under the field of <a href="http://en.wikipedia.org/wiki/Succinct_data_structure">succinct data structures</a>.</p>
+<h3>Understanding Sparsetable</h3>
+<p>Traditional arrays of size N require <code>N x len(obj)</code> bytes, even if only one slot in the array is used.
+In the image below, an array of length 16 only stores 6 elements, wasting 10 of the slots.</p>
+<p><img class="center" src="/media/images/articles/2015/sparsetable_raw_array.svg"></p>
+<p>Sparsetable solves this issue by creating an array where elements that are "empty" only require a small amount of storage compared to the size of the element it would contain if it were full.
+Sparsetable is able to get this all the way down to 1 bit of storage for each unused element whilst still allowing constant time insertion, deletion, and lookup.</p>
+<p><img class="center" src="/media/images/articles/2015/sparsetable_sparse_array.svg"></p>
+<p>We can represent the image above by breaking the array into small buckets - in this case, a bucket covers four elements.
+Each bucket needs to know which elements are stored and also to have a space for storing those elements.
+To know which elements are stored, we can turn to a binary string, such as <code>0100</code> for the first bucket.</p>
+<p>For the full example above, the binary string becomes <code>0100|1001|0000|1011</code>.
+This costs 1 bit per element, regardless of whether slot is empty or full.</p>
+<p>For real tasks however we also want to store objects in each of these array slots.
+To do this, we then create a real array for each bucket, exactly the length required to store the active elements - i.e. the number of 1's in the bucket's binary string.
+This wastes no space at all, as the array stores exactly what we need it to store.</p>
+<p>So where does the extra bit comes from?
+We need to store a pointer to the bucket's array.
+In our toy case this is expensive as our buckets hold very few elements each.
+A 64 bit pointer for four elements results in 16 bits of overhead per element.
+If we're lucky and on a 32 bit system, that's only 8 bits of overhead per element.</p>
+<p>In the case of sparsetables, each bucket holds <code>32 * x + 16</code> elements, resulting in far more reasonable overheads for empty slots.<br />
+(here's a secret: it's only 2 bits of overhead for empty slots on 32 bit machines - on 64 bit machines is 2.67 - SHOCKING)</p>
+<h2>Advantages of SparseHash over traditional hash tables</h2>
+<ul>
+<li>Resizing usually doubles space usage</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li><a href="http://research.neustar.biz/2011/11/27/big-memory-part-3-5-google-sparsehash/">Big Memory, Part 3.5: Google sparsehash!</a> as part of the fascinating <a href="http://research.neustar.biz/tag/bigmemory/">Big Memory series</a> from <a href="https://www.neustar.biz/">Neustar</a><br />
+  (for "fun" that involves crying hysterically into a box of tissues, compare hash table performance between C++ and Java in <a href="http://research.neustar.biz/2011/12/12/big-memory-part-4/">Part 4</a>)</li>
+<li><a href="http://danluu.com/assembly-intrinsics/">Hand Coded Assembly Beats Intrinsics in Speed and Simplicity</a> for deep discussion on popcnt</li>
+<li><a href="http://instagram-engineering.tumblr.com/post/12202313862/storing-hundreds-of-millions-of-simple-key-value">Storing hundreds of millions of simple key-value pairs in Redis</a></li>
+<li><a href="http://oldblog.antirez.com/post/redis-weekly-update-7.html">Redis weekly update Number 7 - Full of keys</a></li>
+</ul>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/google_analytics_and_nsa.html">Google, make Google Analytics HTTPS by default (2013)</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+            </ul>
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

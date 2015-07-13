@@ -93,7 +93,8 @@
 <h3 class="post-date">May 25, 2015</h3>
   <p><a href="https://code.google.com/p/sparsehash/">Google Sparsehash</a> was released in 2005 and offered two different hash table implementations - Densehash for speed and Sparsehash for space.
 The Sparsehash implementation remains one of the most space efficient hash tables available, requiring only two bits of overhead per entry.
-Given that just saying whether something exists or not costs a bit, that's not too bad.</p>
+Given that just saying whether something exists or not costs a bit, that's not too bad.
+It's even performant - only two to three times slower than most other C++ hash table libraries.</p>
 <p>How is it possible to be that space efficient whilst still maintaining reasonable performance?
 Today I'll be explaining, in relatively plain English, how the sparse array underlying Google Sparsehash, called <em>sparsetable</em>, works.</p>
 <h2>Hash Table and Open Addressing Review</h2>
@@ -189,6 +190,13 @@ Sparsehash is also able to move items from the smaller Sparsehash to the larger 
 <p>The graph above, from <a href="http://research.neustar.biz/2011/11/27/big-memory-part-3-5-google-sparsehash/">Big Memory, Part 3.5: Google sparsehash!</a> by <a href="https://www.neustar.biz/">Neustar Research</a>, shows how smoothly Sparsehash is able to grow.
 The other hash table libraries all experience blocky growth, caused by increases in the underlying array size to keep the load factor reasonable.
 For certain applications, being able to accurately predict memory usage is vastly important, and it's in these situations Sparsehash really comes out ahead.</p>
+<h2>Conclusion</h2>
+<p>Whilst Sparsehash aims to be memory efficient, it doesn't sacrifice speed to achieve its goal.</p>
+<p>Best of all, the theory behind this well crafted implementation lends itself to other arenas.
+Indeed, <a href="http://oldblog.antirez.com/post/redis-weekly-update-7.html">Redis</a> accidentally implements something quite similar to this by their use of <a href="http://redis.io/topics/memory-optimization">zipmaps</a>!</p>
+<p>For me, the key point is that even if we have machines with <a href="http://www.ec2instances.info/">244GB of RAM</a> available at our fingertips, we will always find a new task that leaves us begging for that extra gigabyte.
+Sparsehash can save us in those cases.
+The fact we end up only two to three times slower than most other C++ hash table libraries should make us cry for joy.</p>
 <h2>References</h2>
 <ul>
 <li><a href="http://research.neustar.biz/2011/11/27/big-memory-part-3-5-google-sparsehash/">Big Memory, Part 3.5: Google sparsehash!</a> as part of the fascinating <a href="http://research.neustar.biz/tag/bigmemory/">Big Memory series</a> from <a href="https://www.neustar.biz/">Neustar</a><br />

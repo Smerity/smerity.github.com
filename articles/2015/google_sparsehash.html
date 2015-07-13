@@ -95,25 +95,61 @@
 The Sparsehash implementation remains one of the most space efficient hash tables available, requiring only two bits of overhead per entry.
 Given that just saying whether something exists or not costs a bit, that's not too bad.</p>
 <p>How is it possible to be that space efficient whilst still maintaining reasonable performance?
-Today I'll be explaining, in relatively plain English, how the sparse array (called <em>sparsetable</em>) underlying Google Sparsehash works.</p>
-<p class="alert alert-danger">
-Whilst the majority of the post is finished, the last section is still incomplete.
-</p>
-
+Today I'll be explaining, in relatively plain English, how the sparse array underlying Google Sparsehash, called <em>sparsetable</em>, works.</p>
 <h2>Hash Table and Open Addressing Review</h2>
 <p><p class="alert alert-info">
-If you are comfortable with how hash tables work, specifically if the phrase "open addressing using quadratic probing" doesn't make you question your sanity, feel free to skip this section.
+If you are comfortable with how hash tables work, specifically if the phrase "open addressing using linear / quadratic probing" doesn't make you question your sanity, feel free to skip this section.
 </p></p>
 <p>Hash tables are one of the magical data structures of computer science.
-In the early days of computing, an 8-bit deity came down <a href="http://giphy.com/gifs/weird-abstract-4WSTSdQZXwME0">in all his/her pixelated goodness</a> and delivered unto us a data structure that allows for <code>O(1)</code> insertion, deletion, and lookup.
+In the early days of computing, an 8-bit deity came down in all <a href="http://giphy.com/gifs/weird-abstract-4WSTSdQZXwME0">his/her pixelated goodness</a> and delivered unto us a data structure that allows for <code>O(1)</code> insertion, deletion, and lookup.
 It's even easy to implement.</p>
 <p>Hash tables store key-value pairs, such as going from an email to a name, where the email would be the key and the name the value.</p>
 <p><code>Email =&gt; Name</code>
 <code>smerity@smerity.com =&gt; Stephen Merity</code></p>
 <p>Hash tables are also frequently referred to as dictionaries, specifically as that's exactly what they become if we set the key to be a word and the value to be the word's description.</p>
-<p>For a full description of hash tables and how they achieve such quick insertion and lookup times, there are likely <a href="http://en.wikipedia.org/wiki/Hash_table">far better sources available</a>.
-In the next few lines I will try to describe them with brutal (and likely messy) efficiency.</p>
-<h2>Sparsetable</h2>
+<p>For a full description of hash tables and how they achieve such quick insertion and lookup times, there are likely <a href="http://en.wikipedia.org/wiki/Hash_table">far better sources available</a> than I could produce.</p>
+<p>To fully grok the contents below, you simply need to know that:</p>
+<ul>
+<li>Underlying a hash table is a large array of length <code>N</code>. Most of these slots are empty. Empty slots are bad as you're wasting a large amount of space.</li>
+<li>If we use <a href="https://en.wikipedia.org/wiki/Hash_table#Separate_chaining">chaining</a> for handling collision, each slot in the array is a linked list. This results in a large amount of overhead as each element in the linked list must store a 32 or 64 bit pointer.</li>
+<li>If we use <a href="https://en.wikipedia.org/wiki/Hash_table#Open_addressing">open addressing</a> for handling collision, we must be very wary with how many empty slots are in the array. If too many slots are taken, lookup can devolve (in the worst case) to an <code>O(n)</code> traversal. This means we need to keep the load factor low as otherwise we'll hurt performance, but keeping the load factor low means we're wasting space.</li>
+</ul>
+<!--
+### Hash table basics
+Underlying a hash table is a large array of length `N`, where `N` changes depending on a number of factors.
+For now, imagine that `N` is very large - far larger than the number of items we're likely to store.
+
+To decide where a key K should be placed in the array, we're going to use a hash of the key.
+A [hash](https://en.wikipedia.org/wiki/Hash_function) is (loosely) a seemingly random number that can be computed from an object.
+The number isn't random and is based upon the composition of the supplied data, so the hash for two objects which are identical should also be identical.
+Most hashing algorithms desire the hash for two very similar objects to be [incredibly different](https://en.wikipedia.org/wiki/Avalanche_effect).
+
+When we have the hash `h` for the key K that we're hashing, we can place the corresponding value into the array by placing it at the `h % len(array)` slot (i.e. the remainder after dividing the hash by the length of the array).
+When we want to look up the value of a given key K, we compute the hash `h` and then retrieve the value at the specified slot.
+
+### Handling collisions - chaining versus open addressing
+
+You've likely already leapt ahead of me and are flailing your hands in the air screaming "what happens if we have a collision?!?!?!".
+One could recommend we just make the hash table larger, but it turns out that collisions are very frequent, even for an arbitrarily large array.
+Indeed, the [birthday paradox](https://en.wikipedia.org/wiki/Birthday_problem) trivially shows this - with just 23 people in a room, there is a 50% probability of finding two people with the same birthday.
+
+Given this revelation, we'll need to deal with collisions. Traditionally two options exist.
+
+The first is chaining.
+Chaining is simply having each slot be a linked list.
+When you go to store a value, you add the key and value onto the existing linked list.
+When you want to retrieve the value for a given key K, you walk along the linked list until you find the matching key and value pair.
+This works well but does result in a large amount of overhead.
+Linked lists require a pointer per element in the list, resulting in 32 or 64 bits of overhead per item you're storing.
+For some tasks, such as storing small integer values or short strings, that's a great deal of wasted space.
+
+The other option is open addressing.
+In the simplest version, open addressing just keeps checking the slot next in line to see if it's full or empty.
+If we're inserting, we find the next nearest empty slot.
+If we're looking a key K up, we keep walking along until we find the
+-->
+
+<h2>Introducing sparsetable</h2>
 <p>The underlying reason why hash tables are space inefficient is that we need to store a very large array in order to ensure we have good performance.
 How large?
 If we are using open addressing, one would generally leave 20-50% of the space empty.
@@ -129,31 +165,37 @@ In the image below, an array of length 16 only stores 6 elements, wasting 10 of 
 Sparsetable is able to get this all the way down to 1 bit of storage for each unused element whilst still allowing constant time insertion, deletion, and lookup.</p>
 <p><img class="center" src="/media/images/articles/2015/sparsetable_sparse_array.svg"></p>
 <p>We can represent the image above by breaking the array into small buckets - in this case, a bucket covers four elements.
-Each bucket needs to know which elements are stored and also to have a space for storing those elements.
+Each bucket needs to know which elements are stored and have a space for storing those elements.
 To know which elements are stored, we can turn to a binary string, such as <code>0100</code> for the first bucket.</p>
 <p>For the full example above, the binary string becomes <code>0100|1001|0000|1011</code>.
-This costs 1 bit per element, regardless of whether slot is empty or full.</p>
+This costs 1 bit per element, regardless of whether the slot is empty or full.</p>
 <p>For real tasks however we also want to store objects in each of these array slots.
 To do this, we then create a real array for each bucket, exactly the length required to store the active elements - i.e. the number of 1's in the bucket's binary string.
 This wastes no space at all, as the array stores exactly what we need it to store.</p>
-<p>So where does the extra bit comes from?
+<p>When we want to retrieve an item from a given slot, we work out which bucket it's in and count how many used slots are before it.
+For example, if we wanted to get the third element of the bucket <code>1011</code> (one-indexed, so the value of <code>__X_</code>), we'd see that there is one item stored before it, meaning the slot is actually in the second position of the array.</p>
+<p>Google Sparsehash uses 2 bits per empty item however - so where does that extra bit comes from?
 We need to store a pointer to the bucket's array.
 In our toy case this is expensive as our buckets hold very few elements each.
 A 64 bit pointer for four elements results in 16 bits of overhead per element.
-If we're lucky and on a 32 bit system, that's only 8 bits of overhead per element.</p>
-<p>In the case of sparsetables, each bucket holds <code>32 * x + 16</code> elements, resulting in far more reasonable overheads for empty slots.<br />
-(here's a secret: it's only 2 bits of overhead for empty slots on 32 bit machines - on 64 bit machines is 2.67 - SHOCKING)</p>
+If we're lucky and on a 32 bit system, that's only 8 bits of overhead per element.
+In the case of sparsetables, each bucket holds <code>32 * x + 16</code> elements, resulting in far more reasonable overheads for empty slots.</p>
+<p>(here's a secret: Sparsehash only uses 2 bits of overhead for empty slots on 32 bit machines - on 64 bit machines the pointer overhead means it's 2.67)</p>
 <h2>Advantages of SparseHash over traditional hash tables</h2>
-<ul>
-<li>Resizing usually doubles space usage</li>
-</ul>
+<p>When the load factor of a Sparsehash hash table grows too large, the underlying sparsetable is able to be doubled with only a minor increase in memory usage - two bits of overhead per empty slot.
+Even for a billion empty slots, that's only 250 megabytes of overhead.
+Sparsehash is also able to move items from the smaller Sparsehash to the larger Sparsehash essentially in-place by moving over a single bucket at a time.</p>
+<p><img class="center" src="/media/images/articles/2015/hash_table_space_benchmark.png"></p>
+<p>The graph above, from <a href="http://research.neustar.biz/2011/11/27/big-memory-part-3-5-google-sparsehash/">Big Memory, Part 3.5: Google sparsehash!</a> by <a href="https://www.neustar.biz/">Neustar Research</a>, shows how smoothly Sparsehash is able to grow.
+The other hash table libraries all experience blocky growth, caused by increases in the underlying array size to keep the load factor reasonable.
+For certain applications, being able to accurately predict memory usage is vastly important, and it's in these situations Sparsehash really comes out ahead.</p>
 <h2>References</h2>
 <ul>
 <li><a href="http://research.neustar.biz/2011/11/27/big-memory-part-3-5-google-sparsehash/">Big Memory, Part 3.5: Google sparsehash!</a> as part of the fascinating <a href="http://research.neustar.biz/tag/bigmemory/">Big Memory series</a> from <a href="https://www.neustar.biz/">Neustar</a><br />
   (for "fun" that involves crying hysterically into a box of tissues, compare hash table performance between C++ and Java in <a href="http://research.neustar.biz/2011/12/12/big-memory-part-4/">Part 4</a>)</li>
-<li><a href="http://danluu.com/assembly-intrinsics/">Hand Coded Assembly Beats Intrinsics in Speed and Simplicity</a> for deep discussion on popcnt</li>
-<li><a href="http://instagram-engineering.tumblr.com/post/12202313862/storing-hundreds-of-millions-of-simple-key-value">Storing hundreds of millions of simple key-value pairs in Redis</a></li>
-<li><a href="http://oldblog.antirez.com/post/redis-weekly-update-7.html">Redis weekly update Number 7 - Full of keys</a></li>
+<li><a href="http://danluu.com/assembly-intrinsics/">Hand Coded Assembly Beats Intrinsics in Speed and Simplicity</a> for deep discussion on popcnt, which would be used for counting the number of active slots are in a bucket (i.e. count how many times <code>1</code> appears in the bucket's bitstring of <code>10110100</code>)</li>
+<li><a href="http://oldblog.antirez.com/post/redis-weekly-update-7.html">Redis weekly update Number 7 - Full of keys</a> where antirez suggests an approach which closely resembles Sparsehash's (i.e. small hashtables in Redis are implemented as a <code>zipmap</code> - a flat array - mimicking the bucket strategy above)</li>
+<li><a href="http://instagram-engineering.tumblr.com/post/12202313862/storing-hundreds-of-millions-of-simple-key-value">Storing hundreds of millions of simple key-value pairs in Redis</a> where the Instagram team implemented a similar solution to antirez by taking advantage of <code>zipmaps</code></li>
 </ul>
 
         </div>

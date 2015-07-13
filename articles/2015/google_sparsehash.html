@@ -180,7 +180,7 @@ We need to store a pointer to the bucket's array.
 In our toy case this is expensive as our buckets hold very few elements each.
 A 64 bit pointer for four elements results in 16 bits of overhead per element.
 If we're lucky and on a 32 bit system, that's only 8 bits of overhead per element.
-In the case of sparsetables, each bucket holds <code>32 * x + 16</code> elements, resulting in far more reasonable overheads for empty slots.</p>
+In the case of sparsetables, each bucket holds <code>32 * x + 16</code> elements (<a href="https://code.google.com/p/sparsehash/source/browse/trunk/src/sparsehash/sparsetable#275">why that formula?</a>), resulting in far more reasonable overheads for empty slots.</p>
 <p>(here's a secret: Sparsehash only uses 2 bits of overhead for empty slots on 32 bit machines - on 64 bit machines the pointer overhead means it's 2.67)</p>
 <h2>Advantages of SparseHash over traditional hash tables</h2>
 <p>When the load factor of a Sparsehash hash table grows too large, the underlying sparsetable is able to be doubled with only a minor increase in memory usage - two bits of overhead per empty slot.

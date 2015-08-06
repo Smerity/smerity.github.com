@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Question answering on the Facebook bAbi dataset using deep recurrent neural networks and 175 lines of Keras</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Question answering on the Facebook bAbi dataset using deep recurrent neural networks and 175 lines of Keras">
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2015/keras_qa_model.png" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2015/keras_qa_model.png" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Question answering on the Facebook bAbi dataset using deep recurrent neural networks and 175 lines of Keras</h1>
+<h3 class="post-date">August 5, 2015</h3>
+  <p>One of the holy grails of natural language processing is a generic system for question answering.
+The <a href="https://research.facebook.com/researchers/1543934539189348">Facebook bAbi tasks</a> are a synthetic dataset of 20 tasks released by the Facebook AI Research team that help evaluate systems hoping to do just that.</p>
+<p>An example from the second task, Two Supporting Facts (QA2), is below:</p>
+<style>
+span.focus {color: #C44;}
+div.example {margin: 1em 8em; padding: 0.5em; background-color: #f9f9f9; border-radius: 0.5em;}
+</style>
+
+<!--
+#QA1
+<div class="example">
+1 Mary moved to the bathroom.<br />
+2 John went to the hallway.<br />
+3 Where is Mary? <span class="focus">bathroom 1</span><br />
+4 Daniel went back to the hallway.<br />
+5 Sandra moved to the garden.<br />
+6 Where is Daniel? <span class="focus">hallway 4</span><br />
+</div>
+-->
+
+<div class="example">
+1 John moved to the bedroom.<br />
+2 <b>Mary grabbed the football there.</b><br />
+3 Sandra journeyed to the bedroom.<br />
+4 Sandra went back to the hallway.<br />
+5 Mary moved to the garden.<br />
+6 <b>Mary journeyed to the office.</b><br />
+7 Where is the <b>football</b>? <span class="focus">office 2 6</span><br />
+</div>
+
+<p>Whilst this may seem trivial to you, it can represent quite a challenge even for advanced machine learning models.
+The bAbi tasks cover far more than trivial comprehension however - they're supposed to represent a prerequisite towards an AI-Complete question answering solution.
+Each task aims to require a unique aspect of text and reasoning, testing the different capabilities of the learning models.
+To answer the questions correctly, the models must be able to perform induction, deduction, fact chaining, and more.</p>
+<p>Whilst doing well on this task requires advanced tools, we can implement a baseline solution in only a few lines using the Keras machine learning library.
+The results are comparable (and occasionally superior) to those for the LSTM baseline provided in Weston et al.'s <a href="http://arxiv.org/abs/1502.05698">Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks</a> given only 1000 samples and without any hyperparamater tuning.</p>
+<h2>Try it yourself!</h2>
+<p>The question answering code this article refers to is now part of the Keras distribution: <a href="https://github.com/fchollet/keras/blob/master/examples/babi_rnn.py">babi_rnn.py</a> in the examples directory.
+When you run the example, Keras will automatically download the dataset and start training.</p>
+<p>Best of all, as opposed to most deep learning tasks, training these models will only take a few minutes each!</p>
+<h2>Why a synthetic dataset?</h2>
+<p>As bAbi is a synthetic dataset, you may ask why we're interested in doing well on it, or why we even created it at all.</p>
+<p>Real world data is noisy.
+Rarely does it provide a clear and simple answer for you to train on.
+Additionally, even a well curated dataset from the real world is littered with nuance, complexities, and errors.</p>
+<p>Instead of relying on real world data, we can instead challenge the machine learning models using simulations reminiscent of classic text adventure games.
+The tasks are generated using a simulation reminiscent of a classic text adventure game.
+By using an artificial world we know the exact state the world is in and the exact set of rules by which it runs.
+Thanks to this, generating training and testing data is trivial.</p>
+<p>As opposed to real world material, the data is also well curated.
+The vocabulary (set of words) is constrained, the sentences are always well structured (the only noise is the noise we want to challenge the model with), and the performance on specific tasks can be tested without other tasks interferring.
+As we know the exact state of the world and how it got to that point, we can also provide additional helpful information, such as pointing out precisely how the answer can be reached (the supporting facts in bold above).</p>
+<p>With the synethetic dataset, all the commonsense knowledge and reasoning required for the test set should be contained in the training set.
+That way, if a machine learning model then fails to solve the task, we know that the challenge is in the model itself, and not the data (or lack of data) it was exposed to.</p>
+<h2>How do we approach the problem?</h2>
+<p>One of the easiest ways to approach a task is to code a basline solution.
+Baseline solutions are meant to provide the best "bang for the buck" - the minimal amount of work for the best result possible.
+In this situation, a recurrent neural network (RNN) is the baseline we can turn to.</p>
+<p>Recurrent neural networks such as Long Short Term Memory (LSTM) and the Gated Recurrent Unit (GRU) are neural networks that can process a sequence of inputs, updating the network's internal state as it reads more data.
+This enables it to learn long term dependencies such as bracket matching.
+As we encode words into a vector representation, we can consider a sentence as a sequence of words, feeding them one at a time into our RNN.</p>
+<p>Instead of implementing these models ourselves, we can instead use an existing implementation.</p>
+<h2>Keras - a deep learning library for Python</h2>
+<p><a href="http://keras.io/">Keras is a minimalist, highly modular neural network library in the spirit of Torch, written in Python, that uses Theano under the hood for optimized tensor manipulation on GPU and CPU.</a></p>
+<p>As an open source project, it has strong documentation, an active community, and a good leader. (François Chollet).
+Only <a href="https://github.com/fchollet/keras/pull/477">three hours</a> after submitting my pull request for this example code, François Chollet (fchollet) merged in the code.
+The rapid turn around of the project and strong examples make it a good library to get going with deep learning.
+Keras also leverages the Theano library, a Python library defining, optimizing, and evaluating mathematical expressions involving multi-dimensional arrays efficiently.</p>
+<h2>The challenge at hand</h2>
+<p>Our idea is as follows: each task has a story component and a query component.
+We will run an RNN over both of these components, converting the long sequence of words into a fixed vector representation.
+This fixed vector representation should hopefully encapsulate all of the relevant input.
+Finally, we feed these two fixed vector representations into a traditional dense neural network, where it can look at the encoded query, then at the encoded story, and hopefully answer the question correctly.</p>
+<p><img class="center" src="/media/images/articles/2015/keras_qa_model.svg"></p>
+<h3>Word vectors</h3>
+<p>One additional component is the word vector representation.
+This is where hope to convert a word into a fixed vector representation encapsulating extra knowledge about it.
+Word vectors hope to capture the meaning behind the word, enabling related words to be considered similar and thus act in similar fashions.</p>
+<p>This might be important if, for example, we had the two sentences:<br />
+<strong>John put down the apple.</strong><br />
+<strong>John dropped the apple.</strong><br />
+but are only interested in answering the question "<strong>Does John have the apple?</strong>", where the nuance between putting something down and dropping it is unimportant.</p>
+<p>Whilst we can learn good word vector representations for the small set of words in these task, it wouldn't have broader knowledge.
+For a real task, where knowing extra information might be useful (such as frog ~= toad), we could use existing word vectors trained on billions of words, such as the Stanford's <a href="http://nlp.stanford.edu/projects/glove/">GloVe</a>.</p>
+<h3>The code</h3>
+<p>Luckily, the code for this is stunningly simple thanks to Keras.
+You can see the full code at <a href="https://github.com/fchollet/keras/blob/master/examples/babi_rnn.py">babi_rnn.py</a> but the relevant recurrent network code is quickly and minimally contained below.</p>
+<div class="codehilite"><pre><span class="n">sentrnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">sentrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">mask_zero</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">sentrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RNN</span><span class="p">(</span><span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">SENT_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+
+<span class="n">qrnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">qrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">EMBED_HIDDEN_SIZE</span><span class="p">))</span>
+<span class="n">qrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RNN</span><span class="p">(</span><span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">QUERY_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Merge</span><span class="p">([</span><span class="n">sentrnn</span><span class="p">,</span> <span class="n">qrnn</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;concat&#39;</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">SENT_HIDDEN_SIZE</span> <span class="o">+</span> <span class="n">QUERY_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;softmax&#39;</span><span class="p">))</span>
+</pre></div>
+
+
+<h2>Final results</h2>
+<p>In this section, I compare the final results for the Keras based question answering system with the LSTM baseline provided by the Facebook paper.</p>
+<p>The results are comparable (and occasionally superior) to those for the LSTM baseline provided in Weston et al.'s <a href="http://arxiv.org/abs/1502.05698">Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks</a> given only 1000 samples and without any hyperparamater tuning.
+The same model is also used across all tasks.</p>
+<p>Unfortunately, the baseline is just that.
+Using traditional recurrent neural networks, such as the LSTM or GRU, won't give you substantially better performance even if you scale up the network tremendously.
+For better results, new neural network configurations have been suggested and used, such as Facebook's <a href="http://arxiv.org/pdf/1410.3916.pdf">Memory Network</a> (further improved in the paper presenting the bAbi dataset), Google's <a href="http://arxiv.org/pdf/1410.5401.pdf">Neural Turing Machine</a>, and MetaMind's <a href="http://arxiv.org/pdf/1506.07285.pdf">Dynamic Memory Networks</a>.</p>
+<p>All of these models can take advantage of knowing where the supporting facts are, learning where to focus attention in the input, and performing multiple "lookups" to track down relevant information.
+I'm hoping to implement a simple version of one of these models in the near future.</p>
+<p>For now, however, I'm content with my simple baseline.</p>
+<table class="table table-striped"><thead>
+<tr>
+<th>Task Number</th>
+<th>FB LSTM Baseline</th>
+<th>Keras QA</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>QA1 - Single Supporting Fact</td>
+<td>50</td>
+<td>52.1</td>
+</tr>
+<tr>
+<td>QA2 - Two Supporting Facts</td>
+<td>20</td>
+<td>37.0</td>
+</tr>
+<tr>
+<td>QA3 - Three Supporting Facts</td>
+<td>20</td>
+<td>20.5</td>
+</tr>
+<tr>
+<td>QA4 - Two Arg. Relations</td>
+<td>61</td>
+<td>62.9</td>
+</tr>
+<tr>
+<td>QA5 - Three Arg. Relations</td>
+<td>70</td>
+<td>61.9</td>
+</tr>
+<tr>
+<td>QA6 - Yes/No Questions</td>
+<td>48</td>
+<td>50.7</td>
+</tr>
+<tr>
+<td>QA7 - Counting</td>
+<td>49</td>
+<td>78.9</td>
+</tr>
+<tr>
+<td>QA8 - Lists/Sets</td>
+<td>45</td>
+<td>77.2</td>
+</tr>
+<tr>
+<td>QA9 - Simple Negation</td>
+<td>64</td>
+<td>64.0</td>
+</tr>
+<tr>
+<td>QA10 - Indefinite Knowledge</td>
+<td>44</td>
+<td>47.7</td>
+</tr>
+<tr>
+<td>QA11 - Basic Coreference</td>
+<td>72</td>
+<td>74.9</td>
+</tr>
+<tr>
+<td>QA12 - Conjunction</td>
+<td>74</td>
+<td>76.4</td>
+</tr>
+<tr>
+<td>QA13 - Compound Coreference</td>
+<td>94</td>
+<td>94.4</td>
+</tr>
+<tr>
+<td>QA14 - Time Reasoning</td>
+<td>27</td>
+<td>34.8</td>
+</tr>
+<tr>
+<td>QA15 - Basic Deduction</td>
+<td>21</td>
+<td>32.4</td>
+</tr>
+<tr>
+<td>QA16 - Basic Induction</td>
+<td>23</td>
+<td>50.6</td>
+</tr>
+<tr>
+<td>QA17 - Positional Reasoning</td>
+<td>51</td>
+<td>49.1</td>
+</tr>
+<tr>
+<td>QA18 - Size Reasoning</td>
+<td>52</td>
+<td>90.8</td>
+</tr>
+<tr>
+<td>QA19 - Path Finding</td>
+<td>8</td>
+<td>9.0</td>
+</tr>
+<tr>
+<td>QA20 - Agent's Motivations</td>
+<td>91</td>
+<td>90.7</td>
+</tr>
+</tbody></table>
+
+<p><a id="dataset-issues"></a></p>
+<h2>Note: Dataset issues - duplication in Positional Reasoning (QA17) and Size Reasoning (QA18)</h2>
+<p>The results above show a large performance difference between the Facebook LSTM baseline and the Keras QA system on QA18 - jumping from 52 to 91.
+Whilst investigating I found that there were numerous duplicated statements and questions in the QA18 training and testing datasets.
+This is also an issue in QA17 and possibly others.
+Given that there are only 1000 train and test data points (which you can confirm by running <code>grep "?" tasks_1-20_v1-2/en/qa18_size-reasoning_train.txt | wc -l</code>), repetitions could cause serious issues.</p>
+<p>I'll be emailing the maintainers of the dataset once I perform a full analysis in the hopes this will be fixed for Version 1.3 of the data.</p>
+<div class="example">
+# QA18 - top of training data<br />
+1 <b>The container fits inside the suitcase.</b><br />
+2 <b>The container fits inside the suitcase.</b><br />
+3 The chocolate fits inside the chest.<br />
+4 The box of chocolates fits inside the suitcase.<br />
+5 <b>The chocolate fits inside the box.</b><br />
+6 The chocolate fits inside the container.<br />
+7 The box of chocolates fits inside the suitcase.<br />
+8 The container fits inside the suitcase.<br />
+9 <b>The chocolate fits inside the box.</b><br />
+10 The suitcase is bigger than the chocolate.<br />
+11 Is the chocolate bigger than the suitcase?   no  6 1</b><br />
+12 <b>Does the suitcase fit in the chocolate?   no  6 1</b><br />
+13 <b>Does the suitcase fit in the chocolate?   no  6 1</b><br />
+14 <b>Does the suitcase fit in the chocolate?   no  6 1</b><br />
+</div>
+
+<div class="example">
+# QA17 - top of training data<br />
+1 The triangle is above the pink rectangle.<br />
+2 The blue square is to the left of the triangle.<br />
+3 Is the pink rectangle to the right of the blue square?    yes 1 2<br />
+4 <b>Is the blue square below the pink rectangle?   no  2 1</b><br />
+5 Is the blue square to the right of the pink rectangle?    no  2 1<br />
+6 <b>Is the blue square below the pink rectangle?   no  2 1</b><br />
+7 <b>Is the blue square below the pink rectangle?   no  2 1</b><br />
+</div>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2013/google_analytics_and_nsa.html">Google, make Google Analytics HTTPS by default (2013)</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
+              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+            </ul>
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

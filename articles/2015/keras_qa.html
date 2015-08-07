@@ -347,6 +347,45 @@ Given that there are only 1000 train and test data points (which you can confirm
 7 <b>Is the blue square below the pink rectangle?   no  2 1</b><br />
 </div>
 
+<h3>Update - Full duplicate analysis</h3>
+<p>Having finished the duplicate analysis, there are issues in the dataset that need to be fixed.
+Luckily the dataset has already been released in a versioned state, though it is unfortunate that the papers published using the dataset do not report which versions they used, and historical versions are not available.</p>
+<p>The duplicate analysis was performed by finding only unique (story, query, answer) tuples within the training set and the test set, then finding if there were any intersections between those unique tuples.</p>
+<p>The most extreme issue is that one of the tasks, QA4, has about 13% of the unique samples present in both training and testing.</p>
+<div class="example">
+<b>Unique samples in QA4 - Two Arg Relations</b><br />
+Train length: 919<br />
+Test length: 933<br />
+Intersection: <span class="focus">124</span><br />
+</div>
+
+<p>Another issue was duplicates within the training and testing sets, especially problematic in QA15, QA17, and QA18.
+This is especially important given that the algorithms are trained on only 1000 samples.</p>
+<p>QA15, QA17, and QA18 has numerous duplicates in training and testing</p>
+<div class="example">
+<b>Unique samples in QA15 - Basic Deduction</b><br />
+Train length: <span class="focus">695</span><br />
+Test length: <span class="focus">678</span><br />
+Intersection: 0<br />
+</div>
+
+<div class="example">
+<b>Unique samples in QA17 - Positional Reasoning</b><br />
+Train length: <span class="focus">627</span><br />
+Test length: <span class="focus">632</span><br />
+Intersection: 11<br />
+</div>
+
+<div class="example">
+<b>Unique samples in QA18 - Size Reasoning</b><br />
+Train length: <span class="focus">654</span><br />
+Test length: <span class="focus">602</span><br />
+Intersection: 0<br />
+</div>
+
+<p>These issues become even more extreme when the bAbi tasks contain 10,000 samples are used.</p>
+<p>For details, refer to the <a href="https://gist.github.com/Smerity/8ceb539c125cbe648bfe">full results</a>.</p>
+
         </div>
       </div>
       

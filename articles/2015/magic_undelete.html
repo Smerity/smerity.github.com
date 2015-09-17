@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: The limitations of the magic undelete in Linux</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="The limitations of the magic undelete in Linux">
+  
+  <meta name="description" content="If you&#39;ve deleted a file with rm, there&#39;s still a chance you won&#39;t have to cry yourself to sleep at night!" />
+  <meta property="og:description" content="If you&#39;ve deleted a file with rm, there&#39;s still a chance you won&#39;t have to cry yourself to sleep at night!" />
+  <meta name="twitter:description" content="If you&#39;ve deleted a file with rm, there&#39;s still a chance you won&#39;t have to cry yourself to sleep at night!" />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2015/magic_undelete.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2015/magic_undelete.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">The limitations of the magic undelete in Linux</h1>
+<h3 class="post-date">September 8, 2015</h3>
+  <p>Imagine you were running the command below ...</p>
+<div class="codehilite"><pre>sed <span class="s1">&#39;s/Linux/GNU Linux/g&#39;</span> linux-history.txt &gt; linux-history.txt
+</pre></div>
+
+
+<p>If you're experienced on the GNU Linux command line, you're likely trying to punch me through your monitor right now.
+That's unfortunate for you as you've a <abbr title="Even with millions of dollars of VC funding, one still cannot physically injure an idiot through the screen of a digital device. If this were possible, trolling on the Internet would be forever changed.">broken screen</abbr>.</p>
+<p>For the rest of you, piping a file into itself (take the results of A and put it back into A) deletes the file.</p>
+<p class="alert alert-info">
+  If you would prefer to avoid destroying files by piping into themselves, setting <a href="https://en.wikipedia.org/wiki/Clobbering">noclobber</a> in bashrc is a great idea!
+  Sadly this won't save you if you accidentally delete a file...
+</p>
+
+<p>Even if you know this to be a terrible idea, you've likely still done it by accident at least once, whether it's due to trusting tab completion too much, the subconscious inability to deal with the one hundredth mangled CSV file that day, or general self loathing.</p>
+<p>This is the situation I found myself in - one stray command deleting hours and hours of work.
+The data clobbered was 300 whales faces (<a href="https://www.kaggle.com/c/noaa-right-whale-recognition/">I'm not crazy, I promise</a>), deleted just as I was putting them into <a href="https://github.com/Smerity/right_whale_hunt/">version control</a>.</p>
+<p><img src="http://i.imgur.com/o5cf6pd.jpg" width="600px" class="smooth center"></p>
+<h2>WHERE'S THE UNDO!?!?!?!</h2>
+<p>The tragedy: once you've deleted a file on the Unix command line it's almost certainly lost.
+<em>Almost</em> certainly.</p>
+<p>In all of those hacker TV shows, you'll likely see them destroying the hard drive with microwaves, thermite, sledgehammers, or puppy incinerators.
+There's a good reason for that - it's actually possible to recover a lot from improperly deleted files.
+This gives us hope.
+Vague hope - the kind of hope you might have that a TV character, introduced that very episode (and only two days from retirement) will not die horribly within in the next five minutes (see: <a href="http://tvtropes.org/pmwiki/pmwiki.php/Main/Retirony">retirony</a>).</p>
+<h2>The N stages of recovery</h2>
+<h3>When you delete a file, it's rarely gone</h3>
+<p>To understand why we can get a file back, it's important to understand how it's stored in the first place.
+Imagine we had hundreds of little boxes, each with a stack of papers in them.
+In file system terms, we refer to these as blocks.
+If you'r
+That brilliant novel you're writing, that one about a modern day Frankenstein created by Siri to force people to use Apple Maps, is in boxes ordered #8, #4, #12 and #2.
+You store this on a piece of paper you put in your pocket.
+In file system terms, we refer to this as an inode.
+If you're really interested, you can <a href="http://serverfault.com/questions/29886/how-do-i-list-a-files-data-blocks-on-linux">list both the inode and all the blocks that compose a file</a>.</p>
+<p>Imagine your novel had a dozen rejections.
+At this point, in a drunken stupor, you decide (like Frankenstein himself) to destroy your creation.
+You rip up the piece of paper in your pocket angrily, then curse yourself as you've forgotten which boxes hold the pages to your novel.</p>
+<p>This is what happens when you delete a file on disk - the inode is deleted but the contents of the blocks are left in place.
+If this wasn't the case, you'd find that deleting files was far slower - as slow as writing out the file in the first place.</p>
+<p>This, ladies and gentlemen, is what gives us hope.
+If we know enough choice phrases from the pages of your novel (i.e. you decided Frank Stein was a great name for the protagonist and used it way too much), we can search through all the boxes and recover your pages.
+Unfortunately, we won't know what order to put them in without reading, but it's at least a start.</p>
+<h3>Pulling out the data</h3>
+<p>On a Unix filesystem, <a href="https://en.wikipedia.org/wiki/Everything_is_a_file">everything is a file</a>.
+This makes our lives easier and enables us to even <a href="https://github.com/Smerity/Snippets/tree/master/sound/vsc/">pipe our hard drive directly to our sound card</a>.
+Data has never sounded so beautiful, right?</p>
+<p class="alert alert-danger">
+Note: you should really have unmounted the drive you've experienced the data loss with, and should especially not be writing to it, as your new file might overwrite your old.
+Like me, however, you might be slightly insane and decide unmounting your hard drive seems like a pain.
+</p>
+
+<p>To begin our recovery, we can search the entirety of our hard drive for the specific phrase, pulling out a portion of surrounding context as we go, putting it into a new file.</p>
+<div class="codehilite"><pre>smerity@pegasus:~<span class="nv">$ </span><span class="c"># Let&#39;s find where our hard drive is</span>
+smerity@pegasus:~<span class="nv">$ </span>df -h .
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2       130G  122G  2.0G  99% /
+smerity@pegasus:~<span class="nv">$ </span>sudo grep --binary-files<span class="o">=</span>text --context<span class="o">=</span>32 <span class="s1">&#39;Frank Stein&#39;</span> /dev/sda2 | pv &gt; /tmp/novel
+</pre></div>
+
+
+<p>This will take a while.
+If you have <code>iotop</code>, you can estimate how long it will take.
+If your grep is reading at 200MB/s and you have a 120GB hard drive, you're in for a 10 minute wait.
+I added <code>pv</code> which monitors the progress of data through a pipe so you can see when it finds new hidden treasure.</p>
+<!--
+At this point, let's be risky. How about I delete this blog and see if I can find it again..?
+
+Back.
+So it turns out I had many copies of the file on this machine, from [Vim backup files](http://stackoverflow.com/questions/607435/why-does-vim-save-files-with-a-extension) to the browser cache to the original file itself.
+To make it a fairer comparison, I moved the file onto a different laptop, deleted it there, and then recovered it there.
+-->
+
+<h3>Reassembling the file</h3>
+<p>Once you have the portions, you're still in for trouble - you need to work out the orderings!
+If it's a binary file, I'm sorry to say, you're likely screwed.
+There may be a way to retrieve only the contents from the matching blocks, then try all permutations, and only accept files that validate, but I didn't dig that deep.
+If it's a text file, you're likely able to piece it together yourself.</p>
+<p>My situation was lucky - the file I was looking for was JSON, with self contained objects every few lines, all following a specific pattern.</p>
+<div class="codehilite"><pre><span class="p">{</span>
+    <span class="nt">&quot;annotations&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Head&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mf">337.35773710482545</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rect&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mf">429.3643926788686</span><span class="p">,</span>
+            <span class="nt">&quot;x&quot;</span><span class="p">:</span> <span class="mf">991.6272878535774</span><span class="p">,</span>
+            <span class="nt">&quot;y&quot;</span><span class="p">:</span> <span class="mf">797.3910149750416</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Body&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mf">640.6389351081532</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;rect&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mf">1720.8652246256238</span><span class="p">,</span>
+            <span class="nt">&quot;x&quot;</span><span class="p">:</span> <span class="mf">981.4043261231282</span><span class="p">,</span>
+            <span class="nt">&quot;y&quot;</span><span class="p">:</span> <span class="mf">507.7404326123128</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;imgs/whale_24458/w_7709.jpg&quot;</span>
+<span class="p">}</span><span class="err">,</span>
+</pre></div>
+
+
+<p>Searching for the string <code>"class": "Head"</code> recovered all the annotations. With a small portion of Python glue, we can then find all the valid JSON objects in our extracted text, sort them according to filename (personal preference), and then spit them back out again!</p>
+<div class="codehilite"><pre><span class="n">template</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;(    {</span>
+<span class="s">        &quot;annotations&quot;: \[(?:[^\]]+?)\],</span>
+<span class="s">        &quot;class&quot;: &quot;image&quot;,</span>
+<span class="s">        &quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;</span>
+<span class="s">    },</span><span class="se">\n</span><span class="s">)&#39;&#39;&#39;</span>
+
+<span class="n">get_filename</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;string_heads&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">heads</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">get_filename</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span> <span class="s">&#39;Saved {} whales&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">heads</span><span class="p">))</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;sloth.json&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;[</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">heads</span><span class="p">:</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">head</span><span class="p">)</span>
+  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;]&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This allowed me to save 285 of the 289 then annotated whales.
+The remaining lost four are likely split between blocks, resulting in the regular expression not capturing them.
+If we really wanted to, we could likely recover those, but for me it was easier to simply re-annotate those four images.</p>
+<h2>Conclusion</h2>
+<p>Given that you're far smarter than me, I assume you are here simply as you enjoyed observing the plight of a naive computer tinkerer.
+If you are unlucky enough to have a data hating cat jump onto your keyboard, however, I hope this will help you recover your bits and your sanity.</p>
+<p>The future is likely to be dangerous for our data however.
+Recovering data from SSDs becomes far more troublesome but <a href="http://articles.forensicfocus.com/2014/09/23/recovering-evidence-from-ssd-drives-in-2014-understanding-trim-garbage-collection-and-exclusions/">there's still hope</a> - or at least hope if you're willing to hire a digital forensics team.</p>
+<p>Let's just hope that one day soon, hard drives will be so plentiful that delete means nothing and save just means create a new commit.
+We might be waiting a while.</p>
+<p><strong>Special thanks:</strong> <a href="https://www.flickr.com/photos/ervins_strauhmanis/">Ervins Strauhmanis</a> for the <a href="https://www.flickr.com/photos/ervins_strauhmanis/10135243453/">Delete key image</a> (CC licensed).</p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
+              <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

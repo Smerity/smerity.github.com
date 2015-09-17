@@ -101,29 +101,31 @@ Unfortunately AJAX can add unwanted complexity to the codebase and doesn't degra
 <p>Although all these benefits come into play, the main one to consider is simply this: <em>transmitting and redrawing a page fully when there are shared elements is a waste</em>.</p>
 <h2>Simple PJAX Example</h2>
 <p>Imagine a fairly standard webpage layout which involves a main piece of content surrounded by a header and footer.</p>
-<div class="codehilite"><pre>  <span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-      <span class="nt">&lt;title&gt;</span>...<span class="nt">&lt;/title&gt;</span>
-      <span class="nt">&lt;script&gt;</span><span class="p">...</span><span class="nx">JS</span> <span class="nx">that</span> <span class="nx">is</span> <span class="nx">reloaded</span> <span class="nx">and</span> <span class="nx">reconsidered</span> <span class="nx">each</span> <span class="nx">time</span><span class="p">...</span><span class="nt">&lt;/script&gt;</span>
-      <span class="nt">&lt;style&gt;</span><span class="o">..</span><span class="nc">.Style</span> <span class="nt">that</span> <span class="nt">is</span> <span class="nt">reloaded</span> <span class="nt">and</span> <span class="nt">reconsidered</span> <span class="nt">each</span> <span class="nt">time</span><span class="o">...</span><span class="nt">&lt;/style&gt;</span>
-    <span class="nt">&lt;/head&gt;</span>
+<div class="codehilite"><pre>  <span class="p">::</span><span class="nl">html</span>
+  <span class="o">&lt;</span><span class="nx">html</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nb">head</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nb">title</span><span class="o">&gt;</span><span class="nx">...</span><span class="o">&lt;/</span><span class="nb">title</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nb">script</span><span class="o">&gt;</span><span class="nx">...JS</span> <span class="nx">that</span> <span class="nx">is</span> <span class="nx">reloaded</span> <span class="ow">and</span> <span class="nx">reconsidered</span> <span class="nb">each</span> <span class="nx">time...</span><span class="o">&lt;/</span><span class="nb">script</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nb">style</span><span class="o">&gt;</span><span class="nx">...Style</span> <span class="nx">that</span> <span class="nx">is</span> <span class="nx">reloaded</span> <span class="ow">and</span> <span class="nx">reconsidered</span> <span class="nb">each</span> <span class="nx">time...</span><span class="o">&lt;/</span><span class="nb">style</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="nb">head</span><span class="o">&gt;</span>
 
-    <span class="nt">&lt;body&gt;</span>
-      <span class="nt">&lt;header&gt;</span>...<span class="nt">&lt;/header&gt;</span>
+    <span class="o">&lt;</span><span class="nb">body</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="k">header</span><span class="o">&gt;</span><span class="nx">...</span><span class="o">&lt;/</span><span class="k">header</span><span class="o">&gt;</span>
 
-      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main-content&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
+      <span class="o">&lt;</span><span class="nb">div</span> <span class="n">id</span><span class="o">=</span><span class="s2">&quot;main-content&quot;</span><span class="o">&gt;</span>
+      <span class="o">&lt;/</span><span class="nb">div</span><span class="o">&gt;</span>
 
-      <span class="nt">&lt;footer&gt;</span>..<span class="nt">&lt;/footer&gt;</span>
-    <span class="nt">&lt;/body&gt;</span>
-  <span class="nt">&lt;/html&gt;</span>
+      <span class="o">&lt;</span><span class="nx">footer</span><span class="o">&gt;</span><span class="nx">..</span><span class="o">&lt;/</span><span class="nx">footer</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="nb">body</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="nx">html</span><span class="o">&gt;</span>
 </pre></div>
 
 
 <p>Everything before and after <strong>#main-content</strong> other than the title, is a waste (assuming the Javascript and CSS styles are shared between pages).
 When PJAX requests a page, all it needs to receive is a subset of above, the title and the contents of a one element you want replaced, in this case, <strong>#main-content</strong>.</p>
-<div class="codehilite"><pre>  <span class="nt">&lt;title&gt;</span>...<span class="nt">&lt;/title&gt;</span>
-  <span class="c">&lt;!-- contents of #main-content --&gt;</span>
+<div class="codehilite"><pre>  <span class="p">::</span><span class="nl">html</span>
+  <span class="o">&lt;</span><span class="nb">title</span><span class="o">&gt;</span><span class="nx">...</span><span class="o">&lt;/</span><span class="nb">title</span><span class="o">&gt;</span>
+  <span class="o">&lt;!--</span> <span class="nb">contents</span> <span class="nx">of</span> <span class="vi">#main</span><span class="na">-content</span> <span class="o">--&gt;</span>
 </pre></div>
 
 
@@ -132,39 +134,40 @@ When PJAX requests a page, all it needs to receive is a subset of above, the tit
 <p>Whenever PJAX makes a request to the webserver it sets a specific header to true: <strong>X-PJAX</strong>.
 Flask's default template engine, Jinja2, is already supplied with contextual information about the headers through the <em>request</em> object, so we can simply use that to modify the template.</p>
 <p>Note that when <strong>X-PJAX</strong> is not set in the headers, Flask/Jinja2 degrade to rendering and returning the full webpage.</p>
-<div class="codehilite"><pre>  {% if &quot;X-PJAX&quot; not in request.headers %}
+<div class="codehilite"><pre>  ::html
+  <span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;X-PJAX&quot;</span> <span class="k">not</span> <span class="k">in</span> <span class="nv">request.headers</span> <span class="cp">%}</span>
   <span class="cp">&lt;!DOCTYPE html&gt;</span>
   <span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;head&gt;</span>
       <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
-  {% endif %}
+  <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 
-      <span class="nt">&lt;title&gt;</span>{% block title %}{% endblock %}<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;title&gt;</span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">title</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span><span class="nt">&lt;/title&gt;</span>
 
-  {% if &quot;X-PJAX&quot; not in request.headers %}
-      {% block head %}{% endblock %}
-      {% block css %}{% endblock %}
-      {% block js %}{% endblock %}
+  <span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;X-PJAX&quot;</span> <span class="k">not</span> <span class="k">in</span> <span class="nv">request.headers</span> <span class="cp">%}</span>
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">head</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">css</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">js</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
     <span class="nt">&lt;/head&gt;</span>
-    {% block body %}
+    <span class="cp">{%</span> <span class="k">block</span> <span class="nv">body</span> <span class="cp">%}</span>
     <span class="nt">&lt;body&gt;</span>
-      {% block header %}
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">header</span> <span class="cp">%}</span>
       <span class="nt">&lt;header&gt;</span>...<span class="nt">&lt;/header&gt;</span>
-      {% endblock %}
+      <span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
       <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main-content&quot;</span><span class="nt">&gt;</span>
-  {% endif %}
+  <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 
-      {% block content %}
-      {% endblock %}
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}</span>
+      <span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
 
-  {% if &quot;X-PJAX&quot; not in request.headers %}
+  <span class="cp">{%</span> <span class="k">if</span> <span class="s2">&quot;X-PJAX&quot;</span> <span class="k">not</span> <span class="k">in</span> <span class="nv">request.headers</span> <span class="cp">%}</span>
       <span class="nt">&lt;/div&gt;</span>
-      {% block footer %}
+      <span class="cp">{%</span> <span class="k">block</span> <span class="nv">footer</span> <span class="cp">%}</span>
       <span class="nt">&lt;footer&gt;</span>...<span class="nt">&lt;/footer&gt;</span>
-      {% endblock %}
+      <span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
     <span class="nt">&lt;/body&gt;</span>
   <span class="nt">&lt;/html&gt;</span>
-  {% endif %}
+  <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 </pre></div>
 
 
@@ -181,9 +184,9 @@ Best of all, next to zero programmer attention is required!</p>
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
-              <li><a href="/articles/2013/google_analytics_and_nsa.html">Google, make Google Analytics HTTPS by default (2013)</a></li>
-              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go? (2013)</a></li>
-              <li><a href="/articles/2013/animated_gif.html">The Mystery of the Spotty Animated GIF (2013)</a></li>
+              <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
+              <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
             </ul>
             <div class="well well-small">
               <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->

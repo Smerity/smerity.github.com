@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Why small files are a curse for big datasets</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Why small files are a curse for big datasets">
+  
+  <meta name="description" content="Whenever you have a large number of small files, you&#39;re in for a bad time. We&#39;ll benchmark retrieving a dataset from a fairly optimal backend, S3, to see how bad it gets." />
+  <meta property="og:description" content="Whenever you have a large number of small files, you&#39;re in for a bad time. We&#39;ll benchmark retrieving a dataset from a fairly optimal backend, S3, to see how bad it gets." />
+  <meta name="twitter:description" content="Whenever you have a large number of small files, you&#39;re in for a bad time. We&#39;ll benchmark retrieving a dataset from a fairly optimal backend, S3, to see how bad it gets." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2015/small_postage.png" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2015/small_postage.png" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Why small files are a curse for big datasets</h1>
+<h3 class="post-date">October 30, 2015</h3>
+  <p>Imagine you had a large dataset - millions of images or webpages - and aimed to pull it all down to your machine from a distant server.
+This is a frequent task if you want to spin up machines to train machine learning models or if you were using MapReduce to process a large dataset.</p>
+<p>For our example, let's imagine a single machine needs to handle:<br />
+<strong>1.5 terabytes over 15 million files = 100KB per file</strong></p>
+<p>For downloading the dataset, the typical back of the envelope might be <code>(dataset size) / (transfer speed)</code>.
+This would give us:</p>
+<ul>
+<li>1.5 TB / 100Mbps = 1.38 days</li>
+<li>1.5TB / 1Gbps = 3.33 hours</li>
+</ul>
+<p>This is likely far from correct however, possibly by many orders of magnitude, due to the connection overhead of these small files.
+We'll look at how large an impact this has on a near optimal situation, retrieving files from Amazon S3, and consider how bad it can get in less optimal situations.</p>
+<h2>By the numbers...</h2>
+<p>For back of the envelope calculations, there's a <a href="http://static.googleusercontent.com/media/research.google.com/en//people/jeff/stanford-295-talk.pdf">small set of numbers you should know</a>.
+Whilst the numbers <a href="http://www.eecs.berkeley.edu/~rcs/research/interactive_latency.html">do change over time</a>, they don't change enough to strongly impact your equation.</p>
+<p>When moving small files, our problems are most likely to come from:</p>
+<ul>
+<li>0.5 ms for a round trip within the same datacenter</li>
+<li>10 ms for a traditional disk seek</li>
+<li>150 ms for a round trip from California to <s>the Netherlands</s> Sydney, Australia</li>
+</ul>
+<p>Why Sydney, Australia?
+First, the numbers are near equivalent, and second, let's just chalk it up to home sickness ^_^</p>
+<h1>Death by <s>a thousand</s> 15e6 cuts</h1>
+<h2>Latency</h2>
+<p>In the optimal case, we only have to deal with 0.5 ms for a round trip in the same datacenter.
+Why is this important?
+A HTTP GET requires between one to three round trips to get rolling (DNS, TCP handshake, TLS tunnel).
+There are ways of saving time, such as using <a href="https://en.wikipedia.org/wiki/HTTP_persistent_connection">HTTP KeepAlive</a> to not discard connections when they may be reused, but there's no way of getting around the minimum of one round trip request per file.</p>
+<p>For more details on why HTTP is such a bad idea for short lived connections (<a href="https://en.wikipedia.org/wiki/Slow-start">TCP Slow Start</a>, TCP being built for long lived flows, the verbosity of HTTP headers, etc), check out <a href="https://www.mnot.net/talks/http2-expectations/">What to Expect from HTTP/2</a>.</p>
+<p>Let's imagine we're in an idealistic world where, once you've made a connection to the storage server, downloads are instantaneous and free.
+We're also super lucky in that we only need a single connection for each HTTP GET.
+Even in this dreamland, sequentially retrieving 15 million small records from a server in the same datacenter would take (0.5 ms * 15e6 =) 2.08 hours.</p>
+<p><strong>2.08 hours in connection overhead to get 15e6 million files sequentially at 0.5 ms per roundtrip</strong></p>
+<p>Now imagine that you're unlucky enough to have servers in California but live in Sydney, Australia...</p>
+<p><strong>625 hours in connection overhead to get 15e6 million files sequentially at 150 ms per roundtrip</strong></p>
+<p>Even in the optimal case, San Francisco is around 12,000 kilometres from Sydney, Australia.
+Even for light itself, it would take 40 ms to travel that distance.</p>
+<p>Sure, you might be able to save a few miliseconds if we burrowed a hole through the middle of the earth, but...</p>
+<h2>Concurrency</h2>
+<p>You're super intelligent though, so you'll be parallelizing those downloads.</p>
+<p>The connection overhead can be partially overcome by downloading many files in parallel.
+This technique is frequently used in web crawling for example, retrieving these small HTML files from dozens or hundreds of different servers at the same time.</p>
+<p>Still, it takes time for a new connection to work out the maximum speed at which it can reliably send data - the TCP Slow Start problem mentioned earlier.
+It's also hard to perfectly parallelize an implementation, increasing complexity and load on both ends of the connection.</p>
+<p>Luckily Amazon S3 is well optimized for the small file use case with your files partitioned over many servers for free.
+For best results, there's a set of best practices you can follow such as prefacing keys with a hash for assisting with load balancing.</p>
+<p>As the real world is dark and full of terrors, you might be unlucky enough to have a spinning disk at the other end however.
+This decimates any of the advantages of your concurrent approach.</p>
+<p>Given a spinning disk takes 10 ms to perform a random seek, that would limit you to retrieving approximately 100 files per second per disk.
+We can hope that there are either many hard drives or many servers but your luck is not recognised as currency in this establishment...</p>
+<p><strong>41.6 hours spent on random seeks on a spinning disk for 15e6 million files</strong></p>
+<h1>Fixing the problem</h1>
+<h2>Larger files</h2>
+<p>The easy and obvious solution is to get rid of small files by archiving / compressing them into a single larger file.</p>
+<p>If you're transferring the files from one server to another, you can even do this in place, by running <code>tar c some/dir | gzip - |  ssh host2 tar xz</code>.</p>
+<p>Creating larger files sounds like a perfect solution except that it destroys your ability to perform random access - a deal breaker in many situations.</p>
+<p>If you instead concatenate files together by keep an index of where a given file starts and ends, you can have your cake and eat it too.
+This tactic has been pursued in a number of different ways, including:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Web_ARChive">Web ARChive</a> (WARC) file that take advantage of peculiarities in the <code>gzip</code> file format to have both compression as well as random lookup</li>
+<li><a href="https://www.usenix.org/legacy/event/osdi10/tech/full_papers/Beaver.pdf">Finding a needle in Haystack: Facebook’s photo storage</a></li>
+</ul>
+<p>Whilst I leave the majority of the investigations up to the reader, I will state a few interesting advantages...</p>
+<p>WARC files have the advantage of record level compression whilst still allowing for random lookups.
+This is possible as the gzip spec actually states that two or more gzip files stuck together should be interpreted as a single gzip file.
+As such, a WARC file is simply thousands of individually gzipped web pages all stuck together.</p>
+<p>The Facebook file format is similar but doesn't use compression due to images already being compressed.
+Facebook have the additional challenge of files being created and deleted - something which a web archive doesn't need to worry about - so performs garbage collection by compacting haystacks where many of the files may no longer be required.</p>
+<p>Anything from running tar on your directory all the way to a complex orchestration such as Facebook's haystack will help you however!</p>
+<h1>Experimentation</h1>
+<h2>Benchmarking small files on Amazon S3</h2>
+<p>To see how this can impact you, I performed an experiment on Amazon S3 over 2,038 files.
+The total file size for this collection is 276MB - quite small given the connection speed available on the machine and the bandwidth provided by Amazon S3.</p>
+<p>Experiments were performed both with <code>aws s3 cp</code> and <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html">TransferManager</a> from the AWS Java SDK.</p>
+<p>Interestingly whilst <code>TransferManager</code> runs in parallel itself, even adding the 2,038 files sequentially to the <code>TransferManager</code> was a bottleneck that required a quick call to Java 8's <code>parallelStream</code> to solve.</p>
+<p>For transferring the 2,038 files naively:<br />
+<strong>2,038 files in 15.9 seconds = 7.80 milliseconds per file</strong></p>
+<p>Compared to transferring a single 276MB blob:
+<strong>A single 276MB blob in 2.46 seconds</strong></p>
+<p>Indeed, this single large file likely isn't large enough to see the full benefits you'd obtain from longer transfers, but it's enough to showcase our point.</p>
+<h2>So...</h2>
+<p>Please think about the small file problem, especially if you don't hate Australians who might be cursed with 150+ ms pings ^_^</p>
+<p>Special thanks to Katey Nicosia for <a href="https://www.flickr.com/photos/onegoodbumblebee/152657671/">the postage stamp image</a> =]</p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
+              <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b><a href="/abme.html">Read more about me</a></b>
+              </p>
+            </div>
+            <p class="center-text">
+              <b>Interested in saying hi?</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

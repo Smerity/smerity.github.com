@@ -168,10 +168,15 @@ The total file size for this collection is 276MB - quite small given the connect
 <p>Experiments were performed both with <code>aws s3 cp</code> and <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/transfer/TransferManager.html">TransferManager</a> from the AWS Java SDK.</p>
 <p>Interestingly whilst <code>TransferManager</code> runs in parallel itself, even adding the 2,038 files sequentially to the <code>TransferManager</code> was a bottleneck that required a quick call to Java 8's <code>parallelStream</code> to solve.</p>
 <p>For transferring the 2,038 files naively:<br />
-<strong>2,038 files in 15.9 seconds = 7.80 milliseconds per file</strong></p>
-<p>Compared to transferring a single 276MB blob:
-<strong>A single 276MB blob in 2.46 seconds</strong></p>
-<p>Indeed, this single large file likely isn't large enough to see the full benefits you'd obtain from longer transfers, but it's enough to showcase our point.</p>
+<strong>2,038 files in 15.9 seconds = 138.87Mbps</strong></p>
+<p>Compared to transferring a single 276MB blob:<br />
+<strong>A single 276MB blob in 2.46 seconds = 897.56MBps</strong></p>
+<p>Extrapolated to our full 1.5 terabyte dataset with 15 million files, the transfer times for our dataset are:</p>
+<ul>
+<li>23.97 hours when we have our small file problem</li>
+<li>3.71 hours when composed into larger files</li>
+</ul>
+<p>This is far closer to our initial back of the envelope of <code>(dataset size) / (transfer speed)</code>!</p>
 <h2>So...</h2>
 <p>Please think about the small file problem, especially if you don't hate Australians who might be cursed with 150+ ms pings ^_^</p>
 <p>Special thanks to Katey Nicosia for <a href="https://www.flickr.com/photos/onegoodbumblebee/152657671/">the postage stamp image</a> =]</p>

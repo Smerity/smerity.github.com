@@ -188,8 +188,8 @@ You may want to help "nudge" the model in this direction by using L1 regularizat
 This is a major problem given that weight re-use is a major component of why CNNs work so well.
 Each filter is shared across all the visual field, allowing a feature to be detected regardless of the position in the field, even if it has never been seen at that location before.
 On top of decreasing the number of parameters that need to be learned, this weight re-use allows the model to achieve better generalization.</p>
-<h2>Why this is an issue?</h2>
-<p>All of these hand code architectural modifications are enforced, not learned.
+<h2>Why is this an issue?</h2>
+<p>All of these hand coded architectural modifications are enforced, not learned.
 This directly limits the generality of the models.</p>
 <p>In the case of images, you may argue that this is fine - we're only injecting a minor amount of knowledge.
 Fair enough for images maybe - but what about tasks where humans can't see such "obvious" relations however?

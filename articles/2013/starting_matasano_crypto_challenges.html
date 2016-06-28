@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -106,15 +120,15 @@ If you lose, I obtain one (1) unit of beverage should we meet in the future.
 <p>Naive bit commitment algorithm (Python):
 </div>
 
-<div class="codehilite"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">hashlib</span>
+<div class="codehilite"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">hmac</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">random</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">secret</span> <span class="o">=</span> <span class="mi">32</span> <span class="n">character</span> <span class="n">string</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">toss</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s">&quot;heads&quot;</span><span class="p">,</span> <span class="s">&quot;tails&quot;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">toss</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">toss</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-<span class="s">&#39;79525aa50d45f77988ca1cc265a36ee48381f2c46f50459a8a1576ac6dc01475&#39;</span>
+<span class="s1">&#39;79525aa50d45f77988ca1cc265a36ee48381f2c46f50459a8a1576ac6dc01475&#39;</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-<span class="s">&#39;1ee8e55ce174f9ce13a1857ceca1b42082cbe23fd86245f89e8405d676e21ad6&#39;</span>
+<span class="s1">&#39;1ee8e55ce174f9ce13a1857ceca1b42082cbe23fd86245f89e8405d676e21ad6&#39;</span>
 </pre></div>
 
 
@@ -139,6 +153,7 @@ I'll give one (1) unit of beverage to whoever can work out the 32 character secr
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

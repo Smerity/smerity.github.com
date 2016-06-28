@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -100,7 +114,7 @@ It does however make a nifty use of the <code>--merge</code> flag that only merg
 Even then, I'd be curious to know whether <code>sort</code>'s own <code>--parallel=N</code> flag results in higher efficiency than the solution suggested.</p>
 <p>The file I want to shuffle (<code>com.txt.xz</code>, a list of 61 million .com domains from <a href="dnscensus2013.neocities.org">DNS Census 2013</a>) is only 187 megabytes compressed, so it shouldn't be too problematic to use a less than perfect method.</p>
 <p>Boom, let's do this thing.</p>
-<div class="codehilite"><pre><span class="n">xzcat</span> <span class="n">com</span><span class="p">.</span><span class="n">txt</span><span class="p">.</span><span class="n">xz</span> <span class="o">|</span> <span class="n">pv</span> <span class="o">|</span> <span class="n">sort</span> <span class="o">--</span><span class="n">random</span><span class="o">-</span><span class="n">sort</span> <span class="o">|</span> <span class="n">gzip</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">ephemeral0</span><span class="o">/</span><span class="n">torrent</span><span class="o">/</span><span class="n">com_random</span><span class="p">.</span><span class="n">gz</span>
+<div class="codehilite"><pre><span></span>xzcat com.txt.xz | pv | sort --random-sort | gzip &gt; /media/ephemeral0/torrent/com_random.gz
 </pre></div>
 
 
@@ -142,28 +156,28 @@ I should also mention, <code>sort</code> will use up to eight cores by default w
 Spurts of a few megabytes per second at a time.
 In <code>/tmp/</code> there are a few random <code>sort...</code> files such as <code>sortO17hPL</code> are all around 200MB in size.
 Upon checking out the contents with <code>head</code>, one can see a pretty interesting pattern emerging.</p>
-<div class="codehilite"><pre><span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="n">tmp</span><span class="p">]</span><span class="err">$</span> <span class="n">head</span> <span class="n">sortxfJiYp</span>
-<span class="n">btempletes</span><span class="p">.</span><span class="n">com</span>
-<span class="n">bigaccfans</span><span class="p">.</span><span class="n">com</span>
-<span class="n">biljartdepot</span><span class="p">.</span><span class="n">com</span>
-<span class="n">asdoonline</span><span class="p">.</span><span class="n">com</span>
-<span class="n">alldiesels</span><span class="p">.</span><span class="n">com</span>
-<span class="mi">7</span><span class="n">rocks</span><span class="p">.</span><span class="n">com</span>
-<span class="n">brekhman</span><span class="p">.</span><span class="n">com</span>
-<span class="n">artspectrum</span><span class="p">.</span><span class="n">com</span>
-<span class="mi">215</span><span class="n">graphics</span><span class="p">.</span><span class="n">com</span>
-<span class="mi">1</span><span class="n">sttickets</span><span class="p">.</span><span class="n">com</span>
-<span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="n">tmp</span><span class="p">]</span><span class="err">$</span> <span class="n">head</span> <span class="n">sortO17hPL</span>
-<span class="n">mypetfection</span><span class="p">.</span><span class="n">com</span>
-<span class="n">preventionfirst</span><span class="p">.</span><span class="n">com</span>
-<span class="n">planetfriend</span><span class="p">.</span><span class="n">com</span>
-<span class="n">queerchachki</span><span class="p">.</span><span class="n">com</span>
-<span class="n">quietdiver</span><span class="p">.</span><span class="n">com</span>
-<span class="n">merecinema</span><span class="p">.</span><span class="n">com</span>
-<span class="n">nissanmckinney</span><span class="p">.</span><span class="n">com</span>
-<span class="n">mesubin</span><span class="p">.</span><span class="n">com</span>
-<span class="n">onlinecasinosandslots</span><span class="p">.</span><span class="n">com</span>
-<span class="n">ottobredesign</span><span class="p">.</span><span class="n">com</span>
+<div class="codehilite"><pre><span></span>[ec2-user@ip-10-91-165-143 tmp]$ head sortxfJiYp
+btempletes.com
+bigaccfans.com
+biljartdepot.com
+asdoonline.com
+alldiesels.com
+7rocks.com
+brekhman.com
+artspectrum.com
+215graphics.com
+1sttickets.com
+[ec2-user@ip-10-91-165-143 tmp]$ head sortO17hPL
+mypetfection.com
+preventionfirst.com
+planetfriend.com
+queerchachki.com
+quietdiver.com
+merecinema.com
+nissanmckinney.com
+mesubin.com
+onlinecasinosandslots.com
+ottobredesign.com
 </pre></div>
 
 
@@ -177,13 +191,13 @@ Honestly, I don't even remember what the flags stand for, it's instinctive when 
 Turns out <code>-l</code> is for long listing format, <code>-r</code> is for reverse, and <code>-t</code> is for sorting by modification time (newest to oldest).
 Makes sense.
 Thanks past me for figuring that out.</p>
-<div class="codehilite"><pre><span class="p">[</span><span class="n">ec2</span><span class="o">-</span><span class="n">user</span><span class="err">@</span><span class="n">ip</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">91</span><span class="o">-</span><span class="mi">165</span><span class="o">-</span><span class="mi">143</span> <span class="mi">2</span><span class="n">nd</span><span class="o">-</span><span class="n">level</span><span class="o">-</span><span class="n">domains</span><span class="p">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">ltr</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sort</span><span class="o">*</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">204665627</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">17</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortxfJiYp</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206620408</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">18</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortEjDAAv</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">203040320</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">20</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortRNqiUZ</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206915992</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">22</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortO17hPL</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="mi">206570511</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">24</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortn9PDp5</span>
-<span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span> <span class="n">ec2</span><span class="o">-</span><span class="n">user</span>  <span class="mi">84255630</span> <span class="n">Sep</span> <span class="mi">24</span> <span class="mi">10</span><span class="o">:</span><span class="mi">24</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sortkvB5ZI</span>
+<div class="codehilite"><pre><span></span>[ec2-user@ip-10-91-165-143 2nd-level-domains]$ ls -ltr /tmp/sort*
+-rw------- 1 ec2-user ec2-user 204665627 Sep 24 10:17 /tmp/sortxfJiYp
+-rw------- 1 ec2-user ec2-user 206620408 Sep 24 10:18 /tmp/sortEjDAAv
+-rw------- 1 ec2-user ec2-user 203040320 Sep 24 10:20 /tmp/sortRNqiUZ
+-rw------- 1 ec2-user ec2-user 206915992 Sep 24 10:22 /tmp/sortO17hPL
+-rw------- 1 ec2-user ec2-user 206570511 Sep 24 10:24 /tmp/sortn9PDp5
+-rw------- 1 ec2-user ec2-user  84255630 Sep 24 10:24 /tmp/sortkvB5ZI
 </pre></div>
 
 
@@ -207,6 +221,7 @@ If it was breaking the laws of physics, I'd be very angry, but it's allowed to g
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

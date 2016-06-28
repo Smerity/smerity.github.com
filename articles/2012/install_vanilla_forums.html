@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -93,7 +107,7 @@ I also presume you have basic Unix/Linux knowledge.</p>
 <p>These instructions will work on a standard <a href="http://www.ubuntu.com/download/server">Ubuntu server</a> installation and should be easily modified to fit other Linux distributions.</p>
 <h3>PHP</h3>
 <p>As Vanilla Forums is written in PHP, and PHP is not the fastest language around, it's not a bad idea to start there. If you're happy with package managers handling the versioning, it's quite straight forward in Ubuntu:</p>
-<div class="codehilite"><pre>sudo apt-get install php5 php5-gd php5-curl php5-memcache php5-mysql php5-cli php5-cgi php5-fpm spawn-fcgi php-apc
+<div class="codehilite"><pre><span></span>sudo apt-get install php5 php5-gd php5-curl php5-memcache php5-mysql php5-cli php5-cgi php5-fpm spawn-fcgi php-apc
 </pre></div>
 
 
@@ -124,8 +138,8 @@ This means that if you find your database having trouble in the future, you can 
 <p>Memcache is an enormous performance booster, especially for pages with common database queries, and is a fundamental tool in any large scale website.
 Assuming you only want to use a local memcache instance, adding it is trivial. Running <code>sudo apt-get install memcached</code> will get you a service on Ubuntu that runs with sane defaults and launches memcached as a service.
 Then you can add to <code>conf/config.php</code> two simple lines:</p>
-<div class="codehilite"><pre><span class="err">$</span><span class="n">Configuration</span><span class="p">[</span><span class="err">&#39;</span><span class="n">Cache</span><span class="err">&#39;</span><span class="p">][</span><span class="err">&#39;</span><span class="n">Enabled</span><span class="err">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
-<span class="err">$</span><span class="n">Configuration</span><span class="p">[</span><span class="err">&#39;</span><span class="n">Cache</span><span class="err">&#39;</span><span class="p">][</span><span class="err">&#39;</span><span class="n">Method</span><span class="err">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">memcache</span><span class="err">&#39;</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><span class="p">$</span><span class="nv">Configuration</span><span class="x">[&#39;Cache&#39;][&#39;Enabled&#39;] = TRUE;</span>
+<span class="p">$</span><span class="nv">Configuration</span><span class="x">[&#39;Cache&#39;][&#39;Method&#39;] = &#39;memcache&#39;;</span>
 </pre></div>
 
 
@@ -152,6 +166,7 @@ Good luck! =]</p>
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

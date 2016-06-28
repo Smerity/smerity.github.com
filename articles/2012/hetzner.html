@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -119,12 +133,12 @@ If you're a maniacal super-villain you'd best have your fake passport handy.</p>
 </ul>
 <h2>Bandwidth Test</h2>
 <p>The bandwidth test from <em>cachefly</em> indicates it can essentially max out the 100Mbit/s network card (10.9M/s &rarr; 87 megabits/s).</p>
-<div class="codehilite"><pre>smerity@Ubuntu-1110-oneiric-64-minimal:~<span class="nv">$ </span>wget http://cachefly.cachefly.net/100mb.test
+<div class="codehilite"><pre><span></span>smerity@Ubuntu-1110-oneiric-64-minimal:~$ wget http://cachefly.cachefly.net/100mb.test
 --2012-04-12 15:56:29--  http://cachefly.cachefly.net/100mb.test
 Resolving cachefly.cachefly.net... 140.99.93.175
-Connecting to cachefly.cachefly.net|140.99.93.175|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 104857600 <span class="o">(</span>100M<span class="o">)</span> <span class="o">[</span>application/octet-stream<span class="o">]</span>
+Connecting to cachefly.cachefly.net<span class="p">|</span>140.99.93.175<span class="p">|</span>:80... connected.
+HTTP request sent, awaiting response... <span class="m">200</span> OK
+Length: <span class="m">104857600</span> <span class="o">(</span>100M<span class="o">)</span> <span class="o">[</span>application/octet-stream<span class="o">]</span>
 Saving to: <span class="sb">`</span>100mb.test<span class="s1">&#39;</span>
 <span class="s1">100%[================================================&gt;] 104,857,600 10.8M/s in 9.4s</span>
 <span class="s1">2012-04-12 15:56:38 (10.9 MB/s) - `100mb.test&#39;</span> saved <span class="o">[</span>104857600/104857600<span class="o">]</span>
@@ -134,7 +148,7 @@ Saving to: <span class="sb">`</span>100mb.test<span class="s1">&#39;</span>
 <h2>Redis Benchmark</h2>
 <p>When viewing these benchmarks, note that the Hetzner VPS only has a single CPU.
 Whilst Redis only takes advantage of a single core, it needs to share that with the Redis benchmarking program as well, which will likely severly impede the benchmark results.</p>
-<div class="codehilite"><pre><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="nl">minimal:</span><span class="o">~/</span><span class="n">redis</span><span class="o">-</span><span class="mf">2.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="n">src$</span> <span class="o">./</span><span class="n">redis</span><span class="o">-</span><span class="n">benchmark</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="mi">100000</span>
+<div class="codehilite"><pre><span></span><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="n">minimal</span><span class="o">:~/</span><span class="n">redis</span><span class="o">-</span><span class="mf">2.4.10</span><span class="o">/</span><span class="n">src$</span> <span class="o">./</span><span class="n">redis</span><span class="o">-</span><span class="n">benchmark</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">n</span> <span class="mi">100000</span>
 <span class="nl">PING_INLINE:</span> <span class="mf">52056.22</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
 <span class="nl">PING_BULK:</span> <span class="mf">51948.05</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
 <span class="nl">SET:</span> <span class="mf">61462.82</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
@@ -144,17 +158,17 @@ Whilst Redis only takes advantage of a single core, it needs to share that with 
 <span class="nl">LPOP:</span> <span class="mf">60532.69</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
 <span class="nl">SADD:</span> <span class="mf">60204.70</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
 <span class="nl">SPOP:</span> <span class="mf">49091.80</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">LPUSH</span> <span class="o">(</span><span class="n">needed</span> <span class="n">to</span> <span class="n">benchmark</span> <span class="n">LRANGE</span><span class="o">):</span> <span class="mf">59453.03</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">LRANGE_100</span> <span class="o">(</span><span class="n">first</span> <span class="mi">100</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">18433.18</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">LRANGE_300</span> <span class="o">(</span><span class="n">first</span> <span class="mi">300</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">9101.67</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">LRANGE_500</span> <span class="o">(</span><span class="n">first</span> <span class="mi">450</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">8402.66</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">LRANGE_600</span> <span class="o">(</span><span class="n">first</span> <span class="mi">600</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">6651.59</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
-<span class="n">MSET</span> <span class="o">(</span><span class="mi">10</span> <span class="n">keys</span><span class="o">):</span> <span class="mf">37907.50</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">LPUSH</span> <span class="o">(</span><span class="n">needed</span> <span class="n">to</span> <span class="n">benchmark</span> <span class="n">LRANGE</span><span class="o">):</span> <span class="mf">59453.03</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">LRANGE_100</span> <span class="o">(</span><span class="n">first</span> <span class="mi">100</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">18433.18</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">LRANGE_300</span> <span class="o">(</span><span class="n">first</span> <span class="mi">300</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">9101.67</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">LRANGE_500</span> <span class="o">(</span><span class="n">first</span> <span class="mi">450</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">8402.66</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">LRANGE_600</span> <span class="o">(</span><span class="n">first</span> <span class="mi">600</span> <span class="n">elements</span><span class="o">):</span> <span class="mf">6651.59</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
+<span class="nf">MSET</span> <span class="o">(</span><span class="mi">10</span> <span class="n">keys</span><span class="o">):</span> <span class="mf">37907.50</span> <span class="n">requests</span> <span class="n">per</span> <span class="n">second</span>
 </pre></div>
 
 
 <h2>Hard drive speed tests</h2>
-<div class="codehilite"><pre><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="nl">minimal:</span><span class="o">~</span><span class="n">$</span> <span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">zero</span> <span class="n">of</span><span class="o">=</span><span class="n">test</span> <span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="n">k</span> <span class="n">count</span><span class="o">=</span><span class="mi">16</span><span class="n">k</span> <span class="n">conv</span><span class="o">=</span><span class="n">fdatasync</span>
+<div class="codehilite"><pre><span></span><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="n">minimal</span><span class="o">:~</span><span class="n">$</span> <span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">zero</span> <span class="n">of</span><span class="o">=</span><span class="n">test</span> <span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="n">k</span> <span class="n">count</span><span class="o">=</span><span class="mi">16</span><span class="n">k</span> <span class="n">conv</span><span class="o">=</span><span class="n">fdatasync</span>
 <span class="mi">16384</span><span class="o">+</span><span class="mi">0</span> <span class="n">records</span> <span class="n">in</span>
 <span class="mi">16384</span><span class="o">+</span><span class="mi">0</span> <span class="n">records</span> <span class="n">out</span>
 <span class="mi">1073741824</span> <span class="n">bytes</span> <span class="o">(</span><span class="mf">1.1</span> <span class="n">GB</span><span class="o">)</span> <span class="n">copied</span><span class="o">,</span> <span class="mf">12.6352</span> <span class="n">s</span><span class="o">,</span> <span class="mf">85.0</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
@@ -163,10 +177,10 @@ Whilst Redis only takes advantage of a single core, it needs to share that with 
 
 <hr />
 
-<div class="codehilite"><pre><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="nl">minimal:</span><span class="o">~/</span><span class="n">redis</span><span class="o">-</span><span class="mf">2.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="n">src$</span> <span class="n">sudo</span> <span class="n">hdparm</span> <span class="o">-</span><span class="n">tT</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span>
-<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="nl">sda:</span>
- <span class="n">Timing</span> <span class="n">cached</span> <span class="nl">reads:</span>   <span class="mi">17996</span> <span class="n">MB</span> <span class="n">in</span>  <span class="mf">2.00</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mf">9007.04</span> <span class="n">MB</span><span class="o">/</span><span class="n">sec</span>
- <span class="n">Timing</span> <span class="n">buffered</span> <span class="n">disk</span> <span class="nl">reads:</span> <span class="mi">514</span> <span class="n">MB</span> <span class="n">in</span>  <span class="mf">3.02</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mf">170.12</span> <span class="n">MB</span><span class="o">/</span><span class="n">sec</span>
+<div class="codehilite"><pre><span></span><span class="n">smerity</span><span class="nd">@Ubuntu</span><span class="o">-</span><span class="mi">1110</span><span class="o">-</span><span class="n">oneiric</span><span class="o">-</span><span class="mi">64</span><span class="o">-</span><span class="n">minimal</span><span class="o">:~/</span><span class="n">redis</span><span class="o">-</span><span class="mf">2.4.10</span><span class="o">/</span><span class="n">src$</span> <span class="n">sudo</span> <span class="n">hdparm</span> <span class="o">-</span><span class="n">tT</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span><span class="o">:</span>
+ <span class="n">Timing</span> <span class="n">cached</span> <span class="n">reads</span><span class="o">:</span>   <span class="mi">17996</span> <span class="n">MB</span> <span class="n">in</span>  <span class="mf">2.00</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mf">9007.04</span> <span class="n">MB</span><span class="o">/</span><span class="n">sec</span>
+ <span class="n">Timing</span> <span class="n">buffered</span> <span class="n">disk</span> <span class="n">reads</span><span class="o">:</span> <span class="mi">514</span> <span class="n">MB</span> <span class="n">in</span>  <span class="mf">3.02</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mf">170.12</span> <span class="n">MB</span><span class="o">/</span><span class="n">sec</span>
 </pre></div>
 
 
@@ -185,6 +199,7 @@ Hetzner is especially tempting if you can use RAM to achieve reasonable performa
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

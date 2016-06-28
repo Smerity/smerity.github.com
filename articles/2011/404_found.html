@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -89,15 +103,15 @@ If, however, they are looking for the 404 Not Found page, then they found the pa
 <h2>Are you mad?</h2>
 <p>To be fair, it would not be the first time I've lost my mind, but at least one site backs me up in this!
 The <a href="http://www.github.com/404">404 page</a> over at <a href="http://www.github.com">GitHub</a> returns 200 OK when visited directly.</p>
-<div class="codehilite"><pre><span class="n">smerity</span><span class="nd">@hermes</span><span class="o">:~</span><span class="n">$</span> <span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="nl">https:</span><span class="c1">//github.com/404</span>
+<div class="codehilite"><pre><span></span><span class="n">smerity</span><span class="nd">@hermes</span><span class="o">:~</span><span class="n">$</span> <span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="n">https</span><span class="o">:</span><span class="c1">//github.com/404</span>
 <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">OK</span>
-<span class="nl">Server:</span> <span class="n">nginx</span><span class="o">/</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">4</span>
-<span class="nl">Date:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mi">16</span><span class="o">:</span><span class="mi">07</span><span class="o">:</span><span class="mi">31</span> <span class="n">GMT</span>
-<span class="n">Content</span><span class="o">-</span><span class="nl">Type:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
-<span class="n">Content</span><span class="o">-</span><span class="nl">Length:</span> <span class="mi">17461</span>
-<span class="n">Last</span><span class="o">-</span><span class="nl">Modified:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mi">04</span><span class="o">:</span><span class="mi">30</span><span class="o">:</span><span class="mi">43</span> <span class="n">GMT</span>
+<span class="nl">Server:</span> <span class="n">nginx</span><span class="o">/</span><span class="mf">1.0.4</span>
+<span class="nl">Date:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mi">16</span><span class="o">:</span><span class="mo">07</span><span class="o">:</span><span class="mi">31</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="o">:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="o">:</span> <span class="mi">17461</span>
+<span class="n">Last</span><span class="o">-</span><span class="n">Modified</span><span class="o">:</span> <span class="n">Mon</span><span class="o">,</span> <span class="mi">28</span> <span class="n">Nov</span> <span class="mi">2011</span> <span class="mo">04</span><span class="o">:</span><span class="mi">30</span><span class="o">:</span><span class="mi">43</span> <span class="n">GMT</span>
 <span class="nl">Connection:</span> <span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
-<span class="n">Accept</span><span class="o">-</span><span class="nl">Ranges:</span> <span class="n">bytes</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Ranges</span><span class="o">:</span> <span class="n">bytes</span>
 </pre></div>
 
 
@@ -128,6 +142,7 @@ As Blippy's <a href="http://blippy.com/404">404 page</a> returns <strong>404 Not
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

@@ -42,6 +42,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -178,7 +192,7 @@ For a real task, where knowing extra information might be useful (such as frog ~
 <h3>The code</h3>
 <p>Luckily, the code for this is stunningly simple thanks to Keras.
 You can see the full code at <a href="https://github.com/fchollet/keras/blob/master/examples/babi_rnn.py">babi_rnn.py</a> but the relevant recurrent network code is quickly and minimally contained below.</p>
-<div class="codehilite"><pre><span class="n">sentrnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<div class="codehilite"><pre><span></span><span class="n">sentrnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
 <span class="n">sentrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">mask_zero</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 <span class="n">sentrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RNN</span><span class="p">(</span><span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">SENT_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
 
@@ -187,8 +201,8 @@ You can see the full code at <a href="https://github.com/fchollet/keras/blob/mas
 <span class="n">qrnn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RNN</span><span class="p">(</span><span class="n">EMBED_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">QUERY_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
-<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Merge</span><span class="p">([</span><span class="n">sentrnn</span><span class="p">,</span> <span class="n">qrnn</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;concat&#39;</span><span class="p">))</span>
-<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">SENT_HIDDEN_SIZE</span> <span class="o">+</span> <span class="n">QUERY_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;softmax&#39;</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Merge</span><span class="p">([</span><span class="n">sentrnn</span><span class="p">,</span> <span class="n">qrnn</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;concat&#39;</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">SENT_HIDDEN_SIZE</span> <span class="o">+</span> <span class="n">QUERY_HIDDEN_SIZE</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">))</span>
 </pre></div>
 
 
@@ -396,6 +410,7 @@ Intersection: 0<br />
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

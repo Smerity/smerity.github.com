@@ -33,6 +33,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -95,47 +109,47 @@ SR parsing is quite popular amongst programming language parsing as it's quite e
 For ambiguous languages, however, parsing takes worst-case exponential time.
 With the addition of a relatively unexplored data structure, the <a href="http://en.wikipedia.org/wiki/Graph-structured_stack">Graph-Structured Stack</a> (GSS), this can be reduced down to worst-case polynomial time.</p>
 <h2>Shift-Reduce Parsing</h2>
-<div class="codehilite"><pre><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># Start with the empty stack -- ∅</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;D&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;E&quot;</span><span class="p">)</span> <span class="c"># Shift</span>
-<span class="c"># stack = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;]</span>
+<div class="codehilite"><pre><span></span><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Start with the empty stack -- ∅</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span> <span class="c1"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span> <span class="c1"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span> <span class="c1"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">)</span> <span class="c1"># Shift</span>
+<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span> <span class="c1"># Shift</span>
+<span class="c1"># stack = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;]</span>
 </pre></div>
 
 
 <p><img class="center smooth" src="/media/images/articles/2011/gss/exponential.png" /></p>
 <h3>Deterministic Recogniser SR Parser</h3>
-<div class="codehilite"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 
-<span class="n">sent</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s">&quot;ABCDEI&quot;</span><span class="p">))</span>
+<span class="n">sent</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;ABCDEI&quot;</span><span class="p">))</span>
 <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">rules</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;F&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;G&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">),</span> <span class="s">&quot;H&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">),</span> <span class="s2">&quot;F&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">),</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">),</span> <span class="s2">&quot;H&quot;</span><span class="p">),</span>
 
-  <span class="p">((</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">),</span>
-  <span class="p">((</span><span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">),</span> <span class="s">&quot;J&quot;</span><span class="p">)</span>
+  <span class="p">((</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">),</span> <span class="s2">&quot;J&quot;</span><span class="p">),</span>
+  <span class="p">((</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">),</span> <span class="s2">&quot;J&quot;</span><span class="p">)</span>
 <span class="p">]</span>
 
 <span class="n">prev_stack</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="k">while</span> <span class="n">sent</span> <span class="ow">or</span> <span class="n">prev_stack</span> <span class="o">!=</span> <span class="n">stack</span><span class="p">:</span>
-  <span class="c"># Print out the stack and store it for later comparison</span>
-  <span class="k">print</span> <span class="s">&quot;Stack:&quot;</span><span class="p">,</span> <span class="n">stack</span>
+  <span class="c1"># Print out the stack and store it for later comparison</span>
+  <span class="k">print</span> <span class="s2">&quot;Stack:&quot;</span><span class="p">,</span> <span class="n">stack</span>
   <span class="n">prev_stack</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[:]</span>
-  <span class="c"># Try all reduction rules</span>
+  <span class="c1"># Try all reduction rules</span>
   <span class="k">for</span> <span class="n">rule</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rule</span><span class="p">):])</span> <span class="o">==</span> <span class="n">rule</span><span class="p">:</span>
-      <span class="k">print</span> <span class="s">&quot;+ Reduce with </span><span class="si">%r</span><span class="s"> =&gt; </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+      <span class="k">print</span> <span class="s2">&quot;+ Reduce with </span><span class="si">%r</span><span class="s2"> =&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
       <span class="p">[</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">]</span>
       <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
       <span class="k">continue</span>
-  <span class="c"># If there are tokens left in the input, shift</span>
+  <span class="c1"># If there are tokens left in the input, shift</span>
   <span class="k">if</span> <span class="n">sent</span><span class="p">:</span>
     <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sent</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
-    <span class="k">print</span> <span class="s">&quot;+ Shift on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s2">&quot;+ Shift on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
 
@@ -169,6 +183,7 @@ In the case below, two rules produce an equivalent node <strong>J</strong> (thei
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

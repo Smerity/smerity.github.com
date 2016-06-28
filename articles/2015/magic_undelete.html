@@ -42,6 +42,20 @@
     
   <script type="text/javascript" src="/media/js/jquery.js"></script>
   <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
 
     
     
@@ -92,7 +106,7 @@
 <h1 class="post-title">The limitations of the magic undelete in Linux</h1>
 <h3 class="post-date">September 8, 2015</h3>
   <p>Imagine you were running the command below ...</p>
-<div class="codehilite"><pre>sed <span class="s1">&#39;s/Linux/GNU Linux/g&#39;</span> linux-history.txt &gt; linux-history.txt
+<div class="codehilite"><pre><span></span>sed <span class="s1">&#39;s/Linux/GNU Linux/g&#39;</span> linux-history.txt &gt; linux-history.txt
 </pre></div>
 
 
@@ -143,11 +157,11 @@ Like me, however, you might be slightly insane and decide unmounting your hard d
 </p>
 
 <p>To begin our recovery, we can search the entirety of our hard drive for the specific phrase, pulling out a portion of surrounding context as we go, putting it into a new file.</p>
-<div class="codehilite"><pre>smerity@pegasus:~<span class="nv">$ </span><span class="c"># Let&#39;s find where our hard drive is</span>
-smerity@pegasus:~<span class="nv">$ </span>df -h .
+<div class="codehilite"><pre><span></span>smerity@pegasus:~$ <span class="c1"># Let&#39;s find where our hard drive is</span>
+smerity@pegasus:~$ df -h .
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sda2       130G  122G  2.0G  99% /
-smerity@pegasus:~<span class="nv">$ </span>sudo grep --binary-files<span class="o">=</span>text --context<span class="o">=</span>32 <span class="s1">&#39;Frank Stein&#39;</span> /dev/sda2 | pv &gt; /tmp/novel
+smerity@pegasus:~$ sudo grep --binary-files<span class="o">=</span>text --context<span class="o">=</span><span class="m">32</span> <span class="s1">&#39;Frank Stein&#39;</span> /dev/sda2 <span class="p">|</span> pv &gt; /tmp/novel
 </pre></div>
 
 
@@ -169,7 +183,7 @@ If it's a binary file, I'm sorry to say, you're likely screwed.
 There may be a way to retrieve only the contents from the matching blocks, then try all permutations, and only accept files that validate, but I didn't dig that deep.
 If it's a text file, you're likely able to piece it together yourself.</p>
 <p>My situation was lucky - the file I was looking for was JSON, with self contained objects every few lines, all following a specific pattern.</p>
-<div class="codehilite"><pre><span class="p">{</span>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;annotations&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="nt">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Head&quot;</span><span class="p">,</span>
@@ -195,25 +209,25 @@ If it's a text file, you're likely able to piece it together yourself.</p>
 
 
 <p>Searching for the string <code>"class": "Head"</code> recovered all the annotations. With a small portion of Python glue, we can then find all the valid JSON objects in our extracted text, sort them according to filename (personal preference), and then spit them back out again!</p>
-<div class="codehilite"><pre><span class="n">template</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;(    {</span>
-<span class="s">        &quot;annotations&quot;: \[(?:[^\]]+?)\],</span>
-<span class="s">        &quot;class&quot;: &quot;image&quot;,</span>
-<span class="s">        &quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;</span>
-<span class="s">    },</span><span class="se">\n</span><span class="s">)&#39;&#39;&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;(    {</span>
+<span class="s1">        &quot;annotations&quot;: \[(?:[^\]]+?)\],</span>
+<span class="s1">        &quot;class&quot;: &quot;image&quot;,</span>
+<span class="s1">        &quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;</span>
+<span class="s1">    },</span><span class="se">\n</span><span class="s1">)&#39;&#39;&#39;</span>
 
-<span class="n">get_filename</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;&#39;&#39;&#39;</span>
+<span class="n">get_filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;&quot;filename&quot;: &quot;imgs_sub/(?:[^&quot;]+?)&quot;&#39;&#39;&#39;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;string_heads&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;string_heads&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">heads</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">get_filename</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-<span class="k">print</span> <span class="s">&#39;Saved {} whales&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">heads</span><span class="p">))</span>
+<span class="k">print</span> <span class="s1">&#39;Saved {} whales&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">heads</span><span class="p">))</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;sloth.json&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
-  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;[</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sloth.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
   <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">heads</span><span class="p">:</span>
     <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">head</span><span class="p">)</span>
-  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;]&#39;</span><span class="p">)</span>
+  <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -239,6 +253,7 @@ We might be waiting a while.</p>
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
               <li><a href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
               <li><a href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
               <li><a href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>

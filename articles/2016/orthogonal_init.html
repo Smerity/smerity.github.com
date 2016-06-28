@@ -12,9 +12,9 @@
   
   <meta property="og:title" content="Explaining and illustrating orthogonal initialization for recurrent neural networks">
   
-  <meta name="description" content="One of the largest issues with recurrent neural networks (RNNs) has been vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
-  <meta property="og:description" content="One of the largest issues with recurrent neural networks (RNNs) has been vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
-  <meta name="twitter:description" content="One of the largest issues with recurrent neural networks (RNNs) has been vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
+  <meta name="description" content="One of the most extreme issues with recurrent neural networks (RNNs) are vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
+  <meta property="og:description" content="One of the most extreme issues with recurrent neural networks (RNNs) are vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
+  <meta name="twitter:description" content="One of the most extreme issues with recurrent neural networks (RNNs) are vanishing and exploding gradients. Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach." />
   <!-- Seems excessive, doesn't it? -->
   
   
@@ -121,7 +121,7 @@ Even toy tasks can provide an opportunity to visualize and better understand the
 Upon receiving each element of an input stream \\(x_1, x_2, \dots, x_t, \dots\\), having started from an initial state \\(h_0\\), an RNN updates its internal state \\(h_t = f(x_t, h_{t-1})\\) and producing an output \\(y_t = g(h_t)\\).
 -->
 
-<p>One of the largest issues with recurrent neural networks (RNNs) has been vanishing and exploding gradients.
+<p>One of the most extreme issues with recurrent neural networks (RNNs) are vanishing and exploding gradients.
 Whilst there are many methods to combat this, such as gradient clipping for exploding gradients and more complicated architectures including the LSTM and GRU for vanishing gradients, orthogonal initialization is an interesting yet simple approach.</p>
 <p>To help solidify our understanding of why orthogonal initialization works, we'll explore it in terms of basic linear algebra and stability theory.</p>
 <p><center><video controls autoplay loop>
@@ -130,15 +130,15 @@ Whilst there are many methods to combat this, such as gradient clipping for expl
 </video></center></p>
 <h2>Eigenvalues, stability theory, and repeated matrix multiplication</h2>
 <p>A fundamental action performed in deep learning is repeated matrix multiplications.
-Repeated matrix multiplications can result in serious numerical stability issues however.
-Due to the exponential nature of the repetition, the results can explode or disappear quickly.
-One of the worst culprits in terms of this are RNNs, which repeatedly update an internal state using a single weight matrix, sometimes hundreds or thousands of times.</p>
+These repeated matrix multiplications mean the resulting matrix is exponential in the number of layers of the neural network.
+This can have serious numerical stability issues, with the result exploding or disappearing quickly.
+One of the worst culprits in terms of this are RNNs which repeatedly update an internal state using a single weight matrix, sometimes over hundreds or thousands of timesteps.</p>
 <p>Stability theory asks what the dynamics of a system are after a long period of time and can be used to gain insights here.
 While stability theory covers many methods, we're particularly interested in how eigenvalues can be used to quickly compute repeated matrix multiplication.</p>
 <p>Let's take a step away from RNNs for a second to establish some fundamentals.</p>
 <h3>Repeated matrix multiplication and Fibonacci</h3>
 <p>Imagine you wanted to compute the Fibonacci sequence using matrices.
-It turns out there exists a matrix \(F\) with which, when you perform repeated matrix multiplication on it, you can iteratively compute the Fibonacci sequence.</p>
+It turns out there exists a matrix \(F\) that, when you perform repeated matrix multiplication on it, you can use to iteratively compute the Fibonacci sequence.</p>
 <script type="math/tex; mode=display">
 F^n = \begin{pmatrix}
 0 & 1 \\
@@ -152,7 +152,7 @@ F^{n} & F^{n+1} \\
 
 <p>Special note, a matrix to the power of 0 gives you the identity matrix, placing zeros in the \(F^{n}\) entries of the matrix, giving the correct solution of \(F^0 = 0\).</p>
 <p>Let's compute the 4th entry in the Fibonacci sequence using this method, starting at identity and then performing a matrix multiplication with \(F\) at each step.
-Notice that the intermediate values we've computed are all part of the sequence - 0, 1, 1, 2, 3.</p>
+Notice that the intermediate values on the diagonals are all part of the Fibonacci sequence - 0, 1, 1, 2, 3.</p>
 <script type="math/tex; mode=display">
 \begin{align*}
 \begin{pmatrix}
@@ -196,7 +196,7 @@ Even at \(n = 10\), we find that one of the eigenvalues is almost irrelevant.</p
 \Lambda^{10} = \begin{pmatrix}0.0081 & 0 \\0 & 122.9919\end{pmatrix} \\
 </script>
 
-<p>Indeed, if you just multiply a reasonably large Fibonnaci number by the largest eigenvalue, you get essentially the next Fibonacci value.
+<p>Indeed, if you just multiply a reasonably large Fibonacci number by the largest eigenvalue, you get essentially the next Fibonacci value.
 It's no surprise that the largest eigenvalue happens to be the Golden ratio, \(\varphi\), or the converged ratio of consecutive Fibonacci numbers.</p>
 <div class="codehilite"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">13</span> <span class="o">*</span> <span class="mf">1.618</span> <span class="o">**</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
 <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">89</span><span class="p">]</span>
@@ -205,15 +205,65 @@ It's no surprise that the largest eigenvalue happens to be the Golden ratio, \(\
 
 <p>The summary is that, as \(n\) gets asymptotically large:</p>
 <ul>
-<li>The matrix \(F^n\) vanishes if all eigenvalues are smaller than 1</li>
-<li>The matrix \(F^n\) remains and doesn't grow if all eigenvalues are 1</li>
-<li>The matrix \(F^n\) explodes if any eigenvalue is larger than 1</li>
+<li>The matrix \(F^n\) vanishes if the absolute value of all eigenvalues are smaller than 1</li>
+<li>The matrix \(F^n\) maintains a constant norm if the absolute value of all eigenvalues are 1</li>
+<li>The matrix \(F^n\) explodes if the absolute value of any eigenvalue is larger than 1</li>
 </ul>
 <h2>Orthogonal Initialization</h2>
 <h3>Orthogonal matrices review</h3>
 <p>Orthogonal matrices have many interesting properties but the most important for us is that all the eigenvalues of an orthogonal matrix have absolute value 1.
 This means that, no matter how many times we perform repeated matrix multiplication, the resulting matrix doesn't explode or vanish.</p>
-<p>A special note is that the eigenvalues can be complex, with the complex part of the eigenvalue contributing an oscillatory component.</p>
+<p>It's interesting to note what the constraint that an eigenvalue must have absolute value 1 means.
+If we are only using real numbers, that means the eigenvalues must be either +1 or -1, resulting in very boring matrices.
+We can extend to complex eigenvalues however, allowing for far more interesting results when repeatedly multiplied.</p>
+<p>Even if the eigenvalues are complex, they can still result in matrices that are all real.
+The simplest example of this is the 2x2 <a href="https://en.wikipedia.org/wiki/Rotation_matrix">rotation matrix</a>.
+Whilst the rotation matrix \(R\) below (which performs a 90 degree rotation) is a real matrix, the eigenvalues and eigenvectors are complex.</p>
+<script type="math/tex; mode=display">
+R = \begin{pmatrix}
+0 & 1 \\
+-1 & 0 \\
+\end{pmatrix} \\
+\Lambda = \begin{pmatrix}
+1i & 0 \\
+0 & -1i \\
+\end{pmatrix} \\
+Q = \begin{pmatrix}
+0.707 & 0.707 \\
+0.707i & -0.707i \\
+\end{pmatrix}
+</script>
+
+<!--
+Following the above, we can use \\(R^0\\) (identity) or \\(R^2\\) to rotate 180 degrees.
+As you might expect, to not rotate at all, we can use \\(R^0\\) (identity), and if we want to rotate 180 degrees, we can use \\(R^2\\).
+
+    :::python
+    >>> # R is a 90 degree rotation matrix
+    >>> R = np.matrix([[0, 1], [-1, 0]])
+    >>> eval, evec = np.linalg.eig(R)
+    >>> Notice the eigenvalues and eigenvectors are complex
+    >>> eval
+    array([ 0.+1.j,  0.-1.j])
+    >>> evec
+    matrix([[ 0.70710678+0.j        ,  0.70710678-0.j        ],
+            [ 0.00000000+0.70710678j,  0.00000000-0.70710678j]])
+    >>> # Yet they reconstruct the real rotation matrix R from above (minus minor floating point issues) using eigendecomposition
+    >>> evec.dot(np.diag(eval)).dot(np.linalg.inv(evec))
+    matrix([[ 0.+0.j,  1.+0.j],
+            [-1.+0.j,  0.+0.j]])
+    >>> # Identity - 0 degree rotation
+    >>> evec.dot(np.diag(eval ** 0)).dot(np.linalg.inv(evec))
+    matrix([[ 1.+0.j,  0.+0.j],
+            [ 0.+0.j,  1.+0.j]])
+    >>> # 180 degree rotation (i.e. R ** 2)
+    >>> evec.dot(np.diag(eval ** 2)).dot(np.linalg.inv(evec))
+    matrix([[-1.+0.j,  0.+0.j],
+            [ 0.+0.j, -1.+0.j]])
+-->
+
+<!--A special note is that the eigenvalues can be complex, with the complex part of the eigenvalue contributing an oscillatory component.-->
+
 <!--
 There has also been explorations into using the unitary matrix for RNN initialization as well, though there are additional complications given the unitary matrix is a complex analogue of the orthogonal matrix.
 -->
@@ -238,7 +288,8 @@ This allows for gradients to backpropagate more effectively.</p>
 </p>
 <h2>Visualizing different inits</h2>
 <p>Let's see what happens to the resulting matrix when performing repeated matrix multiplication over 64 timesteps.
-Remember that it's also not uncommon for RNNs to run for hundreds or even thousands of timesteps.</p>
+Remember that it's also not uncommon for RNNs to run for hundreds or even thousands of timesteps.
+Neural networks also usually have additional complications such as a non-linear activation function and varying input.</p>
 <h3>Vanishing matrix due to small eigenvalues</h3>
 <p><center><video controls autoplay loop>
   <source src="/media/images/articles/2016/eigenvalue_vanish.m4v" type="video/mp4">

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: It&#39;s ML, not magic: machine learning can be prejudiced</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="It&#39;s ML, not magic: machine learning can be prejudiced">
+  
+  <meta name="description" content="Of the many misconceptions about machine learning, the idea that they can&#39;t be prejudiced is likely the most harmful. As Moritz Hardt noted, machine learning is not, by default, fair or just in any meaningful way." />
+  <meta property="og:description" content="Of the many misconceptions about machine learning, the idea that they can&#39;t be prejudiced is likely the most harmful. As Moritz Hardt noted, machine learning is not, by default, fair or just in any meaningful way." />
+  <meta name="twitter:description" content="Of the many misconceptions about machine learning, the idea that they can&#39;t be prejudiced is likely the most harmful. As Moritz Hardt noted, machine learning is not, by default, fair or just in any meaningful way." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper top-smooth">
+        
+  
+  <img class="top-smooth" src="/media/images/articles/2016/prejudice_cards_header.jpg">
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">It&#39;s ML, not magic: machine learning can be prejudiced</h1>
+<h3 class="post-date">July 30, 2016</h3>
+  <p>Of the many misconceptions about machine learning, the idea that they can't be prejudiced is likely the most harmful.
+As stated by Moritz Hardt in <a href="https://medium.com/@mrtz/how-big-data-is-unfair-9aa544d739de#.fafxxi26q">How big data is unfair</a>, <strong>machine learning is not, by default, fair or just in any meaningful way</strong>.
+Even though many researchers and practitioners have noted this repeatedly in the past, the message is still lost.
+It's not uncommon to hear variations of "algorithms don't have in-built bias" even when there is an entire field of research dedicated to fighting that very issue.
+<!--In an effort to clarify why this is the case, I want to provide as concise a summary as possible, without relying on complex mathematical formulations.--></p>
+<p>To make this clearer, prejudice in machine learning will haunt us for years to come.
+<strong>Prejudice in machine learning is like security in programming</strong>.
+No-one will notice the underlying issues until it's obvious something is <em>horribly</em> wrong.
+By the time we hit this realization, the flaws might have negatively impacted hundreds of thousands in a way that can't be undone.
+Even worse, competence is no guarantee you will be able to prevent these issues from occuring.</p>
+<p>Ask yourself whether you think the machine learning teams at Google are competent (hint: they are).
+Then consider that <a href="http://blogs.wsj.com/digits/2015/07/01/google-mistakenly-tags-black-people-as-gorillas-showing-limits-of-algorithms/">black people were tagged as gorillas</a> and that <a href="https://makingnoiseandhearingthings.com/2016/07/12/googles-speech-recognition-has-a-gender-bias/">Google's speech recognition works better for men than for women</a>.
+<!--\<Element 'a' at 0x1107e3db0>-->
+The Google Photos incident, whilst a horrible and upsetting blunder, was fixed quickly after it became obvious.
+The latter is insidious however - the issue is not necessarily obvious but represents a consistent negative penalty that impacts specific groups for the simple reason that they're not the majority or targeted class.</p>
+<p><strong>If we're not careful, optimizing life for some will be equivalent to handicapping life for others.</strong>
+Those others tend to be minority classes or the non-targeted demographics, as is the case with the gender bias above.</p>
+<p>To reiterate, I only picked on Google as they have some of the most competent people on earth in machine learning.
+Most companies that implement machine learning don't have anywhere near that level of quality available - and that's a terrifying prospect.
+As with computer and network security, high levels of competence provides no guarantee you can avoid prejudice leaking in to your systems.
+When machine learning systems are built by teams with less knowledge or less care, the results <em>will</em> be even more tragic.</p>
+<!--the temperamental and unpredictable nature of machine learning-->
+
+<p>(I'm biting my tongue by <a href="/articles/2016/tayandyou.html">not mentioning Microsoft Tay in any more detail</a>...)</p>
+<!--
+Like in computer and network security, systems will have these flaws even when built by the best equipped and most wary of teams.
+If you don't believe me, ask whether you think the ML teams at Google are competent (hint: they are) and then note that [black people were still tagged as gorillas](http://blogs.wsj.com/digits/2015/07/01/google-mistakenly-tags-black-people-as-gorillas-showing-limits-of-algorithms/).
+-->
+<!--Best practices will be skipped.-->
+
+<p>Many might argue that, when we have perfected these algorithms, the results they give will be less biased.
+I am not arguing against this eventual goal.
+That future may well be possible and likely represents a net benefit for society.
+I am simply arguing that, at present, we don't have the tools, theory, or sound practice to avoid prejudice in many sensitive applications of machine learning.</p>
+<h2>Machine learning is eating the world</h2>
+<p>First though, why is being wary of prejudice in machine learning important?
+Machine learning already has an impact on many fundamental aspects of our lives.
+The reach of automated decisions will only be expanding as we progress into the future.
+Right now there are automated algorithms deciding on the content you are shown, the loans you may be offered, the rates you receive for life insurance, whether your resume is automatically filtered out of the recruiting process, or <a href="http://fusion.net/story/330672/algorithms-recidivism-loomis-wisconsin-court/">whether you are likely to commit a crime</a> ...
+And all of this is just the beginning.</p>
+<p>(Note: predicting whether you are likely to commit a crime was what pushed me over the edge to write this - the <a href="https://twitter.com/Smerity/status/755254472566190080">general consensus of many machine learning experts on my feed was terror</a> whilst <a href="https://twitter.com/Smerity/status/755460996450267136">the model used features that could easily leak race and only lightly mentions the potential concerns</a>)</p>
+<p>These systems don't need to be complicated in order to impact us negatively.
+They may be systems and algorithms that we've had in existence for decades.
+As these systems become more complex however they also become even more difficult to debug.</p>
+<p>The simple machine learning frameworks that have become increasingly popular over the recent past are a double edged sword.
+I am genuinely excited that so many people can learn about our field - this is truly brilliant!
+What disturbs me however is that best practices may not be followed whilst machine learning is applied to progressively more and more sensitive applications.</p>
+<p>If we're not careful, the cumulative bias in these systems might dictate the direction of people's lives.
+Those most adversely effected are also likely those in our society who are already maligned, not those protected in the majority class or with the power or influence to challenge such decisions.</p>
+<h2>What can be done?</h2>
+<p>What do we need to solve this?
+Hoping for some level of explicit certification is insane.
+It likely wouldn't be altogether effective and even if it was, you don't need any level of certification to work on the code for a nuclear power plant, you're unlikely to need certification for implementing machine learning.
+There are attempts however.</p>
+<p>The European Union has introduced regulations to restrict automated individual decision-making which "significantly affect" users and also the "right to explanation" whereby a user can ask for an explanation of an algorithmic decision that was made about them.
+Many machine learning researchers and practitioners were surprised (and some even annoyed) by this.
+The laws as they stand are loose and will result in many problems but they do make obvious the potential flaws that our nearing future may introduce.
+It's scary to admit, but a fundamental issue is that <strong>for many machine learning models, there does not exist a consistent, reliable, or interpretable way to "explain in human" the resulting prediction</strong>.
+The regulation by necessity calls out a shortcoming of our field.
+If you're interested in further discussion, the implications are touched on <a href="http://arxiv.org/abs/1606.08813">European Union regulations on algorithmic decision-making and a "right to explanation"</a>.</p>
+<p>There may be a need for the equivalent of the <a href="https://www.owasp.org/index.php/Main_Page">Open Web Application Security Project (OWASP)</a> except for machine learning.
+Ensuring necessary but not sufficient steps are taken, such as balanced datasets, removal of explicitly sensitive features (and removal or processing of features that are highly correlated to those), proper dataset hygience (training, validation, test, cross validation where necessary, ...), and so on.
+Even then, OWASP provides many of the best practices in computer and network security, yet the average application is horrendously insecure due likely to the most obvious and common of faults.
+The same is likely true of machine learning systems - knowing about and attempting to implement best practices is likely not enough.</p>
+<h3>tl;dr for prejudice in machine learning</h3>
+<ul>
+<li>Any machine learning algorithm, regardless of the complexity, can result in prejudice</li>
+<li>Nothing in standard machine learning governs that the results should be unbiased</li>
+<li>Biased data in means biased data out</li>
+<li>Machine learning algorithms do better the more data they receive, which naturally results in majority classes getting more accurate results (see: speech recognition)</li>
+<li>Defining, quantifying, and avoiding prejudice in sounds ways is still an open research question in machine learning</li>
+<li>Ignorance of the intricacies within your model isn't an excuse - it's just gross negligence</li>
+<li>The interaction becomes even more unpredictable when these systems are deployed and the model's predictions may direct the distribution of future training data</li>
+</ul>
+<h2>A quick (insanely non-exhaustive) list of potential issues</h2>
+<h3>Protected features (i.e. race / gender / ...) can be recovered from other features</h3>
+<p>If you want to avoid using gender or race as a feature in your classifier, removing the feature isn't enough.
+Machine learning models with sufficient representational capacity are able to reconstruct them from variables that are correlated with the protected features.</p>
+<p>The easiest example of this is <a href="https://en.wikipedia.org/wiki/Redlining">redlining</a>, wherein discriminating against residents of certain geographical areas is an easy way to perform racial or ethnic discrimination.
+While identified long ago as  a problem in the 1980s</p>
+<p><img src="/media/images/articles/2016/crime-prediction-features.png" class="smooth center"></p>
+<p>In the models explored in <a href="https://www.ncjrs.gov/pdffiles1/nij/grants/238082.pdf">Classifying Adult Probationers by Forecasting Future Offending (PDF)</a>, the initial models take the person's zip code and uses that zip code's house value + household income + distance out of the city limits as features.
+Model C, currently in use for live prediction, replaces these with ZipBase5Top29 which is either the 29 most prevalent valid zip code values among probation cases or, in the case their zip code is not listed, 99998 if their zip code is in the city limits and 99999 if they are outside.</p>
+<p>Given courts are <a href="http://fusion.net/story/330672/algorithms-recidivism-loomis-wisconsin-court/">allowing black box algorithms to be used for risk assessment</a>, this is a very scary direction indeed.
+The incentive for someone to add a feature that may improve accuracy but in an unfair way for some of the impacted, especially when the model won't be externally audited, can't be missed.</p>
+<h3>Bias within word vectors</h3>
+<p>Word vectors sit at the base of many recent NLP models, yet the models don't just capture useful semantic information (king is to male as queen is to female), it also captures <a href="http://arxiv.org/abs/1606.06121">stereotypes</a> and <a href="https://arxiv.org/abs/1607.06520">gender bias</a> that are painfully obvious.
+If we give these word vectors to models in order for the model to use the embedding information, surely we must be concerned if these aspects are captured?</p>
+<p><a href="http://arxiv.org/abs/1606.06121"><img src="/media/images/articles/2016/biased-word-vectors.png" class="smooth center"></a></p>
+<p>What to do when word vectors exhibit such biases is not even clear.
+Word vector models are generally trained on datasets of billions of words, acquired from a variety of sources.
+As such, there is no way to "clean" such a large and complicated dataset.
+Even when there exist methods to debias the word vectors, there is <a href="https://twitter.com/jackclarkSF/status/746039805595762688">debate</a> as some believe that "ML algorithms should tell the truth, and we should decide what to do with it, not tamper with the evidence".</p>
+<h3>Biased training data</h3>
+<p>There have been proposals and even implementations that use machine learning for resume filtering. The general argument that this helps fight bias frequently goes like this:</p>
+<p><img src="/media/images/articles/2016/ml-for-resumes.jpg" class="smooth center"></p>
+<p>As stated earlier, there is nothing about machine learning that guarantees no bias - even if the data wasn't biased.</p>
+<p>As stated by the paragraph above, human based hiring procedures are indeed biased.
+What do we train our machine learning systems on however?
+Training data obtained from humans.
+That means that, on top of all of the issues above, the machine learning model will learn to capture the existing biases, such as <a href="https://en.wikipedia.org/wiki/Employment_discrimination#From_experiments">favouring Anglo-Saxon names when considering identical resumes</a>.</p>
+<h3>Minorities treated differently than the majority</h3>
+<p>Modern machine learning is data driven.
+The more data you have access to, the better.
+By definition, we generally have less training data for minorities compared to the quantity of training data for the majority class.
+Less data results in a worse model for that class, especially as the methods learned for the majority class may not work well at all for the minority class.</p>
+<p>If this is mixed with an unbalanced dataset below, we have a major problem.
+Getting 99% correct on a test composed of addition and multiplication questions doesn't mean much for your ability to multiply if 99% of the questions were for addition. </p>
+<h3>Unbalanced training data</h3>
+<p>Want to find seven people out of the population of an entire country?
+This doesn't work.
+This just really frakking doesn't work.
+Using such an obviously flawed model as any basis for prediction, let alone for launching a drone strike against a person, is horrendous.</p>
+<p><a href="http://arstechnica.co.uk/security/2016/02/the-nsas-skynet-program-may-be-killing-thousands-of-innocent-people/"><img src="/media/images/articles/2016/nsa_skynet.jpg" class="smooth center"></a></p>
+<p>Unfortunately, this issue can still exist even when the datasets are far larger or the model used for more innocuous tasks.</p>
+<h2>Additional reading</h2>
+<p>People far smarter than me have discussed these issues in detail before.
+Both of the following articles provide a brilliant general introduction to some of the potential issues that might arise.
+There is then a world of research beyond if that's your speed!</p>
+<ul>
+<li><a href="https://medium.com/@mrtz/how-big-data-is-unfair-9aa544d739de#.fafxxi26q">How big data is unfair: understanding unintended sources of unfairness in data driven decision making</a></li>
+<li><a href="https://medium.com/@hannawallach/big-data-machine-learning-and-the-social-sciences-927a8e20460d#.9z6batnk4">Big Data, Machine Learning, and the Social Sciences: Fairness, Accountability, and Transparency</a></li>
+</ul>
+<h2>Thanks to:</h2>
+<ul>
+<li>Nick Nguyen for his <a href="https://www.flickr.com/photos/nicktakespics/3590880897/">lovely card shot</a> shared under Creative Commons BY-SA</li>
+</ul>
+<p><img src="/media/images/articles/2016/prejudice_cards.jpg" class="smooth center"></p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>MetaMind:</b><br />
+                Research scientist, deep learning
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

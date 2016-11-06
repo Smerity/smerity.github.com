@@ -12,6 +12,11 @@
   
   <meta property="og:title" content="Hunting through the ICLR 2017 submissions">
   
+  <meta name="description" content="To avoid answering individual &#34;what have you found in the #ICLR2017 submissions&#34;, I&#39;ve written a brief summary here :)" />
+  <meta property="og:description" content="To avoid answering individual &#34;what have you found in the #ICLR2017 submissions&#34;, I&#39;ve written a brief summary here :)" />
+  <meta name="twitter:description" content="To avoid answering individual &#34;what have you found in the #ICLR2017 submissions&#34;, I&#39;ve written a brief summary here :)" />
+  <!-- Seems excessive, doesn't it? -->
+  
   
   <meta property="og:site_name" content="Smerity.com" />
   <meta property="og:type" content="article" />
@@ -140,8 +145,9 @@ Independently of my work with <a href="http://arxiv.org/abs/1609.07843">Pointer 
 They use WikiText (yay!), likely as they want more data and larger windows of previous context (2000 words!) and show the method provides substantial drops in perplexity as they scale the window larger.</li>
 <li><a href="http://openreview.net/pdf?id=S1LVSrcge">Variable Computation in Recurrent Neural Networks</a></li>
 <li><a href="http://openreview.net/pdf?id=ByIAPUcee">Frustratingly Short Attention Spans in Neural Language Modeling</a><br />
+"Training neural language models that efficiently take long-range dependencies into account seems notoriously hard and needs further investigation".
 I've many times ranted that most language modeling experiments only work in blocks of at most 35 timesteps - which is hilariously small.
-"Training neural language models that efficiently take long-range dependencies into account seems notoriously hard and needs further investigation".</li>
+"This led to the unexpected main finding that a much simpler model which simply uses a concatenation of output representations from the previous three-time steps is on par with more sophisticated memory-augmented neural language models."</li>
 <li><a href="http://openreview.net/pdf?id=rJbbOLcex">TopicRNN: A Recurrent Neural Network with Long-range Semantic Dependency</a><br />
 Substantial jump over previous IMDb state of the art - 93.72%.</li>
 <li><a href="http://openreview.net/pdf?id=Byj72udxe">Pointer Sentinel Mixture Models</a> (biased)</li>
@@ -154,13 +160,17 @@ Substantial jump over previous IMDb state of the art - 93.72%.</li>
 <ul>
 <li><a href="http://openreview.net/pdf?id=HJWzXsKxx">Training Long Short-Term Memory with Sparsified Stochastic Gradient Descent</a><br />
 Not directly applicable yet but it involves Nvidia researchers and they explicitly note that "These redundant MAC operations can be eliminated by hardware techniques to improve the energy efficiency and the training speed of LSTM-based RNNs" ;)</li>
-<li><a href="http://openreview.net/pdf?id=BylSPv9gx">Exploring Sparsity in Recurrent Neural Networks</a></li>
+<li><a href="http://openreview.net/pdf?id=BylSPv9gx">Exploring Sparsity in Recurrent Neural Networks</a><br />
+Baidu have a long history of optimizing RNNs.
+This work reduces the size of RNN weights by up to 90%, resulting in a speed-up of 2-7x.
+This is also highly useful for mobile where memory accesses (and hence model size) are a primary drain on battery life (h/t to Mat Kelcey for telling me that).</li>
 </ul>
 <p>Training recurrent neural networks is still fraught with terror.
 I've written previously about orthogonality in RNN weights.
 These works explore the recurrence within RNNs through these lenses.</p>
 <ul>
-<li><a href="http://openreview.net/pdf?id=S1dIzvclg">A Recurrent Neural Network without Chaos</a></li>
+<li><a href="http://openreview.net/pdf?id=S1dIzvclg">A Recurrent Neural Network without Chaos</a><br />
+</li>
 <li><a href="http://openreview.net/pdf?id=HkuVu3ige">On Orthogonality and Learning Recurrent Networks with Long Term Dependencies</a></li>
 <li><a href="http://openreview.net/pdf?id=ry_4vpixl">Rotation Plane Doubly Orthogonal Recurrent Neural Networks</a></li>
 </ul>
@@ -181,7 +191,11 @@ It primarily reminded us that a forget bias of 1 is a darn good idea - something
 <li><a href="http://openreview.net/pdf?id=SJZAb5cel">A Joint Many-Task Model: Growing a Neural Network for Multiple NLP Tasks</a> (biased)</li>
 <li><a href="http://openreview.net/pdf?id=rJeKjwvclx">Dynamic Coattention Networks For Question Answering</a> (biased)</li>
 <li><a href="http://openreview.net/pdf?id=rksfwnFxl">LSTM-Based System-call Language Modeling and Robust Ensemble Method for Designing Host-based Intrusion Detection Systems</a></li>
-<li><a href="http://openreview.net/pdf?id=S1xh5sYgx">SqueezeNet: AlexNet-level Accuracy with 50x Fewer Paramters and &lt;0.5MB Model Size</a></li>
+<li><a href="http://openreview.net/pdf?id=S1xh5sYgx">SqueezeNet: AlexNet-level Accuracy with 50x Fewer Paramters and &lt;0.5MB Model Size</a><br />
+Like the Sparsity in RNN paper above, model size is hugely important for mobile applications not just due to size (download + store + RAM) but also battery life.</li>
+<li><a href="http://openreview.net/pdf?id=BJh6Ztuxl">Fine-grained analysis of sentence embeddings using auxiliary prediction tasks</a><br />
+Another paper that was previously on arXiv but if you haven't seen it, you should.
+This work shows the advantages and shortcomings of sum(BoW) and RNN sentential representations with a few surprises.</li>
 </ul>
 
         </div>

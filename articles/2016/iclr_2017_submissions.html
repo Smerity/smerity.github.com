@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Hunting through the ICLR 2017 submissions</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Hunting through the ICLR 2017 submissions">
+  
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Hunting through the ICLR 2017 submissions</h1>
+<h3 class="post-date">November 5, 2016</h3>
+  <p><strong>Important note:</strong> There are far too many papers for me to have accurately selected all of the interesting ones!
+Every time I go through the list again, I find an additional set of papers for me to read.
+This is dangerous as this is already a formidable list ;)</p>
+<p>If you're interested in tackling the list of papers yourself, check out the <a href="http://openreview.net/group?id=ICLR.cc/2017/conference">ICLR 2017 Conference Track submissions</a>.
+Bonus points if your over-eagerness to read all the papers <a href="https://twitter.com/Smerity/status/794639158224437249">crashes the web server again</a> ;)</p>
+<p>When I note bias it's as I'm an author on the paper or a colleague of one of the authors.
+I will note that I believe my bias to have a good foundation - my colleagues and I produce good work ;)</p>
+<h2>Love you math</h2>
+<ul>
+<li><a href="http://openreview.net/pdf?id=ryxB0Rtxx">Identity Matters in Deep Learning</a><br />
+The paper "put[s] the principle of identity parameterization on a more solid theoretical footing alongside further empirical progress" and their modifications "improve significantly on previous all-convolutional networks on the CIFAR10, CIFAR100, and ImageNet classification benchmarks".</li>
+<li><a href="http://openreview.net/pdf?id=H1oyRlYgg">On Large-batch Training for Deep Learning: Generalization Gap and Sharp Minima</a><br />
+The impact of mini-batch size is often overlooked.
+It's a reality we're just used to and rarely spare thoughts for.
+This was on arXiv some time ago and has since provoked interesting discussion.
+I think the concept of sharpness is likely to be extended to other ideas as well.</li>
+<li><a href="http://openreview.net/pdf?id=Bk_zTU5eg">Inefficiency of Stochastic Gradient Descent with Large Mini-batches (and More Learners)</a></li>
+<li><a href="http://openreview.net/pdf?id=Sy8gdB9xx">Understanding Deep Learning Requires Re-thinking Generalization</a></li>
+<li><a href="http://openreview.net/pdf?id=rkE3y85ee">Categorical Reparameterization with Gumbel-Softmax</a><br />
+If you liked the straight through estimator, you'll likely want to upgrade to the straight through Gumbel-Softmax estimator!</li>
+</ul>
+<h2>Word Vectors</h2>
+<ul>
+<li><a href="http://openreview.net/pdf?id=rJTKKKqeg">Tracking the world state with recurrent entity networks</a><br />
+I'm personally envious of this paper - I wanted to try this idea out myself but not only did they beat me, they did a great job!
+I'd prefer them to be named word vector memory but I'm mainly just glad the idea works ;)</li>
+</ul>
+<p>Tying word vectors has been shown insanely highly effective to language models.
+This advantage likely extends to other specifics tasks as well.</p>
+<ul>
+<li><a href="http://openreview.net/pdf?id=r1aPbsFle">Tying Word Vectors and Word Classifiers: A Loss Framework for Language Modeling</a> (biased)<br />
+Provides a theoretically driven reason for tying the input and output word embeddings (i.e. word vectors and softmax).
+This is related to my previous rants that making your RNN learn a one-to-one mapping between the input and output word embeddings is a very expensive and lossy operation if it's not needed (i.e. for machine translation).</li>
+<li><a href="http://openreview.net/pdf?id=SyBin3sxg">Using the Output Embedding to Improve Language Models</a></li>
+</ul>
+<h2>Recurrent Neural Networks</h2>
+<!-- + [Tuning Recurrent Neural Networks with Reinforcement Learning](http://openreview.net/pdf?id=BJ8fyHceg) -->
+
+<ul>
+<li><a href="http://openreview.net/pdf?id=B184E5qee">Improving Neural Language Models with a Continuous Cache</a><br />
+Independently of my work with <a href="http://arxiv.org/abs/1609.07843">Pointer Sentinel Mixture Models</a>, Grave et al. implement a similar idea but with some interesting differences.
+They use WikiText (yay!), likely as they want more data and larger windows of previous context (2000 words!) and show the method provides substantial drops in perplexity as they scale the window larger.</li>
+<li><a href="http://openreview.net/pdf?id=S1LVSrcge">Variable Computation in Recurrent Neural Networks</a></li>
+<li><a href="http://openreview.net/pdf?id=ByIAPUcee">Frustratingly Short Attention Spans in Neural Language Modeling</a><br />
+I've many times ranted that most language modeling experiments only work in blocks of at most 35 timesteps - which is hilariously small.
+"Training neural language models that efficiently take long-range dependencies into account seems notoriously hard and needs further investigation".</li>
+<li><a href="http://openreview.net/pdf?id=rJbbOLcex">TopicRNN: A Recurrent Neural Network with Long-range Semantic Dependency</a><br />
+Substantial jump over previous IMDb state of the art - 93.72%.</li>
+<li><a href="http://openreview.net/pdf?id=Byj72udxe">Pointer Sentinel Mixture Models</a> (biased)</li>
+<li><a href="http://openreview.net/pdf?id=H1zJ-v5xl">Quasi-Recurrent Neural Networks</a> (biased)<br />
+</li>
+</ul>
+<!--Our reformulation of RNNs gets comparable or better results to LSTMs while being up to 16x faster.-->
+
+<p>The "sparse things are better things" category:</p>
+<ul>
+<li><a href="http://openreview.net/pdf?id=HJWzXsKxx">Training Long Short-Term Memory with Sparsified Stochastic Gradient Descent</a><br />
+Not directly applicable yet but it involves Nvidia researchers and they explicitly note that "These redundant MAC operations can be eliminated by hardware techniques to improve the energy efficiency and the training speed of LSTM-based RNNs" ;)</li>
+<li><a href="http://openreview.net/pdf?id=BylSPv9gx">Exploring Sparsity in Recurrent Neural Networks</a></li>
+</ul>
+<p>Training recurrent neural networks is still fraught with terror.
+I've written previously about orthogonality in RNN weights.
+These works explore the recurrence within RNNs through these lenses.</p>
+<ul>
+<li><a href="http://openreview.net/pdf?id=S1dIzvclg">A Recurrent Neural Network without Chaos</a></li>
+<li><a href="http://openreview.net/pdf?id=HkuVu3ige">On Orthogonality and Learning Recurrent Networks with Long Term Dependencies</a></li>
+<li><a href="http://openreview.net/pdf?id=ry_4vpixl">Rotation Plane Doubly Orthogonal Recurrent Neural Networks</a></li>
+</ul>
+<h2>Machine Translation</h2>
+<ul>
+<li><a href="http://openreview.net/pdf?id=BJAA4wKxg">A Convolutional Encoder Model for Neural Machine Translation</a><br />
+The convolutional source encoder speeds up CPU decoding by two times with no loss of accuracy compared to a strong bi-directional LSTM baseline.
+This matches well with <a href="https://arxiv.org/abs/1610.03017">Fully Character-Level Neural Machine Translation without Explicit Segmentation</a> by Lee et al. who speed up their NMT architecture in similar ways.</li>
+</ul>
+<h2>Doesn't quite fit category</h2>
+<ul>
+<li><a href="http://openreview.net/pdf?id=r1Ue8Hcxg">Neural Architecture Search with Reinforcement Learning</a><br />
+If you're interested in this, also check out <a href="http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf">An Empirical Exploration of Recurrent Network Architectures</a>.
+It primarily reminded us that a forget bias of 1 is a darn good idea - something forgotten since the 90's - but also found a few variations to traditional RNNs through architecture search.</li>
+<li><a href="http://openreview.net/pdf?id=B1ckMDqlg">Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer</a><br />
+</li>
+<li><a href="http://openreview.net/pdf?id=HysBZSqlx">Playing SNES in the Retro Learning Environment</a></li>
+<li><a href="http://openreview.net/pdf?id=SJZAb5cel">A Joint Many-Task Model: Growing a Neural Network for Multiple NLP Tasks</a> (biased)</li>
+<li><a href="http://openreview.net/pdf?id=rJeKjwvclx">Dynamic Coattention Networks For Question Answering</a> (biased)</li>
+<li><a href="http://openreview.net/pdf?id=rksfwnFxl">LSTM-Based System-call Language Modeling and Robust Ensemble Method for Designing Host-based Intrusion Detection Systems</a></li>
+<li><a href="http://openreview.net/pdf?id=S1xh5sYgx">SqueezeNet: AlexNet-level Accuracy with 50x Fewer Paramters and &lt;0.5MB Model Size</a></li>
+</ul>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>MetaMind:</b><br />
+                Research scientist, deep learning
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

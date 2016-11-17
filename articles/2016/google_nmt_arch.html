@@ -12,11 +12,15 @@
   
   <meta property="og:title" content="Peeking into the neural network architecture used for Google&#39;s Neural Machine Translation">
   
-  <meta name="description" content="Google&#39;s Neural Machine Translation looks horrifically complex but actually makes a lot of sense if you build it up piece by piece." />
-  <meta property="og:description" content="Google&#39;s Neural Machine Translation looks horrifically complex but actually makes a lot of sense if you build it up piece by piece." />
-  <meta name="twitter:description" content="Google&#39;s Neural Machine Translation looks horrifically complex but actually makes a lot of sense if you build it up piece by piece." />
+  <meta name="description" content="Google&#39;s Neural Machine Translation looks complex from a distance - but not if you build it up piece by piece." />
+  <meta property="og:description" content="Google&#39;s Neural Machine Translation looks complex from a distance - but not if you build it up piece by piece." />
+  <meta name="twitter:description" content="Google&#39;s Neural Machine Translation looks complex from a distance - but not if you build it up piece by piece." />
   <!-- Seems excessive, doesn't it? -->
   
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2016/gnmt_final_architecture.png" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2016/gnmt_final_architecture.png" />
+  <meta name="twitter:card" content="summary_large_image">
   
   <meta property="og:site_name" content="Smerity.com" />
   <meta property="og:type" content="article" />
@@ -137,7 +141,8 @@ Even with modern complex neural machine translation architectures, the majority 
 That final hidden state of the LSTM, which we call <strong>S</strong>, is where you're trying to cram the entirety of the sentence you have to translate.
 <strong>S</strong> is usually only a few hundred units (read: floating point numbers) long - the more you try to force into this fixed dimensionality vector, the more lossy the neural network is forced to be.
 Thinking of neural networks in terms of "lossy compression" they're required to perform is sometimes quite useful.</p>
-<p>TODO: Bahdanau</p>
+<p><img class="smooth center" src="/media/images/articles/2016/bahdanau_no_attn.png" width="50%"></p>
+<p><strong>Caption:</strong> Image from Bahdanau et al.'s <a href="https://arxiv.org/abs/1409.0473">"Neural Machine Translation by Jointly Learning to Align and Translate" (2014)</a> showing the impact on translation scores (in the form of BLEU scores) as sentences get longer.</p>
 <p>While it may work for our relatively short example above, it's likely to begin failing as the sentence gets longer.
 The obvious solution would be increasing the hidden size of the LSTM.
 Unfortunately, training rapidly becomes impractical if we do this.
@@ -157,7 +162,8 @@ We can then extract a context vector that's a weighted summation of the encoder 
 You may notice that the direction connection between the encoder and decoder (<strong>S</strong> in our previous architecture) has disappeared.
 While many standard encoder-decoder architectures maintain this direct connection, the GNMT architecture decides to remove it.
 The GNMT architectures decides to make the attention mechanism the only way that information can be shifted from the encoder side to the decoder side.</p>
-<p>TODO: Add visualization of attention mechanism from Bahdanau or distil pub</p>
+<p><img class="smooth center" src="/media/images/articles/2016/bahdanau_attn.png" width="70%"></p>
+<p><strong>Caption:</strong> Image from Bahdanau et al.'s <a href="https://arxiv.org/abs/1409.0473">"Neural Machine Translation by Jointly Learning to Align and Translate" (2014)</a> showing the impact on translation scores (in the form of BLEU scores) when using attention. RNNsearch is the architecture with attention and the number afterwards indicates how long the training examples were.</p>
 <h3>V3: Bi-directional encoder layer</h3>
 <p>While the attention mechanism allows for retrieving different parts of the sentence depending on the decoding context, there's still an issue.
 The attention mechanism is essentially asking the stored outputs of the encoder "are you relevant to this?" and using that to determine what information to extract.
@@ -258,9 +264,12 @@ To solve this, we bias the architecture of each of these layers towards performi
 <p>We can do this by only allowing the later layers to add deltas (updates) to the existing vector.
 Now, if the next layer is lazy and ouputs nothing but zeroes, that's fine, as you'll still have the original vector.</p>
 <p>$$
-h_1 = f_1(x) \\
-h_2 = f_2(h_1) + x \\
-h_3 = f_3(h_2) + h_2 = f_3(h_2) + f_2(h_1) + x \\
+\text{Starting by processing } x \\
+h_1 = f_1(x) + x \\
+h_2 = f_2(h_1) + h_1 = f_2(h_1) + f_1(x) + x \\
+h_3 = f_3(h_2) + h_2 = f_3(h_2) + f_2(h_1) + h_1 = f_3(h_2) + f_2(h_1) + f_1(x) + x \\
+h_3 = x + \delta_1 + \delta_2 + \delta_3 \\
+\text{(if all values for }\delta\text{ are zero, we still end up with } x \text{)}
 $$</p>
 <h2>The GNMT monster in its full glory (more or less)</h2>
 <p>All of these changes build upon their previous iteration to result in the full architecture described in the GNMT paper.

@@ -172,7 +172,7 @@ While this is likely fine for translating between sentences, it can become probl
 In computing terminology, if your source sentence is of length \(N\) and your target sentence of length \(M\), we've just take the decoder from \(O(M)\) in the encoder-decoder architecture to \(O(MN)\) in the attention architecture.
 While not optimal the advantages of the attention mechanism far outweigh the disadvantages, at least for this task.</p>
 <p><strong>Note:</strong>
-You may notice that the direction connection between the encoder and decoder (<strong>S</strong> in our previous architecture) has disappeared.
+You may notice that the direct connection between the encoder and decoder (<strong>S</strong> in our previous architecture) has disappeared.
 While many standard encoder-decoder architectures maintain this direct connection, the GNMT architecture decides to remove it.
 The GNMT architectures decides to make the attention mechanism the only way that information can be shifted from the encoder side to the decoder side.</p>
 <p><img class="smooth center" src="/media/images/articles/2016/bahdanau_attn.png" width="70%"></p>
@@ -191,7 +191,7 @@ Why would we force computers, who are already at a substantial handicap, to not 
 Then, for each word, we can either concatenate or add the resulting vector outputs, producing a vector with context from both sides.
 A bi-directional encoder becomes even more important if you're translating to or from a language that has a different ordering (i.e. right-to-left).
 The GNMT architecture concatenates them - potentially advantageous as that results in the both the forward and backward RNN being only half the size.
-Given the bi-directional layer ends up being a bottleneck in GNMT, and the number of parameters in an RNN scale quadratically, this is not an insignificant saving.</p>
+Given that the bi-directional layer ends up being a bottleneck in GNMT, and the number of parameters in an RNN scale quadratically, this is not an insignificant saving.</p>
 <h3>V4: "The deep is for deep learning"</h3>
 <p>For many architectures in neural machine translation, increased depth is a key component in accurate models.
 The GNMT architecture trends this direction too by adding a large number of layers.
@@ -275,7 +275,7 @@ As such, the first layer may fail to train well at all if there are more layers 
 To solve this, we bias the architecture of each of these layers towards performing the identity function.</p>
 <p><img class="center" src="/media/images/articles/2016/gnmt_arch_res.svg"></p>
 <p>We can do this by only allowing the later layers to add deltas (updates) to the existing vector.
-Now, if the next layer is lazy and ouputs nothing but zeroes, that's fine, as you'll still have the original vector.</p>
+Now, if the next layer is lazy and outputs nothing but zeroes, that's fine, as you'll still have the original vector.</p>
 <p>$$
 \text{Starting by processing } x \\
 h_1 = f_1(x) + x \\
@@ -307,6 +307,7 @@ All of this without mentioning the zero-shot GNMT paper or using the GNMT archit
 <ul>
 <li><a href="https://twitter.com/jekbradbury">James Bradbury</a>, who implemented the world's second best neural machine translation system for English to German while only an intern at Metamind, and who happily induldges me when I harass him for details :)</li>
 <li><a href="https://twitter.com/dennybritz">Denny Britz</a>, who was happy to clarify some questions I had regarding my reading of the GNMT architecture paper and gave early feedback on the article itself - check out his articles at <a href="http://www.wildml.com/">WildML</a>!</li>
+<li><a href="http://www.jkk.name/">Jonathan K. Kummerfeld</a> for his read through and suggestions. Among other things, turns out my brain thinks "direction connection" should be amalgamated to "direction" ;)</li>
 </ul>
 
         </div>

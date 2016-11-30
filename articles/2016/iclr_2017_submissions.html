@@ -125,8 +125,7 @@ If you liked the straight through estimator, you'll likely want to upgrade to th
 <h2>Word Vectors</h2>
 <ul>
 <li><a href="http://openreview.net/pdf?id=rJTKKKqeg">Tracking the world state with recurrent entity networks</a><br />
-I'm personally envious of this paper - I wanted to try this idea out myself but not only did they beat me, they did a great job!
-I'd prefer them to be named word vector memory but I'm mainly just glad the idea works ;)</li>
+I really like this paper - I wanted to try a similar idea out myself but not only did they beat me, they did a great job! :)</li>
 </ul>
 <p>Tying word vectors has been shown insanely highly effective to language models.
 This advantage likely extends to other specifics tasks as well.</p>
@@ -183,6 +182,8 @@ This matches well with <a href="https://arxiv.org/abs/1610.03017">Fully Characte
 <h2>Doesn't quite fit category</h2>
 <ul>
 <li><a href="http://openreview.net/pdf?id=r1Ue8Hcxg">Neural Architecture Search with Reinforcement Learning</a><br />
+Quite interesting work involving an RNN being used to construct a CNN hierarchy or the core RNN cell.
+While some of it involves some specific tuning (i.e. which variables the RNN has access to from previous time steps) it's promising and seems effective if you've the spare CPUs or GPUs.
 If you're interested in this, also check out <a href="http://jmlr.org/proceedings/papers/v37/jozefowicz15.pdf">An Empirical Exploration of Recurrent Network Architectures</a>.
 It primarily reminded us that a forget bias of 1 is a darn good idea - something forgotten since the 90's - but also found a few variations to traditional RNNs through architecture search.</li>
 <li><a href="http://openreview.net/pdf?id=B1ckMDqlg">Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer</a><br />

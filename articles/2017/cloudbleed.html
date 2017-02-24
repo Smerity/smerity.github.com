@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Cloudflare&#39;s Cloudbleed in plain English</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Cloudflare&#39;s Cloudbleed in plain English">
+  
+  <meta name="description" content="A friend asked me to explain Cloudflare&#39;s Cloudbleed &#34;in simple English for simple folk&#34;. This is my attempt." />
+  <meta property="og:description" content="A friend asked me to explain Cloudflare&#39;s Cloudbleed &#34;in simple English for simple folk&#34;. This is my attempt." />
+  <meta name="twitter:description" content="A friend asked me to explain Cloudflare&#39;s Cloudbleed &#34;in simple English for simple folk&#34;. This is my attempt." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2017/cloudbleed.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2017/cloudbleed.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/javascript" src="/media/js/jquery.js"></script>
+  <script src="/media/bootstrap/js/bootstrap.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Cloudflare&#39;s Cloudbleed in plain English</h1>
+<h3 class="post-date">February 23, 2017</h3>
+  <p>A friend asked me to explain the <a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1139">Cloudflare Cloudbleed flaw</a> "in simple English for simple folk".<br />
+This is my attempt.</p>
+<!--Specifically: "How many steps from someone finding my data in this dump. To matching it to me. and then busting into my email account or Facebook or Amazon?"-->
+
+<h2>What is (Charlie) Cloudflare?</h2>
+<p>Cloudflare sits as a proxy in front of many websites.
+Think of Cloudflare as <strong>Charlie Cloudflare</strong>, an assistant who prints documents for your entire office.
+Hundreds of people at work use <strong>Charlie</strong> to print documents instead of doing it themselves.
+Most of the time everything works out fine.
+Occasionally however poor <strong>Charlie</strong> gets confused.
+<!--- especially when we ask **Charlie** to modify the document before handing it back to us.--></p>
+<h2>What mistake was Charlie making?</h2>
+<p><strong>Charlie</strong> receives two requests at similar times - <strong>Alice</strong> asks <strong>Charlie</strong> to print her bank statement while <strong>Bob</strong> asks <strong>Charlie</strong> to print a short story.</p>
+<p><strong>Charlie</strong> accidentally prints <strong>Alice</strong>'s bank statement twice but hands her back a correct copy.
+When <strong>Charlie</strong> goes to print <strong>Bob</strong>'s short story, <strong>Charlie</strong> grabs a random page or two from <strong>Alice</strong>'s bank statement by accident and ends up inserting it into <strong>Bob</strong>'s stack of pages.</p>
+<p>Most of the time no-one will notice what went wrong, only seeing a brief spurt of gibberish at the end of their document and dismissing it.</p>
+<h2>Enter Gary Google, the librarian</h2>
+<p>Meanwhile, there are a few people who use the assistant continuously - specifically <strong>Gary Google</strong>.</p>
+<p><strong>Gary</strong> prints thousands of pages a day and stores them in a little personal library that anyone can look at and copy from.
+Given <strong>Gary</strong> prints so much, it's likely that <strong>Gary</strong> end up with many random pages, such as a page from <strong>Alice</strong>'s bank statements or the end of <strong>Bob</strong>'s short story.</p>
+<p>Eventually <strong>Gary</strong> grabs a document from his library and realizes <strong>Charlie</strong> made a mistake.
+<strong>Gary</strong> looks at a single shelf from his enormous library and finds similar mistakes a number of times.</p>
+<p>There's an awful lot of bank statements in this section labelled "Romance" ...</p>
+<h2>Stop it Charlie!</h2>
+<p><strong>Gary</strong> informs <strong>Charlie</strong> of his error.
+<strong>Charlie</strong> freaks out and tries to fix it.
+<strong>Charlie</strong> stops accidentally inserting pages into other people's documents, tells everyone to discard any documents that have strange pages in them, and then claims the situation is solved.</p>
+<p>Unfortunately, this doesn't fix the issue - <strong>Gary</strong>'s library might have random snippets of anyone's data in there!
+Not only is this true for <strong>Gary</strong>, it's also true for anyone else who grabbed print outs from <strong>Charlie</strong> at the time, including <strong>Alice</strong>, <strong>Bob</strong>, or <strong>Gary</strong>.</p>
+<p>Worst of all, if malicious <strong>Mallory</strong> realized <strong>Charlie</strong>'s mistakes, she might have printed thousands of pages on purpose, searching through the contents she retrieved for these accidental leaks.
+Many of them will likely be innocent enough - maybe a page from <strong>Bob</strong>'s short story - but some many contain the combination to <strong>Alice</strong>'s bank vault.</p>
+<h2>The unfortunate summary ...</h2>
+<p>We don't know what was leaked, where it was leaked to, or whether the people who received them have stored the copy.
+We only know that any of the documents printed by <strong>Charlie</strong> might have been leaked.</p>
+<p><strong>Gary Google</strong> is trying to clean his vast library but is still having a real hard time given there are so many files.
+Occasionally it's not even obvious if a random page was slipped into a document - <strong>Bob</strong>'s short stories can get very strange!</p>
+<p><strong>Bill Bing</strong>, <strong>Duck DuckGo</strong>, <strong>Malicious Mallory</strong>, <strong>Ian InternetArchive</strong>, and <strong>Chloe CommonCrawl</strong> might also still have random pages without having deleted them.</p>
+<ul>
+<li>Is this likely to directly leak your password? Not likely - but we don't know.</li>
+<li>Is this likely to impact a service you use? Maybe - but again we don't know.</li>
+<li>Does this impact anyone not using Cloudflare? No.</li>
+<li>Does this mean any page you've loaded from Cloudflare might have been leaked? Maybe.</li>
+</ul>
+<p>There's really not much we can do to know what was leaked unfortunately - or who it was leaked to.</p>
+<p>That's potentially the worst part ...</p>
+<h3>Links</h3>
+<ul>
+<li><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1139">Event log from Google's Project Zero</a> where Tavis discovered and debugged much of the process</li>
+<li>Cloudflare's <a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">Incident report on memory leak caused by Cloudflare parser bug</a> which explains the incident in a fairly relaxed tone</li>
+</ul>
+<h3>Credit</h3>
+<ul>
+<li>Anne-Caroline Alard for <a href="https://www.flickr.com/photos/petitspixels/15105684096/in/photolist-p1QzBf-6LQDoV-9MsPCk-5kMHfB-8QQHms-6ize3M-7XAwgj-4Yq2Rm-MYgvt3-6sKift-6ckbbH-7h3bVY-8fimB4-ajfW7i-j35fkp-gwmAC2-9nMEfr-8vqJiu-L3NYN-gwmN7H-g1EDcJ-RhLqfC-QzP8Sw-kDxWCW-ej53ZN-RPUwWH-as5UNn-PLLwy-opG7A5-eWmq4-cQvmHW-ohwSMS-8vG3Ff-4wEtmy-izrBeC-4iQqTw-anuEeL-8vnF94-tEsAP-3UN759-bjFkmR-ajtLRr-8DTmhn-R2RnYB-dJPZM8-83W4dQ-94z3vN-cPDW6Y-aa7Qtn-9hdCaX">Blood rain on pink background (faux suede)</a></li>
+</ul>
+<!--<img class="smooth center" width="50%" src="/media/images/articles/2017/cloudbleed.jpg" />-->
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Salesforce Research:</b><br />
+                Senior research scientist<br />(deep learning)
+              </p>
+              <p>
+                <b>Part of MetaMind:</b><br />
+                Acquired by Salesforce
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

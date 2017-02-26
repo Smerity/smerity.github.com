@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Stop saying DeepCoder steals code from StackOverflow</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Stop saying DeepCoder steals code from StackOverflow">
+  
+  <meta name="description" content="Contrary to what you might have heard, DeepCoder doesn&#39;t steal code from humans. At all." />
+  <meta property="og:description" content="Contrary to what you might have heard, DeepCoder doesn&#39;t steal code from humans. At all." />
+  <meta name="twitter:description" content="Contrary to what you might have heard, DeepCoder doesn&#39;t steal code from humans. At all." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2017/deepcoder_brain_virus.png" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2017/deepcoder_brain_virus.png" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Stop saying DeepCoder steals code from StackOverflow</h1>
+<h3 class="post-date">February 26, 2017</h3>
+  <p>As a researcher in the rapidly progressing field of machine learning, I see no need to fictionalize the tremendous advances we see.
+I believe AI hype actively harms our field.
+It's not just that this misrepresentation provokes retaliation from AI winters long since past, it's that facts are actively discarded from science in order to craft a romanticized but entirely inaccurate fiction.
+As <a href="/articles/2016/ml_not_magic.html">I previously wrote</a>, combating this fictionalization of research and the prevalance of AI hype should be a top priority.</p>
+<p>DeepCoder is an excellent example of this.
+While the <a href="https://openreview.net/forum?id=ByldLrqlx">DeepCoder paper</a> is interesting and worthy of merit, the research became a caricature of itself as it was replicated throughout the media.
+Heralded by many as a new advance in February 2017, the paper was in fact first released in <a href="https://arxiv.org/abs/1611.01989">early November 2016</a>.
+This may have been as it was accepted to ICLR in early February, though this doesn't justify the rapid fictionalization it endured.
+If you're interested in hearing the unfiltered thoughts of the official reviewers and other researchers in the field, the ICLR comments are hosted publicly on <a href="https://openreview.net/forum?id=ByldLrqlx">OpenReview</a>.</p>
+<p>In this article, we first break down the DeepCoder work in terms of what it contains and then we explore how it became progressively misconstrued in the media.
+If you're interested in only the latter you can safely skip to the last section.</p>
+<!--
++ The DeepCoder paper is interesting and worthy of merit. This is not an attack on their work at all, simply an attempt to understand how the reality of research as presented in a factual and peer reviewed paper devolved into fiction as it was replicated throughout the media. I've not spoken to the authors but am certain they're headdesking as hard as other researchers in the field at the media coverage.
++ This is not an attack on any particular media article. Some sources reported it well. Many others gave in to AI hype, turning science into clickbait science fiction.
++ As a researcher in the rapidly progressing field of machine learning, I see no need to fictionalize the tremendous advances we see. I do believe this hype actively harms our field. Not just provoking the AI winters of the past, but also in discarding factual science for a romanticized but entirely inaccurate fiction.
+-->
+
+<!--Most audiences likely don't care for the details, instead going to these articles for a story instead of reality.-->
+
+<h2>What's the task?</h2>
+<p>Defining the machine learning task in academia is vitally important.
+Such definitions help understand the scope of the problem and the limits involved in any potential solution.</p>
+<p>In the standard programming competition setting, you're given two pieces of information:</p>
+<ul>
+<li>A textual description of the problem</li>
+<li>One or more example input / output pairs</li>
+</ul>
+<p>A simple example from the paper is provided below.</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/deepcoder_simple_program.png" /></p>
+<p><strong>Important note:</strong> DeepCoder doesn't use textual descriptions for generating a solution - it only uses the input and output pairs. See the section "<em>Neural networks are better than infinite monkeys</em>" below.</p>
+<p>From this, your goal is to produce a working program that is (a) consistent with all provided input / output examples and (b) consistent with the task as described.
+Notice that solving (a) does not imply (b).
+All programmers will have run into this in the past - specifically when their examples don't cover edge cases they'd never considered and may not have written tests for.</p>
+<p>This task is known as Inductive Program Synthesis (IPS): given input-output examples, produce a program that has behavior consistent with the examples and the defined task.
+For this work we'll assume that if the program solves all the examples, it's satisfactory.
+Obviously this assumption becomes a major liability if we were to transition IPS to the real world.</p>
+<h2>What does DeepCoder do?</h2>
+<h3>The program space with our infinite monkeys</h3>
+<p>In the experiments in the paper, each problem is given five example input / output pairs.
+DeepCoder defines a domain specific language (DSL) that, when composed together, can solve the specified problems.
+This domain specific language contains 34 different first order and higher order functions and allows all integers from -255 to 255.
+Essentially, you have a set keyboard of options that you can use to piece together a solution.</p>
+<div class="codehilite"><pre><span></span>First-order functions: HEAD, LAST, TAKE, DROP, ACCESS, MIN, MAX, REVERSE, SORT, SUM
+Higher-order functions: MAP, FILTER, COUNT, ZIPWITH, SCANL1.
+Higher-order MAP allows: (+1), (-1), (*2), (/2), (*(-1)), (**2), (*3), (/3), (*4), (/4)
+Higher-order FILTER and COUNT allows: (&gt;0), (&lt;0), (%2==0), (%2==1)
+Higher-order ZIPWITH and SCANL1 allows: (+), (-), (*), MIN, MAX
+</pre></div>
+
+
+<p>Note that this DSL does not contain any explicit control flow such as for loops, while loops, or branching.</p>
+<p>This results in an enormous potential set of programs - one of which is guaranteed to hold the solution.
+This is referred to as the <strong>program space</strong> and is equivalent to throwing the <a href="https://en.wikipedia.org/wiki/Infinite_monkey_theorem">infinite monkey theorem</a> at the problem.</p>
+<p>If you had an infinite number of monkeys all in front of specialized keyboards - buttons labeled with functions (SORT, TAKE, SUM), variables (k, b, c), and so on - one of the monkeys would eventually produce the correct program.
+Obviously monkeys are slow, temperamental, and require bananas, so we'd hope there's a better option.</p>
+<p>One of these better options is depth first search (DFS), where we weight the search towards programs similar in composition to previous working programs we've seen in training and keep testing the program against the input / output examples to see if it works.
+This is one of the baselines that DeepCoder competes against.
+Given infinite time (less infinite time than the monkeys need though), DFS would solve our proposed problems using the DSL specified above.</p>
+<h3>Neural networks are better than infinite monkeys (but way less fun)</h3>
+<!--
+Concise summary of the claims made in the DeepCoder paper:
++ The paper was on arXiv months ago - early November 2016 - and it's only due to the recent media push (potentially related to the paper's ICLR acceptance on the 6th of February?) that it has resurfaced
++ If you're interested in hearing the unfiltered thoughts of the official reviewers and other researchers in the field, ICLR was hosted publicly on OpenReview
++ The problem sets that are tackled are solvable via a brute force search of the program space (search based techniques) and DeepCoder offers significant speed-up over depth first search and other similar methods by integrating neural networks
++ "In this work, we focus on predicting an order on the program space and show how to use it to guide search-based techniques that are common in the programming languages community."
++ What DeepCoder provides is primarily suggestions as to what, of the search space of potential solutions, should be attempted first
++ While a textual description of the problem is used, input / output pairs (five in the paper's case) are also necessary to determine if a given program solves the problem
++ For the real world, where there's not likely to be input / output pairs (and such pairs are not exhaustive in determining a correct solution), there's also no easy way for DeepCoder to know when the suggested solution is "correct" 
++ The authors themselves note that "the programs we can synthesize are only the simplest problems on programming competition websites and are simpler than most competition problems"
+-->
+
+<p>DeepCoder reads the input and output example pairs and predicts the presence or absence of individual functions from the DSL.
+<!--As an example, if you see \<Element 'code' at 0x1070f22d0> you might assume that \<Element 'code' at 0x1070f2960>, \<Element 'code' at 0x1070f2390>, and \<Element 'code' at 0x1070f2210> are likely to be used.--></p>
+<p><strong>Important note:</strong> DeepCoder doesn't even read the problem description yet to help decide which functions are most likely!</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/deepcoder_model.png" /></p>
+<p>Below, Figure 2 from the paper, is an example of the predicted probability of each DSL function appearing in the source code.
+The neural network in this case is particularly interested in trying to use <code>(*4)</code>, <code>MAP</code>, <code>FILTER</code>, <code>SORT</code>, and <code>REVERSE</code> to solve the problem.
+If the neural network's prediction is accurate, it may possibly find the relevant program quickly and easily without exhaustively searching the program space.</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/deepcoder_predicted_probs.png" /></p>
+<p>DeepCoder's assistance in directing the search can result in some significant speed-ups over the baseline methods.</p>
+<p>Important to note, the maximal length of the programs is length 5, as in the example below.</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/deepcoder_complex_program.png" /></p>
+<p>This is still a far cry away from being useful in real world tasks though does represent a strong speed improvement over previous methods that could exhibit these capabilities.</p>
+<h2>What did people claim DeepCoder could do?</h2>
+<p>Like a game of <a href="https://en.wikipedia.org/wiki/Chinese_whispers">telephone / Chinese whispers</a>, errors seem to accumulate in each retelling of scientific research.
+As this progressed the majority of facts were discarded in favor of a simplistic and inflated narrative such as "DeepCoder copy pastes from Stack Overflow".</p>
+<p>Simple statements meant to improve reader comprehension take on a life of their own.</p>
+<p>Instead of describing that the program was able to use 34 different first order and higher order functions from a domain specific language (a mouthful and complex concept even for programmers), a journalist may instead describe it as "piecing together lines of code taken from existing software".</p>
+<p>Instead of describing the process of training from a specific set of problem descriptions and input / output pairs, a journalist may instead describe it as "using machine learning to scour databases of source code".</p>
+<p>Neither of these are bad - especially within the original article context.
+A full explanation of the paper is out of scope for such an article.
+These minor simplifications are used to allow a broader audience of readers to follow the story.
+This is good - more people should have the opportunity to understand these advances.</p>
+<p>Many articles are even reasonable in their claims, stating that DeepCoder for now only works with programs of length five or less and specifically only over an extreme subset of programming competition problems.
+These scoping statements as to the capability of DeepCoder quickly disappear however.</p>
+<p>The issue comes as the story is relayed, poorly, over and over again.
+The incorrect but narratively helpful "piecing together lines of code" suddenly becomes copy and paste.
+The incorrect but narratively helpful "scouring a database" becomes "stealing from other software" which then jumps to "stealing from StackOverflow".
+DeepCoder even becomes an active competitor in online programming competitions and capable of already assisting programmers.
+Reality falls away awfully quickly...</p>
+<hr />
+<ul>
+<li>Microsoft's AI writes code by <strong>looting other software</strong></li>
+<li>DeepCoder <strong>takes lines of code from existing software</strong></li>
+<li>Microsoft's new AI can code by <strong>stealing bits of code from other software</strong></li>
+<li>Microsoft DeepCoder AI Produces Its Own Code By <strong>Ripping Off Existing Software</strong></li>
+<li>Microsoft’s AI ‘DeepCoder’ <strong>learns coding by stealing from others</strong></li>
+<li>Now, here is DeepCoder, an AI trained to <strong>use pieces of code from existing software and write a code of its own</strong>.</li>
+<li>DeepCoder AI Writes Programs <strong>Using Existing Code Snippets</strong></li>
+<li>DeepCoder builds programs <strong>using code it finds lying around</strong></li>
+<li>...the system works <strong>by taking lines of code from existing programs and combining them</strong>.</li>
+<li>Thus, <strong>the hybrid code was born</strong>.</li>
+</ul>
+<hr />
+<ul>
+<li>Called DeepCoder, <strong>the software can take requirements by the developer</strong>, <strong>search through a massive database of code snippets</strong> and deliver working code in seconds...</li>
+<li><strong>They only have to describe their program idea and wait for the system to create it</strong>.</li>
+<li>It’s <strong>been used to complete programming competitions</strong> and could be pointed at a larger set of data to build more complex products.</li>
+<li>Once the system knows what a human programmer wants it to accomplish, along with the available inputs, the system <strong>can then search more quickly and more completely than any human coder to create a new application</strong>.</li>
+<li>DeepCoder <strong>successfully plowed through the basic, input-output style challenges usually set by programming competitions</strong>.</li>
+<li>In the paper, the researchers explain that DeepCoder relies on <strong>big data analysis</strong> and machine learning techniques.</li>
+<li>Now it's writing its own code <strong>using similar techniques to humans</strong>.</li>
+</ul>
+<!--
++ The execution works because through deep-learning, and smart AI to make sense of it, pieces of code are taken from existing software, letting the system learn how everything comes together.  
+  (What?)
++ An awesome example of how this could be used is to improve security of existing applications by replacing sensitive lines of code with good code from other applications.  
+  (Security people - does this sound like a good idea to you?)
++ DeepCoder can write working code after searching from a huge code database.
++ It can take design clues and develop a program after harvesting appropriate lines of code from a massive code database using machine learning.
++ DeepCoder’s efficiency improves over time, as it solves more and more problems.
++ Microsoft’s new AI sucks at coding as much as the typical Stack Overflow user
+-->
+
+<hr />
+<p>To remind you why the above is stunningly incorrect:</p>
+<ul>
+<li>DeepCoder did not (and cannot) at any point take code from another piece of software.</li>
+<li>Stolen implies code was taken illegally and is likely purely added with the intent of clickbaiting.</li>
+<li>DeepCoder can't read or use any of the textual descriptions that might exist for a given problem - so anywhere "reading a problem description" is basically incorrect.
+  Other research has investigated using it but (a) it's not this work and (b) it's not near any level of magic proficiency yet.</li>
+<li>No big data analysis was used - though that is a nice buzz word to add to an article already full of artificial intelligence, machine learning, neural networks, and the rest of the AI hype gang...</li>
+<li>"More quickly and more completely than any human coder" implies superhuman - a popular Terminator-esque narrative which reality is very far from.</li>
+</ul>
+<p>What you've seen here only becomes worse as it reaches Twitter or the comment section of various websites...</p>
+<h2>Symptoms</h2>
+<ul>
+<li>Headlines usually contain far more false content than the article, likely clickbait induced, and it's accepted that reality doesn't need to be represented there</li>
+<li>A small misrepresentation rapidly grows, especially if it can become the bridge that authors use to try to personify the machine learning model, meaning even articles that do good groundwork in ensuring the content is factual can contribute to the eventual molasses</li>
+<li>Factual clarification spreads far slower than clickbait and the majority of articles / comments will only reinforce the fictional narrative</li>
+</ul>
+<h2>So ... what?</h2>
+<p>I'll simply restate - the advances in this field are fascinating enough that we don't need to discard reality for the sake of a storyline.
+I can only hope that both AI-prefix investing and AI-prefix journalism come to terms with this.
+AI and machine learning will have an immense - hopefully positive - impact on the world.
+Misrepresenting the capability and limitations of the technology is simply a disservice.</p>
+<p>What's the best method to shepherd these stories back towards fact from fiction?
+I'm honestly not sure.
+Writing an article like this for every misrepresented paper doesn't seem a scalable solution however.
+Even listing misrepresented papers or concepts in the media would be exhausting!</p>
+<p>I guess I should mediate my complaining at least - the media is helping ensure I've job security until the rolling thunder of the next AI winter comes ;)</p>
+<p><strong>Thanks to:</strong> <a href="https://www.flickr.com/photos/132889348@N07/20013035013/">Christiaan Colen</a> for his stylistic shot of the "Brain" virus from 1986, considered one of the first computer viruses.
+Like DeepCoder it didn't steal code so it seems appropriate!</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/deepcoder_brain_virus.jpg" /></p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Salesforce Research:</b><br />
+                Senior research scientist<br />(deep learning)
+              </p>
+              <p>
+                <b>Part of MetaMind:</b><br />
+                Acquired by Salesforce
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

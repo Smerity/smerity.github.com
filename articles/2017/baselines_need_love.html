@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Backing off towards simplicity - why baselines need more love</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Backing off towards simplicity - why baselines need more love">
+  
+  <meta name="description" content="When we lose accurate baselines, we lose our ability to accurately measure our progress over time." />
+  <meta property="og:description" content="When we lose accurate baselines, we lose our ability to accurately measure our progress over time." />
+  <meta name="twitter:description" content="When we lose accurate baselines, we lose our ability to accurately measure our progress over time." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2016/ml_not_magic.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2016/ml_not_magic.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Backing off towards simplicity - why baselines need more love</h1>
+<h3 class="post-date">November 3, 2017</h3>
+  <p><em>This was originally presented as "Backing Off Towards Simplicity" at O'Reilly AI San Francisco and Data Institute's Annual Conference (DSCO17)</em></p>
+<p>Controversial claim: In deep learning, most models are <strong>overpowered</strong> for what they need to achieve.</p>
+<p>This leads to slower and more complex models, misleading human intuition and poisoning forward progress, especially when compared against sub-optimal baselines.</p>
+<p><strong>When we lose accurate baselines, we lose our ability to accurately measure our progress over time.</strong></p>
+<hr />
+<p>If there are only four things you take away from this article:</p>
+<ul>
+<li><strong>Adopt a baseline</strong> and give it the care that it deserves</li>
+<li>Ensure the baseline is <strong>fast</strong> and <strong>well tuned</strong> to provide as a bed for rapid experimentation</li>
+<li><strong>Take deliberate and reasoned steps foward</strong> towards the state of the art (SotA) or more complex models</li>
+<li>Unless you have strong proof that it's necessary, <strong>don't sacrifice speed</strong></li>
+</ul>
+<p>It's better to use compute intelligently than to throw more of it at a problem.</p>
+<hr />
+<p><em>New to machine learning or deep learning?</em> Read my note at the bottom and adopt a baseline!</p>
+<h2>The issue with complex models</h2>
+<p>Complex models can poison forward progress in our field.</p>
+<p>This goes beyond over-parameterizing deep learning models and then pulling them back with regularization.
+To clarify for those who've not heard that general adage, a standard tactic in deep learning is to keep increasing a model's parameters until it overfits on the dataset and then to increase regularization to prevent overfitting.
+It's a dance between the model's expressiveness, the speed it takes to train, and the potential for over-parameterization.
+While this is an issue - primarily that it encourages you to add complexity to models without understanding where that complexity is warranted - it primarily feeds in to larger issues.</p>
+<p>Due to the resilience of deep learning models, kitchen sinking (or throwing every permutation of a feature set and/or set of architectural decisions into a single model) is frequent.
+Whilst that may improve results, it becomes hard to isolate which components actually contribute meaningfully when there are so many moving parts.
+This is especially true as such models are almost always invariably slower to train than necessary.
+When you have slow to train models, the concept of performing ablation analysis (or where you remove a component at a time to see the impact on the final result) is no longer trivially achievable.
+Without this type of analysis, human intuition (which is already fragile in deep learning to begin with) can be further mislead.</p>
+<p>Rapid iteration is also a prime currency in enabling innovation and discovery, yet we discard it whenever increasing a model's complexity.
+For researchers without an armada of the latest and greatest rocket ship GPUs, this also leads to disillusioned researchers.
+Given how valuable a resource curiousity and interest is in this world, ensuring researchers from all areas can contribute is vital, whether they're amateurs on Kaggle or students at a cash-strapped university.</p>
+<p>Given all of this, it's constantly found that many state of the art results can be achieved with simpler architectures and model setups.</p>
+<h2>The value of baselines</h2>
+<p>Baselines are simultaneously one of the most valuable resources we have in deep learning.
+They provide a sanity check against improvements, an easy avenue for the curious to begin to explore, and a potential foundation for future innovation to be built upon.
+Sadly, they're also one of the most neglected.</p>
+<p>Baselines frequently stem from educational codebases, primarily as simpler techniques are easier to implement and understand for new users.
+This becomes a problem when the goals of education and performance stand in conflict.
+When baselines trade performance for simplicity, you must begin to question how indicative the baseline remains.
+If a baseline isn't indicative, if it doesn't give you a metric against which to measure progress, the baseline is truly useless, and your results may be too.</p>
+<p>Researchers also aggressively optimize their models but not the baseline they compare against.
+Baselines are generally an afterthought and something you fear spending equivalent time on given it may decrease your contribution's worth.
+Sadly this frequently means that baselines are simply a copy and paste of numbers from one paper to another rather than a fair gauge against which you can measure your own progress.
+From this, baselines tend to be artificial, tiny, ancient, ignored, and rarely updated to modern best practices or techniques.</p>
+<p><strong>When we lose accurate baselines, we lose our ability to accurately measure our progress over time.</strong></p>
+<hr />
+<p><em>Random sidenote from outside machine learning:</em>
+We're not the only field with this issue. In graph processing, Frank McSherry found that <a href="http://www.frankmcsherry.org/graph/scalability/cost/2015/01/15/COST.html">a cluster of dozens of machines (128 cores) were outperformed by a single threaded (but intelligently optimized) program on his laptop</a>.
+Indeed, it enabled certain datasets that <a href="http://www.frankmcsherry.org/graph/scalability/cost/2015/02/04/COST2.html">were not even possible at all on the cluster</a>.</p>
+<h2>Strategically improving baselines to state of the art</h2>
+<p>So how do we avoid this complexity?
+Simple.
+Ensure you make the model no more complex than you need it to be.
+If in doubt, start even simpler than you imagined was possible - you might surprise yourself!</p>
+<p>Take an existing baseline or write it yourself, ensure it remains simple and fast.
+Then take this simple and fast baseline and push it as far as possible.
+This means tuning hyperparameters extensively, trying a variety of regularization techniques, sanity checking against bugs and potentially flawed assumptions, and delving into the "boring" data processing in detail.
+All these are made possible due to the simplicity of your baseline.</p>
+<p><strong>As it is fast, you can spend many runs tuning your hyperparameters.</strong></p>
+<p><strong>As it is simple, bugs and flawed assumptions become easier to find as the model isn't powerful enough to hide it from you.</strong></p>
+<p>From this, you can then inch foward towards more complex models.
+Add a component, one at a time, evaluate, and then keep it or remove it, always trying to maintain as fast and minimal a baseline as possible.
+The hope is you'll know what you're trading off.</p>
+<ul>
+<li>Component X makes the model far slower but achieves gains </li>
+<li>Component Y makes the model less general but helps capture this corner case / speed the model up substantially</li>
+</ul>
+<p>This strategy is reinforced by the fact that models of comparable complexity and compute time from today beat generally beat models of comparable complexity from last year.
+Almost never has the single solution in machine learning or deep learning been "just scale it", as much as that adage is repeated.</p>
+<h2>Human intuition in deep learning is bad</h2>
+<p>An amplifier for the fears above - that slow training and lack of ablations may mislead us - is that humans are terrible at intuiting what will and won't work in deep learning.
+Even with the benefit of theory - of which we have precious little for non-simplified systems - our results don't always match what we would expect.</p>
+<p>When attention was first introduced, it achieved lower accuracy than simply increasing the hidden size.
+For some time people believed that it wasn't even necessary - that increasing the hidden size would always result in a better model.
+That stance has shifted over time.</p>
+<p>Within recurrent neural networks it was always assumed that a complex recurrent transition - a matrix multiplication when updating your hidden state from one timestep to the next - was necessary.
+More generally, it was always assumed that to process sequential data you would need to be recurrent.
+This started shifting in only the last year or two with the advent of many non-traditionally recurrent style networks, such as Strongly Typed Recurrent Neural Networks, PixelCNN, ByteNet, the Transformer Network, or the Quasi-Recurrent Nueral Network (QRNN).</p>
+<p>When my colleague James Bradbury and I started designing the QRNN based upon the foundation established by Strongly Typed Recurrent Neural Networks, we expected the model to be far faster but not to perform better than the LSTM.
+I'll speak for myself at being shocked at how well it ended up working.
+In the current baseline state of the art model for word level language modeling on Penn Treebank and WikiText-2, the QRNN can achieve comparable results to the LSTM in a fraction of the time of even the most highly optimized of implementations.</p>
+<p>None of this is to say that the researchers working on these domains or making these discoveries are not incredibly intelligent - other than myself I can almost guarantee they are - it is simply to say that this field doesn't naturally lend itself to human intuition.
+As such, our preconceived assumptions regarding what is and isn't necessary within an architecture can't be trusted.
+This only becomes worse when our baselines provide us a poor compass or when we overcomplicate our models preventing proper analysis.</p>
+<h2>Call to action: adopt a baseline</h2>
+<p>If you're new the field, my message to you is two-fold:</p>
+<ul>
+<li>Adopt a baseline to not only help the field but to also provide a grounded domain in which to hone your skills - you might surprise not just yourself by resesearchers across the community :)</li>
+<li>Even if the Goliaths in the space have access to an armada of GPUs, you can still help advance the field forward (I promise!) and there are many counter examples to show that raw compute is no guarantee they'll beat you</li>
+</ul>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2016/google_nmt_arch.html">Peeking into the neural network architecture used for Google's Neural Machine Translation</a></li>
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Salesforce Research:</b><br />
+                Senior research scientist<br />(deep learning)
+              </p>
+              <p>
+                <b>Part of MetaMind:</b><br />
+                Acquired by Salesforce
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

@@ -109,7 +109,7 @@ The softmax allows you to produce a probability distribution over a set of class
 <p><em>Given that, it's terrifying to think we've been living with a bottlenecked softmax in many situations.</em></p>
 <p>The traditional adage in deep learning tells you to increase your model's parameters until it overfits.
 The issue is that, for the situation caused by the softmax bottleneck, it's not possible or even practical to fix this by simply throwing more parameters at the problem.</p>
-<h2>tdlr; Why mixture of softmaxes matter?</h2>
+<h2>tldr; Why mixture of softmaxes matter?</h2>
 <p><strong>Experimentally:</strong> achieves the best results for word level language modeling on the Penn Treebank and WikiText-2 datasets given the same parameter limit when extending the <a href="https://github.com/salesforce/awd-lstm-lm">AWD-LSTM-LM codebase</a> (<a href="https://arxiv.org/abs/1708.02182">Smerity et al.</a>) and <a href="https://github.com/benkrause/dynamic-evaluation">dynamic evaluation code</a> (<a href="https://arxiv.org/abs/1709.07432">Krause et al.</a>) (<a href="https://github.com/zihangdai/mos">MoS code</a>).</p>
 <p><strong>Theoretically:</strong> highlights an immense deficiency of existing softmax based models through the guise of matrix factorization leading to a simple and readily experimentally verified proof mechanism - matrix rank.</p>
 <h2>Reminder of the traditional softmax</h2>

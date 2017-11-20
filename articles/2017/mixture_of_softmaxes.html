@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: Understanding the Mixture of Softmaxes (MoS)</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="Understanding the Mixture of Softmaxes (MoS)">
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2016/ml_not_magic.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2016/ml_not_magic.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">Understanding the Mixture of Softmaxes (MoS)</h1>
+<h3 class="post-date">November 17, 2017</h3>
+  <p><em>In this post we'll be pulling apart <a href="https://arxiv.org/pdf/1711.03953.pdf">Breaking the Softmax Bottleneck: A High-Rank RNN Language Model</a> by Zhilin Yang, Zihang Dai, Ruslan Salakhutdinov, and William W. Cohen.</em></p>
+<p>The softmax operation is fundamentally important for many tasks in machine learning.
+The softmax allows you to produce a probability distribution over a set of classes - the exact type of thing you might want to do when deciding which digit an image represents, whether the photo is of a cat or dog, and which out of a dictionary of words is the right one to continue a sentence with.</p>
+<p><em>Given that, it's terrifying to think we've been living with a bottlenecked softmax in many situations.</em></p>
+<p>The traditional adage in deep learning tells you to increase your model's parameters until it overfits.
+The issue is that, for the situation caused by the softmax bottleneck, it's not possible or even practical to fix this by simply throwing more parameters at the problem.</p>
+<h2>tdlr; Why mixture of softmaxes matter?</h2>
+<p><strong>Experimentally:</strong> achieves the best results for word level language modeling on the Penn Treebank and WikiText-2 datasets given the same parameter limit when extending the <a href="https://github.com/salesforce/awd-lstm-lm">AWD-LSTM-LM codebase</a> (<a href="https://arxiv.org/abs/1708.02182">Smerity et al.</a>) and <a href="https://github.com/benkrause/dynamic-evaluation">dynamic evaluation code</a> (<a href="https://arxiv.org/abs/1709.07432">Krause et al.</a>) (<a href="https://github.com/zihangdai/mos">MoS code</a>).</p>
+<p><strong>Theoretically:</strong> highlights an immense deficiency of existing softmax based models through the guise of matrix factorization leading to a simple and readily experimentally verified proof mechanism - matrix rank.</p>
+<h2>Reminder of the traditional softmax</h2>
+<p>The traditional softmax function is defined by:</p>
+<script type="math/tex; mode=display">
+P_\theta(x|h) = \frac{\exp h^T w_x}{\sum_{\bar{x}} \exp h^T w_{\bar{x}}}
+</script>
+
+<p>where \(h\) is our hidden or context vector and \(w\) is a word vector.</p>
+<p>By taking the dot product between the context / hidden vector \(h\) and a target word \(w\) we produce what we call a <strong>logit</strong>.
+This logit then competes with all other logits, producing a probability.
+This probability is a normalized probability distribution, meaning that \(\sum_x P_\theta(x|h) = 1\) (i.e. the probability mass is conserved at 1).</p>
+<h2>Language modeling as matrix factorization</h2>
+<p>The paper motivates the deficiency of the current softmax by introducing language modeling as a matrix factorization problem.
+I'll admit that properly explaining this is beyond my cursory analysis but I'll give the general flow of the argument as best I can, hopefully motivating you to then read the paper in detail.</p>
+<p>Imagine you have a set of context vectors \(H \in \mathbb{R}^{N \times d}\), a set of word vectors \(W \in \mathbb{R}^{V \times d}\) (with \(V\) the vocabulary size), and the real word probability of seeing a specific next word in a given context as the \(P^*(x|c)\) entries in the \(A \in \mathbb{R}^{N \times V}\) matrix.
+Essentially we're running our trained model against \(N\) samples from the real world where we know the correct answers.</p>
+<p><img class="center smooth round" src="/media/images/articles/2017/matrix_rank.png" /></p>
+<p>We want to get as close to the real world probabilities of \(A\) as possible using our approximation \(A' = H W^T\) - which can readily be posed and understood as a matrix factorization problem.</p>
+<h2>Why our approximation ends up low rank</h2>
+<p>Whenever we perform matrix multiplications, the rank of our matrix is limited, specifically that when performing a matrix multiplication on \(AB\), we have \(\text{rank}(AB) = \min(\text{rank}(A), \text{rank}(B))\).
+This means many of the simple rules of matrix factorization come through - specifically that the rank of \(H W^T\) is upper bounded by the embedding size \(d\).</p>
+<p>If the real world matrix \(A\) is of a higher rank than \(d\) - which is likely the case given the complexity and intricacies of natural languge - we're limiting ourselves to a low rank approximation \(A'\) of the real world data.
+Note that the matrix \(A\) could attain a full rank of \(V\).
+This is a problem when we want to decide on which word to use from our vocabulary \(V\) and have \(V \gg d\).</p>
+<p>A simple approach would be to just increase \(d\) until it's of comparable size to our vocabulary of size \(V\).
+Unfortunately the issues are two-fold.
+First, the number of parameters for the model would grow rapidly as we increased \(d\).
+The vocabulary of word level language models is easily into the tens of thousands, if not hundreds of thousands, and each word is represented by a word vector of size \(d\).
+Second, increasing the dimensionality of the word vectors beyond a certain point (usually \(d = 400\)) has not been found helpful in practice.
+This has been confirmed experimentally in language modeling and machine translation amongst other tasks.</p>
+<h2>Mixture of softmaxes</h2>
+<p>How can we increase the rank of our resulting matrix with minimal work?
+The paper introduces the mixture of softmaxes (MoS) as a potential solution.
+This essentially boils down to performing \(K\) different softmaxes and mixing them - with some tricks to avoid excess parameter use.</p>
+<p>The mixture of softmaxes can be seen as jointly training an ensemble of \(K\) different models with minimal overhead.
+An ensemble is just where you train multiple models and average their predictions, a practice which usually outperforms any single model.
+Jointly training is when all of these ensembled models are trained against a single loss, allowing the models to work together to avoid deficiencies.</p>
+<p>All the weights, including the word embedding matrix \(W \in \mathbb{R}^{V \times d} \) (which is the largest of the matrices), are reused by each of the different components.
+This means that the parameter overhead when introducing the mixture of softmaxes is minimal.
+The amount of computation increases quite a large amount however - specifically it's as if we're computing \(K\) traditional softmaxes.</p>
+<p>The only two weights introduced are:</p>
+<ul>
+<li>A weight \(P  \in \mathbb{R}^{Kd \times d}\) that takes our hidden vector \(h \in \mathbb{R}^{d}\) and projects it to \(K\) different hidden vectors each of size \(h_k \in \mathbb{R}^{d}\)</li>
+<li>A weight \(M \in \mathbb{R}^{d \times K}\) that takes our hidden vector and says how to mix between the \(K\) different models</li>
+</ul>
+<script type="math/tex; mode=display">
+[h_0, \ldots, h_K] = \tanh(h P^T) \\
+[\pi_0, \ldots, \pi_K] = \text{softmax}(h M^T) \\
+P_\theta(x|h) = \sum^K_k \pi_k \frac{\exp h_k^T w_x}{\sum_{\bar{x}} \exp h_k^T w_{\bar{x}}}
+</script>
+
+<p>As it's a mixture, and as \([\pi_0, \ldots, \pi_K]\) is the result of a softmax, \(\sum_k \pi_k = 1\) and \(\sum_x P_\theta(x|h) = 1\).</p>
+<h2>Mixture of contexts (It's a trap!)</h2>
+<p>A method that looks superficially very similar but isn't is a mixture of contexts, where we produce \(h^T\) from a weighted mixture of \([h_1^T, \ldots h_K^T]\).</p>
+<script type="math/tex; mode=display">
+[h_0, \ldots, h_K] = \tanh(h P^T) \\
+[\pi_0, \ldots, \pi_K] = \text{softmax}(h M^T) \\
+P_\theta(x|h) = \frac{\exp (\sum^K_k \pi_k h_k^T) w_x}{\sum_{\bar{x}} \exp (\sum^K_k \pi_k h_k^T) w_{\bar{x}}}
+</script>
+
+<p>This method is faster - primarily as we don't have to compute \(K\) different softmaxes where the softmax can be one of the slowest operations - but doesn't actually increase the rank of our resulting matrix.
+The reason this is a trap is that it appears very close to the mixture of softmaxes but can be rewritten to be equivalent to a standard softmax (specifically by setting \(h' = \sum^K_k \pi_k h_k^T\)).</p>
+<h2>Demo: Illustrating increased softmax rank</h2>
+<p>Within the paper, they demonstrate better results for three different tasks - two within language modeling (Penn Treebank and WikiText-2), the other in dialog (Switchboard).
+Beyond getting better results, they show that the mixture of softmaxes model produces a resulting matrix with higher rank.
+The matrix we analyze is the result of taking the probability distribution for each sample in a dataset and stacking them together.
+Hence, if we have \(V\) words in our vocabulary and \(S\) samples in our dataset, the matrix we analyze is \(\mathbb{R}^{S \times V}\).</p>
+<p>We're going to perform a simple recreation of that here.
+To illustrate the problem and solution we'll set up a simple PyTorch experiment within <a href="https://drive.google.com/file/d/1Pvb0-Qdc-JjMVLihsUJwUztDiIFE9o3l/view?usp=sharing">a Jupyter Notebook</a> (<a href="https://colab.research.google.com/notebook#fileId=1Pvb0-Qdc-JjMVLihsUJwUztDiIFE9o3l">Colaboratory link</a>).</p>
+<p>There are only three components: a linear layer that projects the \(H\) dimensional context vector to the vocabulary size \(V\), an optional "mixer" that takes \(H\) and produces \(K\) different projections of the context vector \([h_0, \ldots, h_K]\), and \(S\) random context vector inputs samples.
+For this experiment we will asume that each mixture is equally weighted (i.e. \(\pi_k = \frac{1}{K}\)).
+None of these are trained, all starting from random initialization.</p>
+<p>Within our experiment, we set \(H = 32, V = 1000, S = 2048\) and look at the rank of the resulting matrix that predicts the vocabulary distribution for each context vector.
+This resulting matrix is \((2048, 1000)\) - i.e. for each sample we have a probability distribution for the 1000 different vocabulary items.
+The full potential rank of this matrix is 1000 - so that's what we're hoping for with mixture of softmaxes!</p>
+<table class="table table-striped">
+  <thead>
+    <th>Softmax Type</th>
+    <th>k=1</th>
+    <th>k=2</th>
+    <th>k=3</th>
+    <th>k=4</th>
+    <th>k=5</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Traditional softmax</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <td>Mixture of Contexts (MoC)</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <td>Mixture of Softmaxes (MoS)</td>
+      <td>34</td>
+      <td>629</td>
+      <td>979</td>
+      <td>995</td>
+      <td>997</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For those deeply interested, the matrix rank here is approximated and likely off by a little - especially as I believe the 34 should indeed be 32.
+Well ... maybe 33 if the bias allows for an extra ..?
+Who knows, I'm not smart enough, let's continue ;)
+The approximation issue is for the most part due to <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.linalg.matrix_rank.html">numerical tolerance issues</a>.</p>
+<p>As we can see quite readily, both the baseline and mixture of contexts maintain a low rank approximation.
+The mixture of softmaxes result achieves nearly full rank for the resulting matrix, showing the potential of the technique.
+Note that these models are not trained at all, simply a result of random initialization, so by default models using the mixture of softmaxes already have additional expressivity in the form of a higher rank result matrix.</p>
+<h2>Open question: where else can mixture of softmaxes be applied?</h2>
+<p>How much of the performance of ensembles may be just increasing the rank of the prediction matrices?
+This applies equally for \(K\) different models of the same type as well as dynamic evaluation methods such as Krause et al style dynamic eval, pointer, or continuous cache methods.</p>
+<p>Will we see the same benefits within machine translation as we see in language modeling, where both of the tasks can have softmaxes over a stupendously large vocabulary?</p>
+<p>What is the value of \(K\) needed for achieving full rank if we have set values for \((d, V)\)?
+Is achieving full rank enough or like other deep learning tasks do we want to essentially overparameterize the model?
+In the paper they set \(K = 15\) but provide no justification or analysis of this.</p>
+<p>How are architectures such as the <a href="https://arxiv.org/pdf/1706.03762.pdf">Transformer Network</a> either already employing the mixture of softmaxes inadvertently or could potentially employ it in components such as the Multi-Head Attention mechanism?</p>
+<p>What other situations, beyond the softmax over the vocabulary, are we being bitten by these low rank approximations?
+Is low rank when computing large scale attention via softmax an issue?</p>
+<p>Is there any way to minimize the computational overhead whilst maintaining the full rank advantage of the mixture of softmaxes?</p>
+<h2>Interested in exploring further?</h2>
+<p>The code for the mixture of softmaxes is <a href="https://github.com/zihangdai/mos">available on GitHub</a> and extends the <a href="https://github.com/salesforce/awd-lstm-lm">AWD-LSTM-LM codebase</a> that my colleagues and I released for PyTorch and the <a href="https://github.com/benkrause/dynamic-evaluation">dynamic evaluation codebase</a> of Krause et al.</p>
+<p>There are certainly many more opportunities to use this - go forth and prosper =]</p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2017/baselines_need_love.html">Backing off towards simplicity - why baselines need more love</a></li>
+              <li><a target="_blank" href="/articles/2016/google_nmt_arch.html">Peeking into the neural network architecture used for Google's Neural Machine Translation</a></li>
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Salesforce Research:</b><br />
+                Senior research scientist<br />(deep learning)
+              </p>
+              <p>
+                <b>Part of MetaMind:</b><br />
+                Acquired by Salesforce
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

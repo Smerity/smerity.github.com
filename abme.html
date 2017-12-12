@@ -31,8 +31,6 @@
   <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
 
     
-  <script type="text/javascript" src="/media/js/jquery.js"></script>
-  <script src="/media/bootstrap/js/bootstrap.js"></script>
   <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {
@@ -97,18 +95,23 @@
 <h1 class="post-title">About Me</h1>
 
   <p>My name is Stephen Merity, though I'm most commonly referred to as Smerity.
-I'm a senior research scientist working on deep learning in San Francisco with <a href="https://www.metamind.io/">MetaMind</a>, acquired by <a href="https://www.salesforce.com/">Salesforce</a>.</p>
+I'm a senior research scientist working on deep learning in San Francisco with <a href="https://einstein.ai/">Salesforce Research</a> via the <a href="https://www.metamind.io/">MetaMind</a> acquisition.</p>
 <p>I've been lucky enough to work with fascinating people and groups over the years including Google Sydney, Freelancer.com, the <a href="http://schwa.org/">Schwa Lab</a> at the University of Sydney, the team at <a href="https://groklearning.com/">Grok Learning</a>, the non-profit <a href="http://commoncrawl.org/">Common Crawl</a>, and <a href="http://iacs.seas.harvard.edu/">IACS @ Harvard</a>.
 You can read my full history in <a href="/media/files/resume.pdf">my resume</a> or at <a href="http://www.linkedin.com/in/smerity">LinkedIn</a>.
 Feel free to contact me in person at <a href="mailto:smerity@smerity.com">smerity@smerity.com</a> or stalk me on my various social networks!</p>
 <h2>Publications</h2>
 <p><span id="pubs"></span></p>
-<p><strong>Quasi-Recurrent Neural Networks</strong> (2016) [<a href="https://arxiv.org/abs/1611.01576">pdf</a>]<br />
+<p><strong>Regularizing and Optimizing LSTM Language Models</strong> (2017) [<a href="https://arxiv.org/abs/1708.02182">pdf</a>][<a href="https://github.com/salesforce/awd-lstm-lm">code</a>]<br />
+Stephen Merity*, Nitish Shirish Keskar*, James Bradbury, Richard Socher (* equal contribution)<br />
+<em>arXiv</em></p>
+<p><strong>Revisiting Activation Regularization for Language RNNs</strong> (2017) [<a href="https://arxiv.org/abs/1708.01009">pdf</a>]<br />
+Stephen Merity, Bryan McCann, Richard Socher<br />
+<em>arXiv</em></p>
+<p><strong>Quasi-Recurrent Neural Networks</strong> (2016) [<a href="https://arxiv.org/abs/1611.01576">pdf</a>][<a href="https://github.com/salesforce/pytorch-qrnn">code</a>]<br />
 James Bradbury*, Stephen Merity*, Caiming Xiong, Richard Socher (* equal contribution)<br />
 <em>arXiv</em></p>
 <p><strong>The WikiText Long Term Dependency Language Modeling Dataset</strong> (2016) [<a href="http://metamind.io/research/the-wikitext-long-term-dependency-language-modeling-dataset/">dataset</a>]<br />
-Stephen Merity, Caiming Xiong, James Bradbury, Richard Socher<br />
-</p>
+Stephen Merity, Caiming Xiong, James Bradbury, Richard Socher  </p>
 <p><strong>Pointer Sentinel Mixture Models</strong> (2016) [<a href="http://arxiv.org/abs/1609.07843">pdf</a>]<br />
 Stephen Merity, Caiming Xiong, James Bradbury, Richard Socher<br />
 <em>arXiv</em></p>
@@ -174,6 +177,8 @@ This product has been a search engine, a social network, a group of maze navigat
             ul.unstyled li { padding-bottom: 6px; }
             </style>
             <ul class="crossed">
+              <li><a target="_blank" href="/articles/2017/baselines_need_love.html">Backing off towards simplicity - why baselines need more love</a></li>
+              <li><a target="_blank" href="/articles/2016/google_nmt_arch.html">Peeking into the neural network architecture used for Google's Neural Machine Translation</a></li>
               <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
               <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
               <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: T-Mobile Educational Material on Plaintext Passwords and Computer Security</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="T-Mobile Educational Material on Plaintext Passwords and Computer Security">
+  
+  <meta name="description" content="(Parody) Recently T-Mobile Austria launched an innovative campaign to educate the average Joe and Jane on modern computer security, focusing on plaintext passwords but including many other concepts in the expanded scope. Like the Burger King bullying ad, they temporarily embarrass themselves and their company in an effort to educate a broad audience." />
+  <meta property="og:description" content="(Parody) Recently T-Mobile Austria launched an innovative campaign to educate the average Joe and Jane on modern computer security, focusing on plaintext passwords but including many other concepts in the expanded scope. Like the Burger King bullying ad, they temporarily embarrass themselves and their company in an effort to educate a broad audience." />
+  <meta name="twitter:description" content="(Parody) Recently T-Mobile Austria launched an innovative campaign to educate the average Joe and Jane on modern computer security, focusing on plaintext passwords but including many other concepts in the expanded scope. Like the Burger King bullying ad, they temporarily embarrass themselves and their company in an effort to educate a broad audience." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2018/tmobile_by_paul.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2018/tmobile_by_paul.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">T-Mobile Educational Material on Plaintext Passwords and Computer Security</h1>
+<h3 class="post-date">April 6, 2018</h3>
+  <p><strong>Forewarning:</strong> <em>This is a <strong>parody</strong> article. Wathing the debacle unfold literally reminded me of a fake exam question in computer and network security - so let's treat it like that!</em></p>
+<p>Recently T-Mobile Austria launched an innovative campaign to educate the average Joe and Jane on modern computer security, focusing on plaintext passwords but including many other concepts in the expanded scope.
+Like the <a href="https://www.youtube.com/watch?v=mnKPEsbTo9s">Burger King bullying ad</a>, they temporarily embarrass themselves and their company in an effort to educate a broad audience.</p>
+<p>This is not the first instance of T-Mobile producing this type of educational campaign.
+In early 2016, T-Mobile CEO John Legere highlighted the impressive work and independent nature of the <a href="https://www.eff.org/">Electronic Frontier Foundation</a> (EFF), the leading nonprofit defending digital privacy, free speech, and innovation, by shouting in a short tweeted video <a href="https://arstechnica.com/information-technology/2016/01/john-legere-asks-eff-who-the-fk-are-you-and-who-pays-you/">"Who the f**k are you, and who pays you?"</a>.</p>
+<p>Remember when reading below, the T-Mobile Education Team are purposefully making T-Mobile appear incompetent.
+No tech company, larger or small, would ever be so unaware of computer security as to <a href="http://plaintextoffenders.com/">store passwords in plaintext</a>.</p>
+<h2>Wait ... the password policy is what now?</h2>
+<p><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p>The elaborate stunt started with an innocuous password validation issue that surely T-Mobile artificially construed.</p>
+<p><center><blockquote class="twitter-tweet" data-cards="hidden" data-lang="en"><p lang="en" dir="ltr">Max. 16 chars, ASCII only, mandatory security question, pasting disabled for confirm password and answer fields. <a href="https://twitter.com/Telekom_hilft?ref_src=twsrc%5Etfw">@Telekom_hilft</a> <a href="https://twitter.com/PWTooStrong?ref_src=twsrc%5Etfw">@PWTooStrong</a> <a href="https://t.co/vbwKuna80M">pic.twitter.com/vbwKuna80M</a></p>&mdash; Claudia Pellegrino (@c_pellegrino) <a href="https://twitter.com/c_pellegrino/status/980422131417862145?ref_src=twsrc%5Etfw">April 1, 2018</a></blockquote></center></p>
+<p>As you well know, password strength is generally proportional to three things:</p>
+<ul>
+<li>The length and number of possible tokens (i.e. [a-zA-Z0-9] is stronger than [a-z])</li>
+<li>Ensuring unique passwords by usage of password managers</li>
+<li>Avoiding security questions which generally use readily available information</li>
+</ul>
+<p>In one fell swoop, T-Mobile highlighted all three issues.</p>
+<p>This would already be a good introduction to password security in and of itself - but the T-Mobile Educational Team aim for excellence, not mediocrity.</p>
+<h2>Murder on the Plaintext Express</h2>
+<p>After the relatively quiet start, a shocking revelation shakes our cast: <strike>the calls are coming from inside the house</strike> the passwords are stored in plaintext! ◉_◉</p>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Had the same issue with T-Mobile Austria. Apparently they are saving the password in clear because employees have access to them (you have tell them your password when you&#39;re taking to them on the phone or in a shop) and they are not case sensitive</p>&mdash; SeloX (@SeloX_AUT) <a href="https://twitter.com/SeloX_AUT/status/981406875811008513?ref_src=twsrc%5Etfw">April 4, 2018</a></blockquote></center></p>
+<p>As we're all aware, plaintext passwords are a Bad Idea™.
+Why?
+The T-Mobile Educational Team help explain below!
+<!--Any security breach reaching the database, or any employee who snoops more than they should, can walk away with your artisanally crafted, non-GMO, gluten free password.--></p>
+<h2>Passwords are frequently re-used</h2>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Hi <a href="https://twitter.com/c_pellegrino?ref_src=twsrc%5Etfw">@c_pellegrino</a>, I really do not get why this is a problem. You have so many passwords for evey app, for every mail-account and so on. We secure all data very carefully, so there is not a thing to fear. ^Käthe</p>&mdash; T-Mobile Austria (@tmobileat) <a href="https://twitter.com/tmobileat/status/981785213549383680?ref_src=twsrc%5Etfw">April 5, 2018</a></blockquote></center></p>
+<p>Users aren't good with passwords.
+The majority of users re-use passwords across multiple websites.
+As such, when a password is leaked - such as what would happen if a password were stored in plaintext - this leak can compromise other services for that user across the internet.
+T-Mobile highlights this by pretending the average user, such as Grandpa Joe or Grandma Julie, are actually aware of the potential dangers of this.</p>
+<h2>No company's security is perfect</h2>
+<p><center><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/Korni22?ref_src=twsrc%5Etfw">@Korni22</a> What if this doesn&#39;t happen because our security is amazingly good? ^Käthe</p>&mdash; T-Mobile Austria (@tmobileat) <a href="https://twitter.com/tmobileat/status/982187919061303296?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<p>Optimism isn't a strategy that works in computer security.
+Computer security has been described by some (= just me) as akin to hiking across a mine field.
+Whilst wearing skis.
+Near an active volcano.
+Whilst being chased by an Internet-of-Things enabled Furby.
+Which happens to have laser eyes.</p>
+<p>In summary, computer security isn't easy.
+A single mistake of any size anywhere by anyone is enough for the walls of your kingdom to crumble into dust.</p>
+<p>As such, the best tactic is for a company to act under the assumption that their information may already have been accessed.
+The simplest tactic for a company to do is to hash and salt passwords, which substantially complicate the re-use of passwords by bad actors on other sites.</p>
+<p>To really drive this point home, a likely fake user created by the T-Mobile Educational Team highlights recent data breaches which potentially exposed the data of 76 million T-Mobile customers.</p>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Hi Käthe, saying T-Mobile&#39;s security is &quot;amazingly good&quot; is contradicting the fact that the company had multiple data breaches in the past. In addition, here&#39;s a big hit from October last year. FYI: clear-text passwords is a fear for everyone, fix it.<a href="https://t.co/pro9McIDQg">https://t.co/pro9McIDQg</a></p>&mdash; Hydrogen (@HydrogenNGU) <a href="https://twitter.com/HydrogenNGU/status/982345572387471360?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<p>By being so flippant about it, and then pointing out their past folly, T-Mobile successfully highlights that security isn't a guarantee.</p>
+<h2>Passwords as combination locks - way less effective if you know part of it</h2>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Hello Claudia! The customer service agents see the first four characters of your password. We store the whole password, because you need it for the login for <a href="https://t.co/vJapgJ50qc">https://t.co/vJapgJ50qc</a> ^andrea</p>&mdash; T-Mobile Austria (@tmobileat) <a href="https://twitter.com/tmobileat/status/981418339653300224?ref_src=twsrc%5Etfw">April 4, 2018</a></blockquote></center></p>
+<p>In this scenario T-Mobile highlights that even partial plaintext is a Bad Idea™.
+This is important as many companies would make excuses that knowing only part of the password is somehow better than knowing the full password.</p>
+<p>Even in an optimal world where the rest of the password is properly stored (i.e. hashed, salted, grilled, ...), knowing the first four characters of a password is still a Bad Idea™.
+In the T-Mobile Educational team example, knowing the first four characters of the password effectively reduces the password length by - surprise - four characters.
+The average length of a password is only 9.6 characters - meaning that (in this totally hypothetical scenario that would never take place in reality) almost half of a password's length is revealed by storing this information, even if the rest of the system is secure.</p>
+<p>Imagine a padlock with a combination code.
+To guess the correct four digit code is nearly impossible for a human.
+Cut down that to a two digit code and it'll take you a few minutes at most.
+Passwords have the exact same issue.
+Their strength increases exponentially.</p>
+<h2>Bonus points: ad hominem attacks don't increase security</h2>
+<p><center><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/Korni22?ref_src=twsrc%5Etfw">@Korni22</a> Excuse me? Do you have any idea how telecommunication companies work? Do you know anything about our systems? But I&#39;m glad you have the time to share your view with us. ^Käthe</p>&mdash; T-Mobile Austria (@tmobileat) <a href="https://twitter.com/tmobileat/status/982190220798967809?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<p>Whilst it may take a computer security professional to actually secure your system, we can all take part in security by pointing out problematic security practices.
+Many of the tenets of computer security don't change when it's being applied to telecommunication companies, social networks, your friend's soon-to-be-mainstream live streaming website for armadillos, or the Yo app.
+The principles remain the same.</p>
+<p>As such, the T-Mobile Educational Team wanted to highlight that any user can be part of Team Security.
+They also ensured that the random Twitter user would not be too injured by their savage artificial ad hominem by providing them the best retort ever.</p>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Well, I do since I worked for <a href="https://twitter.com/deutschetelekom?ref_src=twsrc%5Etfw">@deutschetelekom</a>, but thanks for asking. 3 years of something that’s called „Ausbildung“ a bit more as contractor.</p>&mdash; Eric™ (@Korni22) <a href="https://twitter.com/Korni22/status/982190552127979523?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<h2>Bonus points: security disclosures in the computer security community</h2>
+<p>The last point is a complex one and I'm impressed the T-Mobile Educational Team decided to tackle it.
+When security researchers find an exploit, what are they meant to do?
+Tell the users who are impacted by it?
+Tell the company who might be able to fix it?
+Sell the exploit to a foreign nation which promises it only wants to listen in on bedroom conversations to better tailor their line of adult toys to very specific target markets?</p>
+<p>Most security researchers attempt to work with companies in a positive manner.
+Sadly some companies can be mean and sue the security researchers or claim they're bribing them into fixing the product.
+Yes.
+Literally.</p>
+<p>In this exchange, someone noting that "no-one can guarantee perfect security" is interpreted as a threat.</p>
+<p><center><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/Korni22?ref_src=twsrc%5Etfw">@korni22</a> Well, I said amazingly good  - not 100% secure. And I have to ask: Are you an employee? Is this some kind of warning? ^Käthe</p>&mdash; T-Mobile Austria (@tmobileat) <a href="https://twitter.com/tmobileat/status/982189116090564608?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<p><strong>Is this some kind of warning?</strong> is the correct question to ask.
+Yes, it is.
+If you attack people who try to do the right thing, or security researchers that do free work in helping make your product more resilient, it acts as a foreshadowing.
+In the future the only people who will worry about your security are your own flawed internal security teams and potentially black hat hackers who aren't going to tell you about vulnerabilities on Twitter.</p>
+<p><center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">Are you nuts?<br>If it’s not 100% secure, make it as hard as you can for any kind of attacker to get to users passwords.<br>And no, I’d never work for a company that stores plaintext passwords and even believes its not a bad idea.</p>&mdash; Eric™ (@Korni22) <a href="https://twitter.com/Korni22/status/982189447490908161?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote></center></p>
+<p>As highlighted in the response, talented engineers and employees won't work for companies that keep having and implementing Bad Ideas™ that will eventually hurt their userbase.</p>
+<h2>Conclusion: unbelievable but impressive production</h2>
+<p>Whilst the plot is unbelievable, the execution was flawless.
+In 2018, decades into the digital revolution, it is simply not a reasonable plot for a large corporation to be unaware of the dangers of plaintext passwords, or for the CEO of a major telecommunications company to attack a non-profit that is known for its dedication to privacy and free speech.</p>
+<p>With that in mind, this was truly an epic stage play, touching many fragmented areas of the computer and network security sphere, performed on a public stage in front of millions of onlookers.</p>
+<p>I can't wait to see what the T-Mobile Educational Team tries next!</p>
+<p><strong>Thanks to:</strong> Paul L McCord Jr for <a href="https://www.flickr.com/photos/plmccordj/15795375053/in/photolist-q4MqGD-62qhUU-6QD73D-5eoBSN-GeVe53-4akVDx-KVSZ6-6wxxM2-5CbPUJ-92zA16-5C7B4v-5x3ijX-jAToF-4jREp2-7okTbB-76VMiL-9jDabf-5MFXCp-5CbUij-6jo3J5-4gXvSz-5DR2KJ-C65wK-59KHUY-6vwFiJ-46RARk-ajaEXX-5iDsyU-3TpNjy-6MEQcR-fwEJ4h-5sxrnS-5hCYTM-4aMJSL-bd4DXR-ebsdiR-4VSVuz-jU9xy-6zWnAF-X9QNh-5Eg2zR-4W5wWc-Ysq9R-6paPtz-5UC9db-5CbQ4f-5CqSLN-78XtdV-X9CXy-5CbQhj">their T-Mobile graphic</a>.</p>
+<p><img src="/media/images/articles/2018/tmobile_by_paul.jpg" class="smooth center" /></p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2017/baselines_need_love.html">Backing off towards simplicity - why baselines need more love</a></li>
+              <li><a target="_blank" href="/articles/2016/google_nmt_arch.html">Peeking into the neural network architecture used for Google's Neural Machine Translation</a></li>
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            <div class="well well-small">
+              <!--<h1 style="margin-bottom: 0; margin-top: 0; text-align: center;">Hi, I'm Smerity</h1>-->
+              <div align="center">
+                <!--img class="shadowed pronounced" src="/media/images/smerity_bw.jpg" />-->
+              </div>
+              <!-- TODO: Place Twitter here -->
+              <p>
+                I'm <b>Stephen Merity</b>, better known in most places as <b>Smerity</b>.
+              </p>
+              <p>
+                <b>Salesforce Research:</b><br />
+                Senior research scientist<br />(deep learning)
+              </p>
+              <p>
+                <b>Part of MetaMind:</b><br />
+                Acquired by Salesforce
+              </p>
+              <p>
+                <b>Harvard University:</b><br />
+                <a href="http://www.seas.harvard.edu/programs/graduate/computational-science-and-engineering/master-of-science-in-cse">MS in CSE</a>
+              </p>
+              <p>
+                <b>Sydney University:</b><br />
+                <a href="http://sydney.edu.au/engineering/it/current_students/undergrad/bit.shtml">BIT</a> (University Medal + First Class Honours)
+              </p>
+              <p>
+                <b><a href="/abme.html">Full about me</a></b>
+              </p>
+            </div>
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="always">
+    <title>Smerity.com: The compute and data moats are dead</title>
+    
+  <link rel="shortcut icon" href="/media/images/favicon.ico">
+
+    
+  
+  <meta property="og:title" content="The compute and data moats are dead">
+  
+  <meta name="description" content="Humans play around 20 million DotA games per day. OpenAI Five plays about 2 million per day. Here&#39;s what I&#39;m looking to see in tomorrow&#39;s match." />
+  <meta property="og:description" content="Humans play around 20 million DotA games per day. OpenAI Five plays about 2 million per day. Here&#39;s what I&#39;m looking to see in tomorrow&#39;s match." />
+  <meta name="twitter:description" content="Humans play around 20 million DotA games per day. OpenAI Five plays about 2 million per day. Here&#39;s what I&#39;m looking to see in tomorrow&#39;s match." />
+  <!-- Seems excessive, doesn't it? -->
+  
+  
+  <meta property="og:image" content="http://smerity.com/media/images/articles/2018/roshan_beast.jpg" />
+  <meta name="twitter:image:src" content="http://smerity.com/media/images/articles/2018/roshan_beast.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Smerity.com" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:site" content="@Smerity" />
+  <meta name="twitter:creator" content="Smerity" />
+  
+
+    
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="/media/js/html5.js"></script>
+  <![endif]-->
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/compiled_less/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/media/css/pygments.css">
+
+    
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false,
+          skipTags: ["script","noscript","style","textarea","code"]
+        }
+      });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-470775-5']);
+    _gaq.push(['_trackPageview']);
+    setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])",15000);
+    setTimeout("_gaq.push(['_trackEvent', '30_seconds', 'read'])",30000);
+    setTimeout("_gaq.push(['_trackEvent', '60_seconds', 'read'])",60000);
+    setTimeout("_gaq.push(['_trackEvent', '120_seconds', 'read'])",120000);
+    setTimeout("_gaq.push(['_trackEvent', '240_seconds', 'read'])",240000);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+  </head>
+  <body>
+  
+
+
+  
+  
+<div class="hero-box">
+  <div class="hero-inner min-padded">
+    <a href="/">
+      <h3 class="heavy pull-left">&laquo; Smerity.com</h3>
+    </a>
+    <h3 class="maroon contact-me pull-right">
+      <!-- All on one line seems crazy but it prevents small form factors trying to fit them over multiple lines -->
+      <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+    </h3>
+  </div>
+</div>
+
+  <div class="container">
+    
+      <div class="row">
+      <div class="span8 content-wrapper ">
+        
+  
+
+        <div class="content-box">
+        
+<h1 class="post-title">The compute and data moats are dead</h1>
+<h3 class="post-date">October 18, 2018</h3>
+  <p>There is an odd belief perpetuated in the machine learning community that massive compute and "big data" represent obstacles that are nearly impossible to scale.
+They're not.
+We've defeated those obstacles time and time again.</p>
+<!--**While a waterfall may roar it has the same capacity as the quiet stream before and after it.**-->
+
+<p><strong>Over time the roaring waterfall fades back into a quiet stream.</strong></p>
+<p>Headlines and hype misrepresent the true pace of progress.
+Numbers are thrown around either as vanity metrics or as a result of misunderstanding how efficiently a task might be solved.
+What is possible has not yet been well defined.</p>
+<p>Isolate what matters in the long term from what gets the spotlight at this moment.
+This is a good general life principle and an especially strong guiding principle for sanity in your own work.</p>
+<p>For machine learning, history has shown compute and data advantages rarely matter in the long run.
+The ongoing trends indicate this will only become more true over time than less.
+You can still contribute to this field with limited compute and even data.
+It is especially true that you can get almost all the advances of the field with limited compute and data.
+Those limits may even be to your advantage.</p>
+<!--Did you hear?  
+Google used 1800 GPUs for three months to calculate inverse kinetic deep HoRSe reinforcement learning on a terabyte sized language singing task!  
+Facebook now use 8 exabytes of puppy hashtags to calculate optimal profile angle alignment using orthogonal residual highway rotations!  
+OpenAI compete 180 years worth of DotA against itself every day.-->
+
+<!--These headlines likely terrify you, regardless of whether you're in academia, industry, or just the real world.
+They shouldn't.
+Local headlines grab but the field ignores all that, even if those contributing to the field don't.
+
+A central theme in my writing is in dispelling myths, especially when I think the myths may be harmful.
+Most of the time it is about the capabilities of AI - but today I'm remarking on something quite different.-->
+
+<p>Is this true for every application?
+No.
+Yet <strong>I genuinely believe it true in most cases.</strong></p>
+<p><em>Note:</em> If you're interested in following this line of thought my earlier article <a href="/articles/2017/baselines_need_love.html">Backing off towards simplicity - why baselines need more love</a> presents a process you can follow for research or implementation.</p>
+<h2>Examples of perceived necessary compute falling rapidly</h2>
+<p><em>Preface:</em>
+None of what I note below means massive compute is bad, either in research or implementation.
+Massive compute frequently results in insight that feed our understanding of later techniques, showing either the full possibility or limits even at tremendous scale.
+Massive compute rarely results in efficiency gains by itself.</p>
+<p>Excess compute frequently ends up as a crutch, not a breakthrough.
+Over time the march of hardware, the march of techniques, and our improved understanding trim away the excess where it isn't needed.</p>
+<p><strong>Adding ever more engines may help get the plane off the ground...<br />
+but that's not the design planes are destined for.</strong></p>
+<!--Early experiments are usually inefficient as all the blinking lights in those early days can lead us astray.-->
+
+<hr />
+<p>Two extremes of this trend to be considered:</p>
+<p>New York Times (2012): "<a href="https://www.nytimes.com/2012/06/26/technology/in-a-big-network-of-computers-evidence-of-machine-learning.html">How Many Computers to Identify a Cat? <strong>16,000 (CPU cores)</strong></a>"<br />
+One year later: "<strong><a href="http://proceedings.mlr.press/v28/coates13.html">three servers each with two quad-core CPUs and four Nvidia GeForce GTX 680 GPUs</a></strong>"</p>
+<p>Neural Architecture Search: "<strong>32,400-43,200 GPU hours</strong>"<br />
+Just over a year later: "<strong>single Nvidia GTX 1080Ti GPU</strong>, the search for architectures takes <strong>less than 16 hours</strong>" (1000x less) (<a href="https://arxiv.org/abs/1802.03268">paper</a>)</p>
+<p>Whilst there are many many more examples of this trend I could note, a rule of thumb is:<br />
+<strong>What may take a cluster to compute one year takes a consumer machine the next.</strong></p>
+<p>Is this overly optimistic?
+Sure.
+I would argue that it is less wrong than "what took a cluster to compute one year takes a cluster to compute the next" however.
+Even if it's wrong it's better than our current thinking that may paralyze us with fear rather than exploring what is or isn't possible.
+Just like Moore's law it may prove a better target for progress than a fundamental law in and of itself.</p>
+<h2>Reflecting on data</h2>
+<p>There is a traditional notion that data moats are impossible to cross.
+In some fields data moats do indeed still hold strong yet the overall trend is that intelligently used small data is better than big data.
+Even better, the size requirement for annotated data is continuously falling, meaning annotated data moats are also falling away.</p>
+<p>The largest trend here is unsupervised sequence modeling.
+I will give an example below but writing in more detail is beyond scope - mainly as I may never get this article out the door otherwise.
+If you're interested in my thoughts, message me, and I'll add it to my writing queue!</p>
+<h2>Why is this important to me?</h2>
+<h3>Compute</h3>
+<p>I have lost months of my life taunted and terrified by massive compute.
+Literally.
+They were the darkest days of my research career.
+A stage where I felt the walls closing in and the billions of FLoPs that I had access to but a tap trying to fill a river.</p>
+<p>My focus had been on language modeling.
+I'd published one strong paper on it - <a href="https://arxiv.org/abs/1609.07843">Pointer Sentinel Mixture Models</a> - and a team at Facebook had developed <a href="https://arxiv.org/abs/1612.04426">a similar idea independently in parallel with a brilliant speed gain over my work</a>!
+I was so happy.
+I was on the parallel cutting edge, exploring ideas that others found value in.</p>
+<p>Then <a href="https://arxiv.org/abs/1611.01578">Neural Architecture Search with Reinforcement Learning</a> came out, blowing my results out of the water.
+I spent months trying to replicate the work.
+Part of the issue was missing details in the paper - but every paper has missing details.
+That's the standard life of a researcher.
+The other far more pressing issue was that I'd convinced myself that Neural Architecture Search and the many GPUs it used was necessary for that level of performance.
+This was not true.</p>
+<p>Under this misguided notion, I scaled my GPUs from the single GPU I had to many.
+Far too many.
+I eventually commanded an armada of 40 GPUs.
+I was trying to use them efficiently, believing there was a better and saner way to the same results, but I was met with obstacles at nearly every turn.
+I was sticky taping a distributed solution together that slowed my thinking down and distracted me from the core task.
+Whilst I gained many insights from <a href="https://arxiv.org/abs/1712.07316">that eventual work</a> (mainly thanks to <a href="https://twitter.com/martin_schrimpf">Martin Schrimpf</a> for replacing the sticky tape with sound engineering), much of the work I put into the project proved an utter distraction for me.</p>
+<p>Upon submitting the paper I conceded defeat in my mind.
+I decided to move away from language modeling and try my hand elsewhere.
+My lovely subfield was going where I could not follow.</p>
+<p>As a swansong I decided to improve the PyTorch language modeling example.
+I always had a sweetspot for good tutorial code and it had proven helpful for my initial implementation.
+I wanted to give back and give anyone who followed me the best fighting chance possible.
+I decided to only improve the model in ways that were fast as the end user needed to be able to explore and tinker sanely on any GPU.</p>
+<p>To my surprise the simple improvement I made got the model to soar.
+I removed a small bit of cruft and found the aerodynamic drag disappeared.
+A single modest GPU was beating out all past work in hours.
+The side project of improving a tutorial ended up relighting my passion and confidence in competing in my own field.
+Brilliant colleagues joined me to </p>
+<p>In parallel and independently a brilliant team at DeepMind/University of Oxford realized many of the same efficiency gains (and a far more nuanced analysis) in <a href="https://arxiv.org/abs/1612.04426">On the State of the Art of Evaluation in Neural Language Models</a>.
+I am glad for that.
+Even if I had conceded defeat and never discovered my flawed thinking by chance I would have when they finally published.
+By this stage I had lost months however - and nearly lost my internal drive.</p>
+<h3>Google N-grams</h3>
+<p>Before the new fangled neural language models or even the resurgence of the neural network era, my obsession was with n-grams.
+They're the simplest things in the world.
+Take N words - let's say <strong>these five words right here</strong>.
+That's a five-gram.
+Imagine seeing all the possible five-grams on earth.</p>
+<p>If you collect all the occurrences of these n-grams, you gain insight into how words are used.
+Working out the next word in <strong>The distance from Sydney to New ____</strong> is easy - find all five grams starting with "from Sydney to New"!
+Want to know flavours are available?
+Find all the patterns where people are ordering ice cream and extract!</p>
+<p>The issue is that there are exponentially increasing n-grams as you increase the value of n.
+If you have a vocabulary of 10,000 then there are 10,000^2 potentially 2-grams, 10,000^3 potential 3-grams, and so on.
+You need ever more data to try to capture these patterns.</p>
+<p>Google released <a href="https://ai.googleblog.com/2006/08/all-our-n-gram-are-belong-to-you.html">an n-gram dataset</a> that was enormous at the time.
+24 gigabytes compressed - oh geez!
+Solid state disks weren't a thing and RAM was, as ever, far too few, especially for holding a dataset of that size just for random access.</p>
+<p>I pondered how to attach dozens or hundreds of USBs - the only sanely cheap solid state disk at the time - through an ever growing vine of USB hubs.
+This taught me a great deal about the lower levels of compute and storage but it didn't help me solve the task itself.</p>
+<p>Today, with a tiny slither of the data used to produce n-grams or even store the original n-gram dataset, a single desktop computer can give you a richer representation in under an hour.
+How?
+More efficient usage of the data.
+That was the word2vec and eventually unsupervised language modeling path.</p>
+<h2>Conclusion</h2>
+<p>I don't want others to lose months of their time or neurons of their sanity like I have done in the past.
+It's not necessary.
+It's not productive.
+It's rarely what you need to achieve your aims or to help forge progress in our field.</p>
+<p>There's need for courage to push beyond what others tell you is possible.
+Most of the time what's possible hasn't been properly defined yet.</p>
+
+        </div>
+      </div>
+      
+        <div class="span3 side-box">
+          <div style="padding: 8px;">
+            <h1 style="margin-bottom: 0; text-align: center;">Popular Articles</h1>
+            <style>
+            ul.unstyled li { padding-bottom: 6px; }
+            </style>
+            <ul class="crossed">
+              <li><a target="_blank" href="/articles/2017/baselines_need_love.html">Backing off towards simplicity - why baselines need more love</a></li>
+              <li><a target="_blank" href="/articles/2016/google_nmt_arch.html">Peeking into the neural network architecture used for Google's Neural Machine Translation</a></li>
+              <li><a target="_blank" href="/articles/2016/algorithms_can_be_prejudiced.html">It's ML, not magic: machine learning can be prejudiced</a></li>
+              <li><a target="_blank" href="/articles/2016/ml_not_magic.html">It's ML, not magic: the rise of AI-prefix investing</a></li>
+              <li><a target="_blank" href="/articles/2016/architectures_are_the_new_feature_engineering.html">In deep learning, architecture engineering is the new feature engineering</a></li>
+              <!--<li><a target="_blank" href="/articles/2015/keras_qa.html">Question answering on the Facebook bAbi dataset using recurrent neural networks and 175 lines of Python + Keras</a></li>-->
+              <li><a target="_blank" href="/articles/2015/google_sparsehash.html">How Google Sparsehash achieves two bits of overhead per entry using sparsetable</a></li>
+              <li><a target="_blank" href="/articles/2013/where_did_all_the_http_referrers_go.html">Where did all the HTTP referrers go?</a></li>
+            </ul>
+
+            <p class="center-text">
+              <b>Interested in saying hi? ^_^</b><br />
+              <a href="https://twitter.com/Smerity" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @Smerity</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div class="contact-me">
+              <a href="https://www.twitter.com/Smerity/" alt="Twitter"><i class="icon-twitter"></i></a><a href="https://facebook.com/smerity" alt="Facebook"><i class="icon-facebook-sign"></i></a><a href="https://github.com/Smerity/" alt="GitHub"><i class="icon-github"></i></a><a href="http://au.linkedin.com/in/smerity" alt="LinkedIn"><i class="icon-linkedin"></i></a><a href="mailto:smerity@smerity.com" alt="Email"><i class="icon-envelope-alt"></i></a>
+              </div>
+            </p>
+
+            
+
+            
+          </div>
+        </div>
+      
+      </div>
+    
+    
+<footer>
+  You reached the bottom! Reading can be challenging, so I think you deserve a reward. I'd offer you <a href="http://www.minecraftwiki.net/wiki/Cake">cake</a>, but after <a href="http://en.wikipedia.org/wiki/Portal_(video_game)">a certain robot-human conflict</a> started due to cake it may not be a wise choice. So here:
+  <div align="center">
+    <img src="/media/images/mini_coin.png" height="32" width="32" />
+  </div>
+  Take a coin. No, not a Bitcoin. Do you know how <a title="When I originally put this note here, Bitcoins were only a few dollars each...">expensive</a> those are? ಠ_ಠ
+</footer>
+
+  </div>
+  
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome.css" />
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/media/css/fontawesome/fontawesome-ie7.css" />
+  <![endif]-->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700' rel='stylesheet' type='text/css'>
+
+  
+  </body>
+</html>
